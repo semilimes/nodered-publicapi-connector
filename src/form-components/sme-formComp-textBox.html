@@ -1,0 +1,84 @@
+<script type="text/javascript">
+    RED.nodes.registerType('sme-formComp-textBox', {
+        category: 'semilimesAPI',
+        color: '#E6E0F8',
+        defaults: {
+            name: { value: "" },
+
+            reference: { value: ""},
+            referenceType: { value: "str" },
+
+            title: { value: "" },
+            titleType: { value: "str" },
+
+            required: { value: "0" },
+
+            text: { value: "" }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-edit",
+        paletteLabel: 'TextBox',
+        label: function () {
+            return this.name || "Form:TextBox";
+        },
+        oneditprepare: function () {
+            $("#node-input-reference").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-referenceType"
+            });
+            $("#node-input-title").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-titleType"
+            });
+            this.editor = RED.editor.createEditor({
+                id: 'node-input-text-editor',
+                mode: 'ace/mode/text',
+                value: this.text
+            });
+        },
+        oneditsave: function () {
+            this.text = this.editor.getValue();
+            this.editor.destroy();
+            delete this.editor;
+        },
+        oneditcancel: function () {
+            this.editor.destroy();
+            delete this.editor;
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="sme-formComp-textBox">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-reference"><i class="fa fa-tag"></i> Reference</label>
+        <input type="text" id="node-input-reference" placeholder="Form component reference name">
+        <input type="hidden" id="node-input-referenceType">
+    </div>
+    <div class="form-row">
+        <label for="node-input-title"><i class="fa fa-tag"></i> Title</label>
+        <input type="text" id="node-input-title" placeholder="Textbox title">
+        <input type="hidden" id="node-input-titleType">
+    </div>
+    <div class="form-row">
+        <label for="node-input-required"><i class="fa fa-tag"></i> Required</label>
+        <select id="node-input-required">
+            <option value="1">Yes</option>
+            <option value="0" selected>No</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-text"><i class="fa fa-tag"></i> Text</label>
+        <div style="height: 250px; min-height:150px;" class="node-text-editor" id="node-input-text-editor"></div>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="sme-formComp-textBox">
+    <p>Creates an editable text box in a form component</p>
+</script>

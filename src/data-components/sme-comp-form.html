@@ -1,0 +1,99 @@
+<script type="text/javascript">
+    RED.nodes.registerType('sme-comp-form', {
+        category: 'semilimesAPI',
+        color: '#a6bbcf',
+        defaults: {
+            name: { value: "" },
+            submitEnabled: { value: "1"},
+            submitText: { value: "Submit" },
+            submitTextType: { value: "str"},
+            receiverId: { value: "" },
+            receiverIdType: { value: "str" },
+            receiverType: { value: "none" },
+            refName: { value: "" },
+            refNameType: { value: "str" }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-comment-o",
+        paletteLabel: 'Form',
+        label: function() {
+            return this.name || "Form";
+        },
+        oneditprepare: function () {
+            $("#node-input-submitText").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-submitTextType"
+            });
+            $("#node-input-receiverId").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-receiverIdType"
+            });
+            $("#node-input-refName").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-refNameType"
+            });
+
+            updateFormComponentUI();
+        }
+    });
+
+    
+    function updateFormComponentUI() {
+        var receiverType = $('#node-input-receiverType').val();
+
+        if (receiverType == "none") {
+            $('#node-input-receiverIdPanel').hide();
+        } else {
+            $('#node-input-receiverIdPanel').show();
+        }
+    }
+    
+
+</script>
+
+<script type="text/html" data-template-name="sme-comp-form">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name"/>
+    </div>
+    <div class="form-row">
+        <label for="node-input-submitText"><i class="fa fa-tag"></i> Submit Text</label>
+        <input type="text" id="node-input-submitText" placeholder="Submit button text">
+        <input type="hidden" id="node-input-submitTextType">
+    </div>
+    <div class="form-row">
+        <label for="node-input-submitEnabled"><i class="fa fa-tag"></i>Submit Enabled</label>
+        <select id="node-input-submitEnabled">
+            <option value="0">No</option>
+            <option value="1" selected>Yes</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-receiverType"><i class="fa fa-tag"></i>Receiver Type</label>
+        <select id="node-input-receiverType" onchange="updateFormComponentUI()">
+            <option value="none" selected> - </option>
+            <option value="contact">Contact</option>
+            <option value="groupchat">Group Chat</option>
+            <option value="channel">Channel</option>
+        </select>
+    </div>
+
+    <div class="form-row" id="node-input-receiverIdPanel">
+        <label for="node-input-receiverId"><i class="fa fa-tag"></i>Receiver Id</label>
+        <input type="text" id="node-input-receiverId" placeholder="Receiver Id">
+        <input type="hidden" id="node-input-receiverIdType">
+    </div>
+    <div class="form-row">
+        <label for="node-input-refName"><i class="fa fa-tag"></i>Form Reference Name</label>
+        <input type="text" id="node-input-refName" placeholder="Reference Name">
+        <input type="hidden" id="node-input-refNameType">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="sme-comp-form">
+    <p>This node creates a form message component skeleton. To be populated with form components before sending</p>
+</script>

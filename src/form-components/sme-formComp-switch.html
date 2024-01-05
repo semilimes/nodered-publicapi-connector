@@ -1,0 +1,68 @@
+<script type="text/javascript">
+    RED.nodes.registerType('sme-formComp-switch', {
+        category: 'semilimesAPI',
+        color: '#E6E0F8',
+        defaults: {
+            name: { value: "" },
+
+            reference: { value: ""},
+            referenceType: { value: "str" },
+
+            title: { value: "" },
+            titleType: { value: "str" },
+
+            value: { value: false },
+            valueType: { value: "bool" }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-toggle-on",
+        paletteLabel: 'Switch',
+        label: function () {
+            return this.name || "Form:Switch";
+        },
+        oneditprepare: function () {
+            $("#node-input-reference").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-referenceType"
+            });
+            $("#node-input-title").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-titleType"
+            });
+            $("#node-input-value").typedInput({
+                type: "bool",
+                types: ["bool", "msg", "flow", "global"],
+                typeField: "#node-input-valueType"
+            });
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="sme-formComp-switch">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-reference"><i class="fa fa-tag"></i> Reference</label>
+        <input type="text" id="node-input-reference" placeholder="Form component reference name">
+        <input type="hidden" id="node-input-referenceType">
+    </div>
+    <div class="form-row">
+        <label for="node-input-title"><i class="fa fa-tag"></i> Title</label>
+        <input type="text" id="node-input-title" placeholder="Switch title">
+        <input type="hidden" id="node-input-titleType">
+    </div>
+    <div class="form-row">
+        <label for="node-input-value"><i class="fa fa-tag"></i> Value</label>
+        <input type="text" id="node-input-value">
+        <input type="hidden" id="node-input-valueType">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="sme-formComp-switch">
+    <p>Creates a switch element in a form component</p>
+</script>

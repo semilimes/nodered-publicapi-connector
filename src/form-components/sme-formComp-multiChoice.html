@@ -1,0 +1,95 @@
+<script type="text/javascript">
+    RED.nodes.registerType('sme-formComp-multiChoice', {
+        category: 'semilimesAPI',
+        color: '#E6E0F8',
+        defaults: {
+            name: { value: "" },
+
+            reference: { value: ""},
+            referenceType: { value: "str" },
+
+            title: { value: "Choose one or more" },
+            titleType: { value: "str" },
+
+            required: { value: "0" },
+
+            choice1: { value: "" },
+            choice2: { value: "" },
+            choice3: { value: "" },
+            choice4: { value: "" },
+            choice5: { value: "" },
+            choice6: { value: "" }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-check-square-o",
+        paletteLabel: 'Multi Choice',
+        label: function () {
+            return this.name || "Form:MultiChoice";
+        },
+        oneditprepare: function () {
+            $("#node-input-reference").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-referenceType"
+            });
+            $("#node-input-title").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-titleType"
+            });
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="sme-formComp-multiChoice">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-reference"><i class="fa fa-tag"></i> Reference</label>
+        <input type="text" id="node-input-reference" placeholder="Form component reference name">
+        <input type="hidden" id="node-input-referenceType">
+    </div>
+    <div class="form-row">
+        <label for="node-input-title"><i class="fa fa-tag"></i> Title</label>
+        <input type="text" id="node-input-title" placeholder="Multi choice title">
+        <input type="hidden" id="node-input-titleType">
+    </div>
+    <div class="form-row">
+        <label for="node-input-required"><i class="fa fa-tag"></i> Required</label>
+        <select id="node-input-required">
+            <option value="1">Yes</option>
+            <option value="0" selected>No</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-choice1"><i class="fa fa-hand-o-right"></i><span> Choice 1</span></label>
+        <input type="text" id="node-input-choice1" placeholder="Insert the first choice">
+    </div>
+    <div class="form-row">
+        <label for="node-input-choice2"><i class="fa fa-hand-o-right"></i><span> Choice 2</span></label>
+        <input type="text" id="node-input-choice2" placeholder="Insert the second choice">
+    </div>
+    <div class="form-row">
+        <label for="node-input-choice3"><i class="fa fa-hand-o-right"></i><span> Choice 3</span></label>
+        <input type="text" id="node-input-choice3" placeholder="Insert the third choice">
+    </div>
+    <div class="form-row">
+        <label for="node-input-choice4"><i class="fa fa-hand-o-right"></i><span> Choice 4</span></label>
+        <input type="text" id="node-input-choice4" placeholder="Insert the fourth choice">
+    </div>
+    <div class="form-row">
+        <label for="node-input-choice5"><i class="fa fa-hand-o-right"></i><span> Choice 5</span></label>
+        <input type="text" id="node-input-choice5" placeholder="Insert the fifth choice">
+    </div>
+    <div class="form-row">
+        <label for="node-input-choice6"><i class="fa fa-hand-o-right"></i><span> Choice 6</span></label>
+        <input type="text" id="node-input-choice6" placeholder="Insert the sixth choice">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="sme-formComp-multiChoice">
+    <p>Creates a multi choice element in a form component</p>
+</script>

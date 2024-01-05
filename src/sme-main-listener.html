@@ -1,0 +1,55 @@
+<script type="text/javascript">
+    RED.nodes.registerType('sme-main-listener', {
+        category: 'semilimesAPI',
+        color: "#D7D7A0",
+        defaults: {
+            connector: { type: 'sme-main-connector', required: true }
+        },
+        inputs: 0,
+        outputs: 1,
+        align: 'left',
+        icon: "font-awesome/fa-rss",
+        paletteLabel: 'listener',
+        label: 'semilimes listener',
+    });
+</script>
+
+<script type="text/html" data-template-name="sme-main-listener">
+    <div style="max-width:500px">Communication with semilimes server is by messages. This node is to listen for messages from semilimes. You can create many instances, but one is enough.</div>
+    <br />
+    <div class="form-row">
+        <label for="node-input-connector"><i class="fa fa-cog"></i> Connector</label>
+        <input type="text" id="node-input-connector" placeholder="semilimes connector" />
+    </div>
+    <div style="font-size: smaller;max-width:500px;">Connector could be sharely used for other nodes.</div>
+    <br />
+    <br />
+    <h4>Outputs</h4>
+    <p><code>msg.payload</code> is received message from semilimes. It is a JSON-parsed object.</p>
+</script>
+
+<script type="text/html" data-help-name="sme-main-listener">
+    <p>Listen for messages from semilimes via a provided semilimes connector.</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>
+            Connector
+            <span class="property-type">sme-connector</span>
+        </dt>
+        <dd>Specify a semilimes Connector configuration node which manages connection to semilimes server.</dd>
+    </dl>
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>
+            payload
+            <span class="property-type">sme-message</span>
+        </dt>
+    </dl>
+    <h3>Details</h3>
+    <p><code>msg.payload</code> is received message from semilimes. It is a JSON-parsed object.</p>
+    <h3>References</h3>
+    <ul>
+        <li><a>Message Formats</a> - full description of <code>sme-message</code>(s) and their properties.</li>
+        <li><a href="https://github.com/semimob/node-red-connector.git">GitHub</a> - the nodes github repository</li>
+    </ul>
+</script>`

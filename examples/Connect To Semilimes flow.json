@@ -1,0 +1,241 @@
+[
+    {
+        "id": "60aa84f35b43b2ca",
+        "type": "tab",
+        "label": "Connect To Semilimes",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "499e3b0ca68626c7",
+        "type": "comment",
+        "z": "60aa84f35b43b2ca",
+        "name": "Step 2: Configure 'Connector' property of the 'send to semilimes' node to setup connection to semilimes",
+        "info": "",
+        "x": 430,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "1ff574b03a43889d",
+        "type": "comment",
+        "z": "60aa84f35b43b2ca",
+        "name": "This example lets you connect to semilimes for the first time and lets you send a message to a contact of your choice",
+        "info": "",
+        "x": 470,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "d4de6f11dccae0bc",
+        "type": "inject",
+        "z": "60aa84f35b43b2ca",
+        "name": "Inject2",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 460,
+        "wires": [
+            [
+                "3e039ea227cd7a5c"
+            ]
+        ]
+    },
+    {
+        "id": "3e039ea227cd7a5c",
+        "type": "sme-comp-text",
+        "z": "60aa84f35b43b2ca",
+        "name": "",
+        "text": "First message sent by NodeRED example flow!",
+        "textType": "str",
+        "x": 290,
+        "y": 460,
+        "wires": [
+            [
+                "205a9aa0495ba053"
+            ]
+        ]
+    },
+    {
+        "id": "205a9aa0495ba053",
+        "type": "sme-main-actionSelector",
+        "z": "60aa84f35b43b2ca",
+        "actionName": "p2p_message_send",
+        "recipientId": "",
+        "recipientIdType": "str",
+        "messageId": "",
+        "messageIdType": "str",
+        "limit": 0,
+        "limitType": "num",
+        "recipientIds": "",
+        "recipientIdsType": "str",
+        "groupChatId": "",
+        "groupChatIdType": "str",
+        "channelId": "",
+        "channelIdType": "str",
+        "x": 480,
+        "y": 460,
+        "wires": [
+            [
+                "028f3c55a5df0dfe"
+            ]
+        ]
+    },
+    {
+        "id": "028f3c55a5df0dfe",
+        "type": "sme-main-sender",
+        "z": "60aa84f35b43b2ca",
+        "connector": "bfab13c0475c3c87",
+        "async": "0",
+        "x": 710,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "49407c3140de9137",
+        "type": "inject",
+        "z": "60aa84f35b43b2ca",
+        "name": "Inject1",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 340,
+        "wires": [
+            [
+                "d527d75c18f77482"
+            ]
+        ]
+    },
+    {
+        "id": "d527d75c18f77482",
+        "type": "sme-main-actionSelector",
+        "z": "60aa84f35b43b2ca",
+        "actionName": "account_contacts",
+        "recipientId": "c",
+        "recipientIdType": "str",
+        "messageId": "",
+        "messageIdType": "str",
+        "limit": 0,
+        "limitType": "num",
+        "recipientIds": "",
+        "recipientIdsType": "str",
+        "groupChatId": "",
+        "groupChatIdType": "str",
+        "channelId": "",
+        "channelIdType": "str",
+        "x": 340,
+        "y": 340,
+        "wires": [
+            [
+                "1e4fbf07024edfa9"
+            ]
+        ]
+    },
+    {
+        "id": "1e4fbf07024edfa9",
+        "type": "sme-main-sender",
+        "z": "60aa84f35b43b2ca",
+        "connector": "bfab13c0475c3c87",
+        "async": "0",
+        "x": 550,
+        "y": 340,
+        "wires": [
+            [
+                "0bb3ee7d9cc13ba1"
+            ]
+        ]
+    },
+    {
+        "id": "0bb3ee7d9cc13ba1",
+        "type": "debug",
+        "z": "60aa84f35b43b2ca",
+        "name": "Filter contacts",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "_sme.responseMsgs[0].Data",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "ef89bf5a8213f87a",
+        "type": "comment",
+        "z": "60aa84f35b43b2ca",
+        "name": "Step 1: Get an API key on semilimes.com",
+        "info": "",
+        "x": 240,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "3098c1296a8f2791",
+        "type": "comment",
+        "z": "60aa84f35b43b2ca",
+        "name": "Step 3: Trigger this flow and look at your contacts' AccountId in the final debug node",
+        "info": "",
+        "x": 370,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "08a7ac41f90de811",
+        "type": "comment",
+        "z": "60aa84f35b43b2ca",
+        "name": "Step 4: Assign a previously got AccountId to the RecipientId of the ActionSelector node",
+        "info": "",
+        "x": 380,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "056b11cb8540c85c",
+        "type": "comment",
+        "z": "60aa84f35b43b2ca",
+        "name": "Step 5: Trigger this flow to send a message to the chosen contact",
+        "info": "",
+        "x": 310,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "bfab13c0475c3c87",
+        "type": "sme-main-connector",
+        "name": "SMECON"
+    }
+]

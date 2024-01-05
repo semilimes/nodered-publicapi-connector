@@ -1,0 +1,111 @@
+<script type="text/javascript">
+    RED.nodes.registerType('sme-main-connector', {
+        category: 'config',
+        defaults: {
+            name: { value: "" }
+        },
+        credentials: {
+            //reservedCode: { type: "text" },
+            server: { type: "text" },
+            //appName: { type: "text", required: true },
+            //applicationID: { type: "text" }
+            apiKey: { type: "text" , required: true },
+            xAccount: { type: "text", required: false }
+        },
+        icon: "font-awesome/fa-cog",
+        label: function () {
+            if (this.name)
+                return this.name;
+
+            if (this.credentials) {
+                if (this.credentials.apiKey)
+                    return this.credentials.apiKey.substring(0,4) + "... connector";
+            }
+
+            return 'semilimes connector';
+        },
+        labelStyle: function () {
+            return (this.credentials && this.credentials.server) ? "node_label_italic" : "";
+        },
+        paletteLabel: 'connector',
+        oneditprepare: function () {
+            if(this.credentials)
+            {
+                $('#node-config-input-server').val(this.credentials.server);
+                $('#node-config-input-apiKey').val(this.credentials.apiKey);
+                $('#node-config-input-xAccount').val(this.credentials.xAccount);
+            }
+        },
+        oneditsave: function () {
+            if(this.credentials) {
+                this.credentials.server = $('#node-config-input-server').val();
+                this.credentials.apiKey = $('#node-config-input-apiKey').val();
+                this.credentials.xAccount = $('#node-config-input-xAccount').val();
+            }
+        }
+    });
+	
+	
+    function connectToSemilimes() {
+        // Get settings from UI
+        var apiKey = $('#node-config-input-apiKey').val();
+        if (!apiKey) {
+            alert('Please provide \'API KEY\'');
+            return;
+        }
+    }
+</script>
+
+<script type="text/html" data-template-name="sme-main-connector">
+    <div style="max-width:500px;">Communication with semilimes server is by messages. <code>connector</code> node is user connection to semilimes server. One <code>connector</code> global instance should be sharely used for flows. But you can create instances for different users.</div>
+    <br />
+
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" />
+    </div>
+
+    <div class="form-row">
+        <label for="node-config-input-server"><i class="fa fa-tag"></i> Server</label>
+        <input type="text" id="node-config-input-server" placeholder="Please blank to connect default server.">
+    </div>
+    <div style="font-size: smaller;max-width:500px;">You can specify development server to check your flow then switch back to the default production server.</div>
+    <br />
+
+    <div class="form-row">
+        <label for="node-config-input-apiKey"><i class="fa fa-tag"></i> Api Key</label>
+        <input type="text" id="node-config-input-apiKey" />
+    </div>
+    <div style="font-size: smaller;max-width:500px;">Use an existing developer api key</div>
+    <br />
+
+    <div class="form-row">
+        <label for="node-config-input-xAccount"><i class="fa fa-tag"></i> X-Account</label>
+        <input type="text" id="node-config-input-xAccount" />
+    </div>
+    <div style="font-size: smaller;max-width:500px;">Use an X-Account (development mode only)</div>
+    <br />
+
+    <!--<button id="connectButton" type="button" class="red-ui-button" onclick="connectToSemilimes()">Verify Connection</button>-->
+
+</script>
+
+<script type="text/html" data-help-name="sme-main-connector">
+    <p>Setup connection to semilimes.</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt class="optional">Server <span class="property-type">sme-server</span></dt>
+        <dd>Target additional semilimes server for development.</dd>
+    </dl>
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">sme-message</span></dt>
+    </dl>
+    <h3>Details</h3>
+    <p><code>msg.payload</code> is used to store received message from semilimes. It is a <code>sme-message</code>, a JSON-parsed object.</p>
+    <h3>References</h3>
+    <ul>
+        <li><a href="https://github.com/semimob/node-red-connector/blob/main/docs/MessageFormat.md">Message Formats</a> - full description of <code>sme-message</code>(s) and their properties.</li>
+        <li><a href="https://github.com/semimob/node-red-connector.git">GitHub</a> - the nodes github repository</li>
+    </ul>
+</script>

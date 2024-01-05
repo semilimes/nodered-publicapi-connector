@@ -1,0 +1,41 @@
+<script type="text/javascript">
+    RED.nodes.registerType('sme-main-sender', {
+        category: 'semilimesAPI',
+        color: "#D7D7A0",
+        defaults: {
+            connector: { type: 'sme-main-connector', required: true },
+            async: { value: "1", required: true }
+        },
+        inputs: 1,
+        outputs: 1,
+        align: 'right',
+        icon: "font-awesome/fa-rss",
+        paletteLabel: 'sender',
+        label: function () {
+            return 'send to semilimes';
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="sme-main-sender">
+    <div style="max-width:500px;">Execute actions in semilimes server via HTTP endpoints or WebSocket messages.</div>
+    <br />
+    <div class="form-row">
+        <label for="node-input-connector"><i class="fa fa-cog"></i> Connector</label>
+        <input type="text" id="node-input-connector" placeholder="semilimes connector" />
+    </div>
+    <div style="font-size: smaller;max-width:500px;">Connector can be shared with other nodes.</div>
+    <br />
+    <div class="form-row">
+        <label for="node-input-async"><i class="fa fa-spinner"></i> <span> Send</span></label>
+        <select id="node-input-async">
+            <option value="1">Websocket</option>
+            <option value="0" selected>HTTP REST</option>
+        </select>
+    </div>
+    <!-- <div style="font-size: smaller;max-width:500px;">Recommend to use asynchronuously to avoid blocking your Node-RED flow execution.</div> -->
+</script>
+
+<script type="text/html" data-help-name="sme-main-sender">
+    <p>Execute action in semilimes via HTTP REST or WebSocket</p>
+</script>

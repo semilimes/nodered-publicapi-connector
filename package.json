@@ -1,0 +1,54 @@
+{
+    "name": "node-red-contrib-semilimes-connector-publicapi",
+    "version": "1.0.0",
+    "description": "The new semilimes connector which integrates with the public API",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "node-red": {
+        "nodes": {
+            "sme-main-core": "src/sme-main-core.js",
+            "sme-main-connector": "src/sme-main-connector.js",
+            "sme-main-actionselector": "src/sme-main-actionSelector.js",
+            "sme-main-sender": "src/sme-main-sender.js",
+            "sme-main-listener": "src/sme-main-listener.js",
+            "sme-main-sshTunnel": "src/sme-main-sshTunnel.js",
+            "sme-comp-text": "src/data-components/sme-comp-text.js",
+            "sme-comp-html": "src/data-components/sme-comp-html.js",
+            "sme-comp-file": "src/data-components/sme-comp-file.js",
+            "sme-comp-contact": "src/data-components/sme-comp-contact.js",
+            "sme-comp-location": "src/data-components/sme-comp-location.js",
+            "sme-comp-webview": "src/data-components/sme-comp-webview.js",
+            "sme-comp-channel": "src/data-components/sme-comp-channel.js",
+            "sme-comp-tunnel": "src/data-components/sme-comp-tunnel.js",
+            "sme-comp-form": "src/data-components/sme-comp-form.js",
+            "sme-formComp-label": "src/form-components/sme-formComp-label.js",
+            "sme-formComp-textBox": "src/form-components/sme-formComp-textBox.js",
+            "sme-formComp-buttonList": "src/form-components/sme-formComp-buttonList.js",
+            "sme-formComp-singleChoice": "src/form-components/sme-formComp-singleChoice.js",
+            "sme-formComp-multiChoice": "src/form-components/sme-formComp-multiChoice.js",
+            "sme-formComp-switch": "src/form-components/sme-formComp-switch.js",
+            "sme-formComp-slider": "src/form-components/sme-formComp-slider.js",
+            "sme-formComp-datePicker": "src/form-components/sme-formComp-datePicker.js",
+            "sme-formComp-timePicker": "src/form-components/sme-formComp-timePicker.js",
+            "sme-formComp-locationPicker": "src/form-components/sme-formComp-locationPicker.js",
+            "sme-formComp-photoPicker": "src/form-components/sme-formComp-photoPicker.js",
+            "sme-formComp-filePicker": "src/form-components/sme-formComp-filePicker.js",
+            "sme-formComp-contactPicker": "src/form-components/sme-formComp-contactPicker.js",
+            "sme-formComp-groupChatPicker": "src/form-components/sme-formComp-groupChatPicker.js",
+            "sme-formComp-channelPicker": "src/form-components/sme-formComp-channelPicker.js",
+            "sme-formComp-bucketPicker": "src/form-components/sme-formComp-bucketPicker.js",
+            "sme-formComp-hiddenValue": "src/form-components/sme-formComp-hiddenValue.js",
+            "sme-formComp-qrCodeScanner": "src/form-components/sme-formComp-qrCodeScanner.js",
+            "sme-formComp-nfcReader": "src/form-components/sme-formComp-nfcReader.js",
+            "sme-filter-formSubmission": "src/filters/sme-filter-formSubmission.js"
+        }
+    },
+    "dependencies": {
+        "node-forge": "^1.3.1",
+        "ssh2": "^1.11.0",
+        "ws": "^8.2.3"
+    }
+}

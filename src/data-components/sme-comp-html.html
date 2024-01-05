@@ -1,0 +1,41 @@
+<script type="text/javascript">
+    RED.nodes.registerType('sme-comp-html', {
+        category: 'semilimesAPI',
+        color: '#a6bbcf',
+        defaults: {
+            name: { value: "" },
+            html: { value: "This is an html message." },
+            htmlType: { value: "str"}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-comment-o",
+        paletteLabel: 'Html',
+        label: function() {
+            return this.name || "Html";
+        },
+        oneditprepare: function () {
+            $("#node-input-html").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-htmlType"
+            });
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="sme-comp-html">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name"/>
+    </div>
+    <div class="form-row">
+        <label for="node-input-html"><i class="fa fa-tag"></i> Text</label>
+        <input type="text" id="node-input-html" placeholder="The html message to send">
+        <input type="hidden" id="node-input-htmlType">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="sme-comp-html">
+    <p>This node creates an html message component</p>
+</script>
