@@ -26,7 +26,7 @@ Or run the following command in the root directory of your Node-RED installation
 The nodes are tested with `Node.js v19.2.0` and `Node-RED v3.0.2`.
 
 ## Connect to semilimes
-1. Get an API key on [](https://www.semilimes.com)
+1. Get an API key on [Semilimes Website](https://www.semilimes.com)
 
 1. Add a new `Text` node and configure it with your preferred message
 
