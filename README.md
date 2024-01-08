@@ -15,7 +15,7 @@ You can install the nodes using node-red's "Manage palette" in the side bar.
 
 Or run the following command in the root directory of your Node-RED installation
 
-    npm install node-red-contrib-semilimes-connector --save
+    npm install @daviderib/node-red-contrib-semilimes-connector --save
 
 ## Installation of the mobile apps
 - IOS semilimes Messenger : [![Platform](https://img.shields.io/badge/Apple%20IOS-semilimes%20Messenger-blue.svg)](https://apps.apple.com/us/app/semilimes-mesh/id1536363738?l=en)  
