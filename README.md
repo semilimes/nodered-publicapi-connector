@@ -1,5 +1,5 @@
 # Node-RED semilimes connector
-[![Platform](https://img.shields.io/badge/platform-Node--RED-red)](https://nodered.org)   [![License](https://img.shields.io/badge/license-Apache--License-lightgrey)](http://www.apache.org/licenses/LICENSE-2.0) [![Downloads](https://img.shields.io/badge/download-github-purple)](https://github.com/semilimes/nodered-publicapi-connector) [![Install](https://img.shields.io/badge/Install-NPM-blue)](https://www.npmjs.com/package/node-red-contrib-semilimes)
+[![Platform](https://img.shields.io/badge/platform-Node--RED-red)](https://nodered.org)   [![License](https://img.shields.io/badge/license-Apache--License-lightgrey)](http://www.apache.org/licenses/LICENSE-2.0) [![Downloads](https://img.shields.io/badge/download-github-purple)](https://github.com/semilimes/nodered-publicapi-connector) [![Install](https://img.shields.io/badge/Install-NPM-blue)](https://www.npmjs.com/package/@daviderib/node-red-contrib-semilimes-connector)
 
 This package of Node-RED nodes to extends your semilimes account with your programming ability, such as auto reply, booking flow or even message-base interface of your exsting system to expose to semilimes Messenger.
 
@@ -9,7 +9,7 @@ This package of Node-RED nodes to extends your semilimes account with your progr
 
 
 ## Installation
-[![NPM](https://nodei.co/npm/node-red-contrib-semilimes-connector.png?downloads=true)](https://nodei.co/npm/node-red-contrib-semilimes-connector/)
+[![NPM](https://nodei.co/npm/node-red-contrib-semilimes-connector.png?downloads=true)](https://nodei.co/npm/@daviderib/node-red-contrib-semilimes-connector/)
 
 You can install the nodes using node-red's "Manage palette" in the side bar.
 
