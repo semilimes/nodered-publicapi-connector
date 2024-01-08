@@ -48,10 +48,10 @@ module.exports = function(RED) {
                     formComponentType: "slider",
                     title: titleValue || "",
                     requiredSelection: node.required == "1",
-                    value: valueValue,
-                    min: minValue,
-                    max: maxValue,
-                    step: stepValue
+                    value: valueValue || 0,
+                    min: minValue || 0,
+                    max: maxValue || 10,
+                    step: stepValue || 1
                 };
                 smeFormMsg.dataComponent.formComponents.push(component);
             }

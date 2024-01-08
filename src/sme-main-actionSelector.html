@@ -106,6 +106,10 @@
                 $('#node-input-recipientIdPanel').show();
                 break;
             }
+            case 'p2p_message_update': {
+                $('#node-input-messageIdPanel').show();
+                break;
+            }
             case 'groupchat': {
                 $('#node-input-recipientIdsPanel').show();
                 break;
@@ -120,8 +124,20 @@
                 $('#node-input-groupChatIdPanel').show();
                 break;
             }
+            case 'groupchat_message_update': {
+                $('#node-input-messageIdPanel').show();
+                break;
+            }
+            case 'channel_my': {
+                //No parameters
+                break;
+            }
             case 'channel_message_send': {
                 $('#node-input-channelIdPanel').show();
+                break;
+            }
+            case 'channel_message_update': {
+                $('#node-input-messageIdPanel').show();
                 break;
             }
             default: {
@@ -142,10 +158,14 @@
             <option value="p2p">P2P - Get Chats</option>
             <option value="p2p_message">P2P - Get Messages</option>
             <option value="p2p_message_send">P2P - Send Message</option>
+            <option value="p2p_message_update">P2P - Update Message</option>
             <option value="groupchat">GroupChat - Get Chats</option>
             <option value="groupchat_message">GroupChat - Get Messages</option>
             <option value="groupchat_message_send">GroupChat - Send Message</option>
+            <option value="groupchat_message_update">GroupChat - Update Message</option>
+            <option value="channel_my">Channel - My Channels</option>
             <option value="channel_message_send">Channel - Send Message</option>
+            <option value="channel_message_update">Channel - Update Message</option>
         </select>
     </div>
     <div class="form-row" id="node-input-recipientIdPanel">
@@ -190,6 +210,6 @@
     <h3>References</h3>
     <ul>
         <li><a href="https://www.semilimes.com/developers/">API documentation</a> - full description of messages and their components.</li>
-        <li><a href="https://github.com/semilimes/node-red-publicapi-connector.git">GitHub</a> - the nodes github repository</li>
+        <li><a href="https://github.com/semilimes/nodered-publicapi-connector">GitHub</a> - the nodes github repository</li>
     </ul>
 </script>

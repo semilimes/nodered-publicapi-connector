@@ -25,11 +25,13 @@ module.exports = function (RED) {
                 smeReceivedMsg.EventBody &&
                 smeReceivedMsg.EventBody.DataComponent &&
                 smeReceivedMsg.EventBody.DataComponent.DataComponentType == "formsubmission";
-
+            
             if (isMatchedSubmissionMessage && node.reference) {
+                var referenceValue = smeHelper.getNodeConfigValue(node, msg, node.referenceType, node.reference);
+                node.log(`Node reference is: ${referenceValue}`);
                 isMatchedSubmissionMessage = 
                     smeReceivedMsg.EventBody.DataComponent.ReplyTo &&
-                    smeReceivedMsg.EventBody.DataComponent.ReplyTo.RefName == node.reference;
+                    smeReceivedMsg.EventBody.DataComponent.ReplyTo.RefName == referenceValue;
             }
 
             if (isMatchedSubmissionMessage) {

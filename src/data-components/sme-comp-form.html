@@ -5,6 +5,7 @@
         defaults: {
             name: { value: "" },
             submitEnabled: { value: "1"},
+            retainStatus: { value: "0" },
             submitText: { value: "Submit" },
             submitTextType: { value: "str"},
             receiverId: { value: "" },
@@ -70,6 +71,13 @@
         <select id="node-input-submitEnabled">
             <option value="0">No</option>
             <option value="1" selected>Yes</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-retainStatus"><i class="fa fa-tag"></i>Retain Status</label>
+        <select id="node-input-retainStatus">
+            <option value="0" selected>No</option>
+            <option value="1">Yes</option>
         </select>
     </div>
     <div class="form-row">

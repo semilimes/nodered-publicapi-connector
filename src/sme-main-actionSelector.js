@@ -28,6 +28,9 @@ module.exports = function (RED) {
         this.channelId = config.channelId;
         this.channelIdType = config.channelIdType;
 
+        this.messageId = config.messageId;
+        this.messageIdType = config.messageIdType;
+
         var node = this;
 
         function getNewRequestId () {
@@ -49,7 +52,7 @@ module.exports = function (RED) {
                         endpoint: "/account/contacts",
                         httpMethod: "GET" 
                     };
-                    smeHelper.addSendingMsg(msg, request)
+                    smeHelper.addSendingMsg(msg, request);
                     break;
                 }
                 case 'p2p': {
@@ -59,7 +62,7 @@ module.exports = function (RED) {
                         endpoint: "/communication/p2p",
                         httpMethod: "GET" 
                     };
-                    smeHelper.addSendingMsg(msg, request)
+                    smeHelper.addSendingMsg(msg, request);
                     break;
                 }
                 case 'p2p_message': {
@@ -73,9 +76,9 @@ module.exports = function (RED) {
                     var recipientIdValue = smeHelper.getNodeConfigValue(node, msg, node.recipientIdType, node.recipientId);
                     var messageIdValue = smeHelper.getNodeConfigValue(node, msg, node.messageIdType, node.messageId);
                     var limitValue = smeHelper.getNodeConfigValue(node, msg, node.limitType, node.limit);
-                    if (recipientIdValue) request.parameters.recipientId = recipientIdValue;
-                    if (messageIdValue) request.parameters.messageId = messageIdValue;
-                    if (limitValue) request.parameters.limit = limitValue;
+                    if (recipientIdValue) request.parameters.recipientId = msg.recipientId || recipientIdValue;
+                    if (messageIdValue) request.parameters.messageId = msg.messageId || messageIdValue;
+                    if (limitValue) request.parameters.limit = msg.limit || limitValue;
                     smeHelper.addSendingMsg(msg, request);
                     break;
                 }
@@ -87,7 +90,23 @@ module.exports = function (RED) {
                             smeMsg.endpoint = "/communication/p2p/message/send";
                             smeMsg.httpMethod = "POST";
                             smeMsg.body = {
-                                recipientId: recipientIdValue,
+                                recipientId: msg.recipientId || recipientIdValue,
+                                dataComponent: smeMsg.dataComponent
+                            };
+                            delete smeMsg.dataComponent;
+                        });
+                    }
+                    break;
+                }
+                case 'p2p_message_update': {
+                    if (smeSendingBox) {
+                        var messageIdValue = smeHelper.getNodeConfigValue(node, msg, node.messageIdType, node.messageId);
+                        smeSendingBox.forEach(smeMsg => {
+                            smeMsg.requestId = getNewRequestId();
+                            smeMsg.endpoint = "/communication/p2p/message/update";
+                            smeMsg.httpMethod = "POST";
+                            smeMsg.body = {
+                                messageId: msg.messageId || messageIdValue,
                                 dataComponent: smeMsg.dataComponent
                             };
                             delete smeMsg.dataComponent;
@@ -125,9 +144,9 @@ module.exports = function (RED) {
                     var groupChatIdValue = smeHelper.getNodeConfigValue(node, msg, node.groupChatIdType, node.groupChatId);
                     var messageIdValue = smeHelper.getNodeConfigValue(node, msg, node.messageIdType, node.messageId);
                     var limitValue = smeHelper.getNodeConfigValue(node, msg, node.limitType, node.limit);
-                    if (groupChatIdValue) request.parameters.groupChatId = groupChatIdValue;
-                    if (messageIdValue) request.parameters.messageId = messageIdValue;
-                    if (limitValue) request.parameters.limit = limitValue;
+                    if (groupChatIdValue) request.parameters.groupChatId = msg.groupChatId || groupChatIdValue;
+                    if (messageIdValue) request.parameters.messageId = msg.messageId || messageIdValue;
+                    if (limitValue) request.parameters.limit = msg.limit || limitValue;
                     smeHelper.addSendingMsg(msg, request);
                     break;
                 }
@@ -139,12 +158,43 @@ module.exports = function (RED) {
                             smeMsg.endpoint = "/communication/groupchat/message/send";
                             smeMsg.httpMethod = "POST";
                             smeMsg.body = {
-                                groupChatId: groupChatIdValue,
+                                groupChatId: msg.groupChatId || groupChatIdValue,
                                 dataComponent: smeMsg.dataComponent
                             };
                             delete smeMsg.dataComponent;
                         });
                     }
+                    break;
+                }
+                case 'groupchat_message_update': {
+                    if (smeSendingBox) {
+                        var messageIdValue = smeHelper.getNodeConfigValue(node, msg, node.messageIdType, node.messageId);
+                        smeSendingBox.forEach(smeMsg => {
+                            smeMsg.requestId = getNewRequestId();
+                            smeMsg.endpoint = "/communication/groupchat/message/update";
+                            smeMsg.httpMethod = "POST";
+                            smeMsg.body = {
+                                messageId: msg.messageId || messageIdValue,
+                                dataComponent: smeMsg.dataComponent
+                            };
+                            delete smeMsg.dataComponent;
+                        });
+                    }
+                    break;
+                }
+                case 'channel_my' : {
+                    smeHelper.clearSendingBox(msg);
+                    var request = {
+                        requestId: getNewRequestId(),
+                        endpoint: "/communication/channel/my",
+                        httpMethod: "GET",
+                        parameters: {
+                            owner: true,
+                            editor: true,
+                            subscriber: true
+                        }
+                    };
+                    smeHelper.addSendingMsg(msg, request);
                     break;
                 }
                 case 'channel_message_send': {
@@ -154,7 +204,23 @@ module.exports = function (RED) {
                             smeMsg.endpoint = "/communication/channel/message/send";
                             smeMsg.httpMethod = "POST";
                             smeMsg.body = {
-                                channelId: channelIdValue,
+                                channelId: msg.channelId || channelIdValue,
+                                dataComponent: smeMsg.dataComponent
+                            };
+                            delete smeMsg.dataComponent;
+                        });
+                    }
+                    break;
+                }
+                case 'channel_message_update': {
+                    if (smeSendingBox) {
+                        var messageIdValue = smeHelper.getNodeConfigValue(node, msg, node.messageIdType, node.messageId);
+                        smeSendingBox.forEach(smeMsg => {
+                            smeMsg.requestId = getNewRequestId();
+                            smeMsg.endpoint = "/communication/channel/message/update";
+                            smeMsg.httpMethod = "POST";
+                            smeMsg.body = {
+                                messageId: msg.messageId || messageIdValue,
                                 dataComponent: smeMsg.dataComponent
                             };
                             delete smeMsg.dataComponent;

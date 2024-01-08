@@ -27,7 +27,7 @@ module.exports = function(RED) {
             var referenceValue = smeHelper.getNodeConfigValue(node, msg, node.referenceType, node.reference);
             var titleValue = smeHelper.getNodeConfigValue(node, msg, node.titleType, node.title);
             var valueValue = smeHelper.getNodeConfigValue(node, msg, node.valueType, node.value);
-            node.log(`valueValue is: ${valueValue}`);
+           
             if (smeFormMsg && smeFormMsg.dataComponent && smeFormMsg.dataComponent.formComponents) {
                 var component = {
                     refName: referenceValue || "",

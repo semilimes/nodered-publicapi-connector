@@ -9,6 +9,7 @@ module.exports = function (RED) {
         this.submitText = config.submitText;
         this.submitTextType = config.submitTextType;
         this.submitEnabled = config.submitEnabled;
+        this.retainStatus = config.retainStatus;
         this.receiverId = config.receiverId;
         this.receiverIdType = config.receiverIdType;
         this.receiverType = config.receiverType;
@@ -31,6 +32,7 @@ module.exports = function (RED) {
             
             //Initializing 
             smeFormMsg.dataComponent.submitEnabled = node.submitEnabled == "1";
+            smeFormMsg.dataComponent.retainStatus = node.retainStatus == "1";
             smeFormMsg.dataComponent.submitText = submitTextValue;
             smeFormMsg.dataComponent.receiver = {};
             if (node.receiverType != "none") {

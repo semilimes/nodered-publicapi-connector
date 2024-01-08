@@ -1,0 +1,207 @@
+[
+    {
+        "id": "9c78f3e70aecce9f",
+        "type": "tab",
+        "label": "Local Tunnel",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "0524510749435a86",
+        "type": "sme-main-sshTunnel",
+        "z": "9c78f3e70aecce9f",
+        "connector": "bfab13c0475c3c87",
+        "name": "myNewTunnel",
+        "host": "localhost",
+        "port": "1880",
+        "path": "ui",
+        "retryInterval": 10,
+        "retryTimeout": "1",
+        "x": 490,
+        "y": 280,
+        "wires": [
+            [
+                "2aea3326917ec6cb"
+            ]
+        ]
+    },
+    {
+        "id": "a885d8cb39f347e8",
+        "type": "inject",
+        "z": "9c78f3e70aecce9f",
+        "name": "CREATE",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "Command",
+                "v": "CREATE",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 260,
+        "wires": [
+            [
+                "0524510749435a86"
+            ]
+        ]
+    },
+    {
+        "id": "7dddfe45321dda92",
+        "type": "inject",
+        "z": "9c78f3e70aecce9f",
+        "name": "OPEN",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "Command",
+                "v": "OPEN",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 300,
+        "wires": [
+            [
+                "0524510749435a86"
+            ]
+        ]
+    },
+    {
+        "id": "d72ddae053956915",
+        "type": "inject",
+        "z": "9c78f3e70aecce9f",
+        "name": "DELETE",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "Command",
+                "v": "DELETE",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 380,
+        "wires": [
+            [
+                "0524510749435a86"
+            ]
+        ]
+    },
+    {
+        "id": "292fc9b847e5f189",
+        "type": "inject",
+        "z": "9c78f3e70aecce9f",
+        "name": "CLOSE",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "Command",
+                "v": "CLOSE",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 340,
+        "wires": [
+            [
+                "0524510749435a86"
+            ]
+        ]
+    },
+    {
+        "id": "2aea3326917ec6cb",
+        "type": "debug",
+        "z": "9c78f3e70aecce9f",
+        "name": "debug 41",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "7e9b0b8e296b2a69",
+        "type": "comment",
+        "z": "9c78f3e70aecce9f",
+        "name": "Open a local tunnel using the appropriate commands.",
+        "info": "",
+        "x": 280,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "c641d861083a4b7c",
+        "type": "comment",
+        "z": "9c78f3e70aecce9f",
+        "name": "Configure the tunnel properties then Create and Open the tunnel. When done, Close. Delete if you are not going to use it anymore.",
+        "info": "",
+        "x": 510,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "bfab13c0475c3c87",
+        "type": "sme-main-connector",
+        "name": "SMECON"
+    }
+]
