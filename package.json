@@ -1,6 +1,6 @@
 {
   "name": "@daviderib/node-red-contrib-semilimes-connector",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "The new semilimes connector which integrates with the public API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -8,6 +8,7 @@
   "author": "Davide Ribezzo",
   "license": "ISC",
   "node-red": {
+    "version": ">=2.0.0",
     "nodes": {
       "sme-main-core": "src/sme-main-core.js",
       "sme-main-connector": "src/sme-main-connector.js",
@@ -51,7 +52,9 @@
     "ssh2": "^1.11.0",
     "ws": "^8.2.3"
   },
-  "main": "index.js",
+  "engines": {
+    "node": ">=12.0.0"
+  },  
   "directories": {
     "example": "examples"
   },
