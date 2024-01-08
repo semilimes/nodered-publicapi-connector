@@ -1,5 +1,5 @@
 {
-    "name": "node-red-contrib-semilimes-connector-publicapi",
+    "name": "node-red-contrib-semilimes-connector",
     "version": "1.0.0",
     "description": "The new semilimes connector which integrates with the public API",
     "scripts": {
