@@ -82,7 +82,7 @@
         "id": "945ead66a1316647",
         "type": "sme-main-sender",
         "z": "03f230443c464b5e",
-        "connector": "bfab13c0475c3c87",
+        "connector": "",
         "async": "0",
         "x": 570,
         "y": 160,
@@ -271,7 +271,7 @@
         "id": "7ec6477b8ee0a3e8",
         "type": "sme-main-sender",
         "z": "03f230443c464b5e",
-        "connector": "bfab13c0475c3c87",
+        "connector": "",
         "async": "0",
         "x": 1290,
         "y": 440,
@@ -356,7 +356,7 @@
         "id": "2d1bed82447ff22f",
         "type": "sme-main-listener",
         "z": "03f230443c464b5e",
-        "connector": "bfab13c0475c3c87",
+        "connector": "",
         "x": 170,
         "y": 600,
         "wires": [
@@ -443,10 +443,5 @@
         "x": 290,
         "y": 560,
         "wires": []
-    },
-    {
-        "id": "bfab13c0475c3c87",
-        "type": "sme-main-connector",
-        "name": "SMECON"
     }
 ]

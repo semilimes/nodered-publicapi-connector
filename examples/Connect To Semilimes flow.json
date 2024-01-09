@@ -100,7 +100,7 @@
         "id": "028f3c55a5df0dfe",
         "type": "sme-main-sender",
         "z": "60aa84f35b43b2ca",
-        "connector": "bfab13c0475c3c87",
+        "connector": "",
         "async": "0",
         "x": 710,
         "y": 460,
@@ -166,7 +166,7 @@
         "id": "1e4fbf07024edfa9",
         "type": "sme-main-sender",
         "z": "60aa84f35b43b2ca",
-        "connector": "bfab13c0475c3c87",
+        "connector": "",
         "async": "0",
         "x": 550,
         "y": 340,
@@ -232,10 +232,5 @@
         "x": 310,
         "y": 420,
         "wires": []
-    },
-    {
-        "id": "bfab13c0475c3c87",
-        "type": "sme-main-connector",
-        "name": "SMECON"
     }
 ]

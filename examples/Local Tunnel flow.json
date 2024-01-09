@@ -11,7 +11,7 @@
         "id": "0524510749435a86",
         "type": "sme-main-sshTunnel",
         "z": "9c78f3e70aecce9f",
-        "connector": "bfab13c0475c3c87",
+        "connector": "",
         "name": "myNewTunnel",
         "host": "localhost",
         "port": "1880",
@@ -198,10 +198,5 @@
         "x": 510,
         "y": 160,
         "wires": []
-    },
-    {
-        "id": "bfab13c0475c3c87",
-        "type": "sme-main-connector",
-        "name": "SMECON"
     }
 ]

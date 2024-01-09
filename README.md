@@ -1,5 +1,5 @@
 # Node-RED semilimes connector
-[![Platform](https://img.shields.io/badge/platform-Node--RED-red)](https://nodered.org)   [![License](https://img.shields.io/badge/license-Apache--License-lightgrey)](http://www.apache.org/licenses/LICENSE-2.0) [![Downloads](https://img.shields.io/badge/download-github-purple)](https://github.com/semilimes/nodered-publicapi-connector) [![Install](https://img.shields.io/badge/Install-NPM-blue)](https://www.npmjs.com/package/@daviderib/node-red-contrib-semilimes-connector)
+[![Platform](https://img.shields.io/badge/platform-Node--RED-red)](https://nodered.org)   [![License](https://img.shields.io/badge/license-Apache--License-lightgrey)](http://www.apache.org/licenses/LICENSE-2.0) [![Downloads](https://img.shields.io/badge/download-github-purple)](https://github.com/semilimes/nodered-publicapi-connector) [![Install](https://img.shields.io/badge/Install-NPM-blue)](https://www.npmjs.com/package/@daviderib/node-red-semilimes)
 
 This package of Node-RED nodes to extends your semilimes account with your programming ability, such as auto reply, booking flow or even message-base interface of your exsting system to expose to semilimes Messenger.
 
@@ -9,13 +9,13 @@ This package of Node-RED nodes to extends your semilimes account with your progr
 
 
 ## Installation
-[![NPM](https://nodei.co/npm/node-red-contrib-semilimes-connector.png?downloads=true)](https://nodei.co/npm/@daviderib/node-red-contrib-semilimes-connector/)
+[![NPM](https://nodei.co/npm/@daviderib/node-red-semilimes.png?downloads=true)](https://nodei.co/npm/@daviderib/node-red-semilimes/)
 
 You can install the nodes using node-red's "Manage palette" in the side bar.
 
 Or run the following command in the root directory of your Node-RED installation
 
-    npm install @daviderib/node-red-contrib-semilimes-connector --save
+    npm install @daviderib/node-red-semilimes --save
 
 ## Installation of the mobile apps
 - IOS semilimes Messenger : [![Platform](https://img.shields.io/badge/Apple%20IOS-semilimes%20Messenger-blue.svg)](https://apps.apple.com/us/app/semilimes-mesh/id1536363738?l=en)  
@@ -30,7 +30,7 @@ The nodes are tested with `Node.js v19.2.0` and `Node-RED v3.0.2`.
 
 1. Add a new `Text` node and configure it with your preferred message
 
-1. Add an `Action Selector` node and select 1. Add an `action selector` node and select the `Account - Get Contacts` to get a list of contacts to send a message to.
+1. Add an `Action Selector` node and select the `Account - Get Contacts` to get a list of contacts to send a message to.
 
 1. Add a `sender` node then config its `Connector` property to create a `connector` configuration.
 ![Property editor of listener node](resources/images/sender_node_properties.jpg)
