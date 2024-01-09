@@ -1,6 +1,6 @@
 {
   "name": "@daviderib/node-red-semilimes",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "The new semilimes connector which integrates with the public API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -44,7 +44,7 @@
       "sme-formComp-hiddenValue": "src/form-components/sme-formComp-hiddenValue.js",
       "sme-formComp-qrCodeScanner": "src/form-components/sme-formComp-qrCodeScanner.js",
       "sme-formComp-nfcReader": "src/form-components/sme-formComp-nfcReader.js",
-      "sme-filter-formSubmission": "src/filters/sme-filter-formSubmission.js"
+      "sme-filter-formSubmission": "src/filters/sme-filter-formsubmission.js"
     }
   },
   "dependencies": {

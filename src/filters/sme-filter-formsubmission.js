@@ -45,5 +45,5 @@ module.exports = function (RED) {
         });
     };
 
-    RED.nodes.registerType("sme-filter-formSubmission", SmeFilterFormSubmissionNode);
+    RED.nodes.registerType("sme-filter-formsubmission", SmeFilterFormSubmissionNode);
 };
