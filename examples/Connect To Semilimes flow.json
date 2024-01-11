@@ -2,7 +2,7 @@
     {
         "id": "60aa84f35b43b2ca",
         "type": "tab",
-        "label": "Connect To Semilimes",
+        "label": "Connect To semilimes",
         "disabled": false,
         "info": "",
         "env": []
@@ -185,7 +185,7 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "_sme.responseMsgs[0].Data",
+        "complete": "_sme.responseMsgs[0].data",
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",

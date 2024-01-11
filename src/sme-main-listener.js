@@ -7,13 +7,11 @@ module.exports = function (RED) {
     function SmeNode(config) {
         RED.nodes.createNode(this, config);
         var node = this;
-
         var smeConnector = config.connector && RED.nodes.getNode(config.connector);
         if (!smeConnector)
             return;
 
-        //	Listener for message...
-        smeConnector.addMessageListener(smeMsg => {
+        var listenerCallback = (smeMsg) => {
             var clonedMsg = JSON.parse(JSON.stringify(smeMsg));
             var nodeRedMsg = { payload: smeMsg };
 
@@ -22,6 +20,12 @@ module.exports = function (RED) {
             smeHelper.setReceivedMsg(nodeRedMsg, clonedMsg);
 
             node.send(nodeRedMsg, false);
+        }
+        //	Add message Listener on creation
+        smeConnector.addMessageListener(listenerCallback);
+        //	Remove listener on redeploy
+        node.on('close', function () {
+            smeConnector.removeMessageListener(listenerCallback);
         });
     };
 

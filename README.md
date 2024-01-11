@@ -1,5 +1,5 @@
 # Node-RED semilimes connector
-[![Platform](https://img.shields.io/badge/platform-Node--RED-red)](https://nodered.org)   [![License](https://img.shields.io/badge/license-Apache--License-lightgrey)](http://www.apache.org/licenses/LICENSE-2.0) [![Downloads](https://img.shields.io/badge/download-github-purple)](https://github.com/semilimes/nodered-publicapi-connector) [![Install](https://img.shields.io/badge/Install-NPM-blue)](https://www.npmjs.com/package/@daviderib/node-red-semilimes)
+[![Platform](https://img.shields.io/badge/platform-Node--RED-red)](https://nodered.org)   [![License](https://img.shields.io/badge/license-Apache--License-lightgrey)](http://www.apache.org/licenses/LICENSE-2.0) [![Downloads](https://img.shields.io/badge/download-github-purple)](https://github.com/semilimes/nodered-publicapi-connector) [![Install](https://img.shields.io/badge/Install-NPM-blue)](https://www.npmjs.com/package/@semilimes/node-red-semilimes)
 
 This package of Node-RED nodes to extends your semilimes account with your programming ability, such as auto reply, booking flow or even message-base interface of your exsting system to expose to semilimes Messenger.
 
@@ -9,13 +9,13 @@ This package of Node-RED nodes to extends your semilimes account with your progr
 
 
 ## Installation
-[![NPM](https://nodei.co/npm/@daviderib/node-red-semilimes.png?downloads=true)](https://nodei.co/npm/@daviderib/node-red-semilimes/)
+[![NPM](https://nodei.co/npm/@semilimes/node-red-semilimes.png?downloads=true)](https://nodei.co/npm/@semilimes/node-red-semilimes/)
 
 You can install the nodes using node-red's "Manage palette" in the side bar.
 
 Or run the following command in the root directory of your Node-RED installation
 
-    npm install @daviderib/node-red-semilimes --save
+    npm install @semilimes/node-red-semilimes --save
 
 ## Installation of the mobile apps
 - IOS semilimes Messenger : [![Platform](https://img.shields.io/badge/Apple%20IOS-semilimes%20Messenger-blue.svg)](https://apps.apple.com/us/app/semilimes-mesh/id1536363738?l=en)  
@@ -26,13 +26,13 @@ Or run the following command in the root directory of your Node-RED installation
 The nodes are tested with `Node.js v19.2.0` and `Node-RED v3.0.2`.
 
 ## Connect to semilimes
-1. Get an API key on [Semilimes Website](https://www.semilimes.com)
+1. Get an API key on [semilimes](https://www.semilimes.com) website
 
-1. Add a new `Text` node and configure it with your preferred message
+2. Add a new `Text` node and configure it with your preferred message
 
-1. Add an `Action Selector` node and select the `Account - Get Contacts` to get a list of contacts to send a message to.
+3. Add an `Action Selector` node and select the `Account - Get Contacts` to get a list of contacts to send a message to.
 
-1. Add a `sender` node then config its `Connector` property to create a `connector` configuration.
+4. Add a `sender` node then config its `Connector` property to create a `connector` configuration.
 ![Property editor of listener node](resources/images/sender_node_properties.jpg)
 
 1. Configure the `connector` node with your API key and connect it to semilimes.
@@ -40,11 +40,11 @@ The nodes are tested with `Node.js v19.2.0` and `Node-RED v3.0.2`.
 
 1. Run the flow and get your contacts list. Save the preferred AccountId
 
-1. In another flow, add a `Text` node with a message
+2. In another flow, add a `Text` node with a message
 
-1. Add an `Action Selector` node and select `P2P - Send Message` and set the AccountId you saved in the RecipientId field
+3. Add an `Action Selector` node and select `P2P - Send Message` and set the AccountId you saved in the RecipientId field
 
-1. Add a `sender` node and run. You have sent your first message!
+4. Add a `sender` node and run. You have sent your first message!
 
 
 Sample flow to connect to semilimes and send your first message.

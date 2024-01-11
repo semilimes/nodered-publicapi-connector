@@ -21,17 +21,17 @@ module.exports = function (RED) {
 
             var isMatchedSubmissionMessage = 
                 smeReceivedMsg &&
-                smeReceivedMsg.EventType == "MessageReceived" &&
-                smeReceivedMsg.EventBody &&
-                smeReceivedMsg.EventBody.DataComponent &&
-                smeReceivedMsg.EventBody.DataComponent.DataComponentType == "formsubmission";
+                smeReceivedMsg.eventType == "MessageReceived" &&
+                smeReceivedMsg.eventBody &&
+                smeReceivedMsg.eventBody.dataComponent &&
+                smeReceivedMsg.eventBody.dataComponent.dataComponentType == "formsubmission";
             
             if (isMatchedSubmissionMessage && node.reference) {
                 var referenceValue = smeHelper.getNodeConfigValue(node, msg, node.referenceType, node.reference);
                 node.log(`Node reference is: ${referenceValue}`);
                 isMatchedSubmissionMessage = 
-                    smeReceivedMsg.EventBody.DataComponent.ReplyTo &&
-                    smeReceivedMsg.EventBody.DataComponent.ReplyTo.RefName == referenceValue;
+                    smeReceivedMsg.eventBody.dataComponent.replyTo &&
+                    smeReceivedMsg.eventBody.dataComponent.replyTo.refName == referenceValue;
             }
 
             if (isMatchedSubmissionMessage) {
@@ -45,5 +45,5 @@ module.exports = function (RED) {
         });
     };
 
-    RED.nodes.registerType("sme-filter-formsubmission", SmeFilterFormSubmissionNode);
+    RED.nodes.registerType("sme-filter-formSubmission", SmeFilterFormSubmissionNode);
 };

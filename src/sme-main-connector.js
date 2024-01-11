@@ -88,6 +88,10 @@ module.exports = function (RED) {
             webSocket.addMessageListener(listener);
         }
 
+        function removeMessageListener(listener) {
+            webSocket.removeMessageListener(listener);
+        }
+
         function addStatusListener(listener) {
             webSocket.addStatusListener(listener);
         }
@@ -97,6 +101,7 @@ module.exports = function (RED) {
         this.sendMessage = sendApiMessage;
         this.callApi = callApi;
         this.addMessageListener = addMessageListener;
+        this.removeMessageListener = removeMessageListener;
         this.addStatusListener = addStatusListener;
     };
 	

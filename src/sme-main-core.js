@@ -333,6 +333,10 @@ module.exports = function (RED) {
             messageDeliver.addListener('message', listener);
         }
 
+        function removeMessageListener(listener) {
+            messageDeliver.removeListener('message', listener);
+        }
+
         function addStatusListener(listener) {
             messageDeliver.addListener('status', listener);
         }
@@ -341,6 +345,7 @@ module.exports = function (RED) {
         this.send = send;
         this.close = disconnect;
         this.addMessageListener = addMessageListener;
+        this.removeMessageListener = removeMessageListener;
         this.addStatusListener = addStatusListener;
 
         if (serverWsURL)

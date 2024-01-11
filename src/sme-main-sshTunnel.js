@@ -239,9 +239,16 @@ module.exports = function (RED) {
                             });
                             promise.then(
                                 value => {
-                                    if(value.Success === true) {
-                                        node.tunnelId = value.Data.TunnelId;
+                                    if(value.success === true) {
+                                        node.tunnelId = value.data.tunnelId;
                                         node.log(`Created tunnel: ${node.tunnelId} - ${node.name}`);
+                                        node.send({
+                                            TunnelStatus: 'created',
+                                            TunnelName: node.name,
+                                            ClientPort: node.port,
+                                            ClientPath: node.path,
+                                            PublicKey: node.publicKey
+                                        }, false);
                                     } else {
                                         node.log(`Could not create tunnel: ${node.name}`);
                                         done && done(`Error: tunnel ${node.name} not created`);
@@ -251,6 +258,8 @@ module.exports = function (RED) {
                                     done && done(reason);
                                 }
                             );
+                        } else {
+                            done && done(`Tunnel with ID ${node.tunnelId} already existing!`);
                         }
                         break;    
                     case 'OPEN':
@@ -267,16 +276,16 @@ module.exports = function (RED) {
                             });
                             promise.then(
                                 value => {
-                                    if(value.Success === true) {
+                                    if(value.success === true) {
                                         //Initiate SSH connection
-                                        node.log(`Opened tunnel: ${node.tunnelId} with server port: ${value.Data.Port}`);
+                                        node.log(`Opened tunnel: ${node.tunnelId} with server port: ${value.data.port}`);
                                         node.serving = true;
                                         startTunnel(node, {
                                             SshPort: 22,
-                                            SshServer: value.Data.Host,
-                                            SshUsername: value.Data.Username,
-                                            ServerPort: value.Data.Port,
-                                            TunnelUrl: value.Data.TunnelUrl
+                                            SshServer: value.data.host,
+                                            SshUsername: value.data.username,
+                                            ServerPort: value.data.port,
+                                            TunnelUrl: value.data.tunnelUrl
                                         });
                                     } else {
                                         node.log(`Could not open tunnel: ${node.tunnelId}`);
@@ -287,6 +296,12 @@ module.exports = function (RED) {
                                     done && done(reason);
                                 }
                             );
+                        } else {
+                            if (!node.tunnelId) {
+                                done && done(`No tunnel found. Please create it first!`);
+                            } else if (node.serving) {
+                                done && done(`SSH connection active. Close Tunnel first!`);
+                            }
                         }
                         break;
                     case 'CLOSE':
@@ -309,8 +324,13 @@ module.exports = function (RED) {
                             });
                             promise.then(
                                 value => {
-                                    if(value.Success === true) {
+                                    if(value.success === true) {
                                         node.log(`Deleted tunnel: ${node.tunnelId}`);
+                                        node.send({
+                                            TunnelStatus: 'deleted',
+                                            TunnelId: node.tunnelId,
+                                            TunnelName: node.name
+                                        }, false);
                                         delete node.tunnelId;
                                     } else {
                                         node.log(`Could not delete tunnel: ${node.tunnelId}`);
@@ -321,6 +341,8 @@ module.exports = function (RED) {
                                     done && done(reason);
                                 }
                             );
+                        } else {
+                            done && done(`No Tunnel to delete!`);
                         }
                         break;
                     default:
