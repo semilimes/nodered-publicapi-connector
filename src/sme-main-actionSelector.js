@@ -76,9 +76,9 @@ module.exports = function (RED) {
                     var recipientIdValue = smeHelper.getNodeConfigValue(node, msg, node.recipientIdType, node.recipientId);
                     var messageIdValue = smeHelper.getNodeConfigValue(node, msg, node.messageIdType, node.messageId);
                     var limitValue = smeHelper.getNodeConfigValue(node, msg, node.limitType, node.limit);
-                    if (recipientIdValue) request.parameters.recipientId = msg.recipientId || recipientIdValue;
-                    if (messageIdValue) request.parameters.messageId = msg.messageId || messageIdValue;
-                    if (limitValue) request.parameters.limit = msg.limit || limitValue;
+                    if (recipientIdValue) request.parameters.recipientId = recipientIdValue;
+                    if (messageIdValue) request.parameters.messageId = messageIdValue;
+                    if (limitValue) request.parameters.limit = limitValue;
                     smeHelper.addSendingMsg(msg, request);
                     break;
                 }
@@ -90,7 +90,7 @@ module.exports = function (RED) {
                             smeMsg.endpoint = "/communication/p2p/message/send";
                             smeMsg.httpMethod = "POST";
                             smeMsg.body = {
-                                recipientId: msg.recipientId || recipientIdValue,
+                                recipientId: recipientIdValue,
                                 dataComponent: smeMsg.dataComponent
                             };
                             delete smeMsg.dataComponent;
@@ -106,7 +106,7 @@ module.exports = function (RED) {
                             smeMsg.endpoint = "/communication/p2p/message/update";
                             smeMsg.httpMethod = "POST";
                             smeMsg.body = {
-                                messageId: msg.messageId || messageIdValue,
+                                messageId: messageIdValue,
                                 dataComponent: smeMsg.dataComponent
                             };
                             delete smeMsg.dataComponent;
@@ -144,9 +144,9 @@ module.exports = function (RED) {
                     var groupChatIdValue = smeHelper.getNodeConfigValue(node, msg, node.groupChatIdType, node.groupChatId);
                     var messageIdValue = smeHelper.getNodeConfigValue(node, msg, node.messageIdType, node.messageId);
                     var limitValue = smeHelper.getNodeConfigValue(node, msg, node.limitType, node.limit);
-                    if (groupChatIdValue) request.parameters.groupChatId = msg.groupChatId || groupChatIdValue;
-                    if (messageIdValue) request.parameters.messageId = msg.messageId || messageIdValue;
-                    if (limitValue) request.parameters.limit = msg.limit || limitValue;
+                    if (groupChatIdValue) request.parameters.groupChatId = groupChatIdValue;
+                    if (messageIdValue) request.parameters.messageId = messageIdValue;
+                    if (limitValue) request.parameters.limit = limitValue;
                     smeHelper.addSendingMsg(msg, request);
                     break;
                 }
@@ -158,7 +158,7 @@ module.exports = function (RED) {
                             smeMsg.endpoint = "/communication/groupchat/message/send";
                             smeMsg.httpMethod = "POST";
                             smeMsg.body = {
-                                groupChatId: msg.groupChatId || groupChatIdValue,
+                                groupChatId: groupChatIdValue,
                                 dataComponent: smeMsg.dataComponent
                             };
                             delete smeMsg.dataComponent;
@@ -174,7 +174,7 @@ module.exports = function (RED) {
                             smeMsg.endpoint = "/communication/groupchat/message/update";
                             smeMsg.httpMethod = "POST";
                             smeMsg.body = {
-                                messageId: msg.messageId || messageIdValue,
+                                messageId: messageIdValue,
                                 dataComponent: smeMsg.dataComponent
                             };
                             delete smeMsg.dataComponent;
@@ -204,7 +204,7 @@ module.exports = function (RED) {
                             smeMsg.endpoint = "/communication/channel/message/send";
                             smeMsg.httpMethod = "POST";
                             smeMsg.body = {
-                                channelId: msg.channelId || channelIdValue,
+                                channelId: channelIdValue,
                                 dataComponent: smeMsg.dataComponent
                             };
                             delete smeMsg.dataComponent;
@@ -220,7 +220,7 @@ module.exports = function (RED) {
                             smeMsg.endpoint = "/communication/channel/message/update";
                             smeMsg.httpMethod = "POST";
                             smeMsg.body = {
-                                messageId: msg.messageId || messageIdValue,
+                                messageId: messageIdValue,
                                 dataComponent: smeMsg.dataComponent
                             };
                             delete smeMsg.dataComponent;

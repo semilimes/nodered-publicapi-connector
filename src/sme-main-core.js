@@ -137,15 +137,35 @@ module.exports = function (RED) {
         }
 
         function getNodeConfigValue(node, msg, selectionType, selectionValue) {
+            
             if (selectionType && selectionValue) {
+                //Function to make nested properties work in UI
+                const leaf = (obj, path) => {
+                    if (path.startsWith('.')) {
+                        path = path.substring(1);
+                    }
+                    return path.length > 0
+                            ? (path.split('.').reduce((value,el) => value && value[el], obj)) 
+                            : obj;
+                }
+
+                var firstProperty = String(selectionValue).split('.')[0];
+                var searchPath = String(selectionValue).replace(`${firstProperty}`, '');
+                console.log("SelectionValue: ", selectionValue);
+                console.log("firstProperty: ",firstProperty);
+                console.log("searchPath: ", searchPath);
+
                 switch (selectionType) {
                     case 'str': return selectionValue;
                     case 'num': return parseInt(selectionValue);
                     case 'bool': return isTrue(selectionValue);
                     case 'json': return JSON.parse(selectionValue);
-                    case 'msg': return msg[selectionValue];
-                    case 'flow': return node && node.context().flow.get(selectionValue);
-                    case 'global': return node && node.context().global.get(selectionValue);
+                    //case 'msg': return msg[selectionValue];
+                    case 'msg': return leaf(msg[firstProperty], searchPath);
+                    //case 'flow': return node && node.context().flow.get(selectionValue);
+                    case 'flow': return node && leaf(node.context().flow.get(firstProperty), searchPath);
+                    //case 'global': return node && node.context().global.get(selectionValue);
+                    case 'global': return node && leaf(node.context().global.get(firstProperty), searchPath);
                 }
             }
 

@@ -1,0 +1,73 @@
+<script type="text/javascript">
+    RED.nodes.registerType('sme-main-formUpdater', {
+        category: 'semilimesAPI',
+        color: "#E2D96E",
+        defaults: {
+            name: {value: ""},
+            location: {value: "", required: true},
+            locationType: {value: "msg"},
+            compRefName: {value: "", required: true},
+            compRefNameType: {value: "str"},
+            compValue: {value: "", required: true},
+            compValueType: {value: "str"}
+        },
+        inputs: 1,
+        outputs: 1,
+        align: 'left',
+        icon: "font-awesome/fa-refresh",
+        paletteLabel: 'Form Values Updater',
+        label: function () {
+            return this.name || `Update Form Value`;
+        },
+        labelStyle: function () {
+            return this.location ? "node_label_italic" : "";
+        },
+        oneditprepare: function () {
+            $("#node-input-location").typedInput({
+                type: "msg",
+                types: ["msg", "flow", "global"],
+                typeField: "#node-input-locationType"
+            });
+            $("#node-input-compRefName").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-compRefNameType"
+            });
+            $("#node-input-compValue").typedInput({
+                type: "str",
+                types: ["str","num", "bool", "msg", "flow", "global"],
+                typeField: "#node-input-compValueType"
+            });
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="sme-main-formUpdater">
+    <div style="max-width:500px;">Use this node to update a component value of a previously saved form.</div>
+    <br />
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-location"><i class="fa fa-tag"></i> Saved Form Location</label>
+        <input type="text" id="node-input-location" placeholder="Location where form is saved">
+        <input type="hidden" id="node-input-locationType">
+    </div>
+    <div class="form-row">
+        <label for="node-input-compRefName"><i class="fa fa-tag"></i> Component RefName</label>
+        <input type="text" id="node-input-compRefName" placeholder="Reference name of the component to be updated">
+        <input type="hidden" id="node-input-compRefNameType">
+    </div>
+    <div class="form-row">
+        <label for="node-input-compValue"><i class="fa fa-tag"></i> Component Value</label>
+        <input type="text" id="node-input-compValue" placeholder="Value of the component to be updated">
+        <input type="hidden" id="node-input-compValueType">
+    </div>
+    
+</script>
+
+<script type="text/html" data-help-name="sme-main-formUpdater">
+    <p>Update a component value of a saved form.</p>
+</script>

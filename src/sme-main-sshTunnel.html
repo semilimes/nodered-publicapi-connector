@@ -15,13 +15,13 @@
         outputs: 1,
         align: 'left',
         icon: "font-awesome/fa-comment-o",
-        paletteLabel: 'ssh tunnel',
+        paletteLabel: 'SSH Tunnel',
         label: function () {
             if (this.host) {
-                return `tunnel [${this.id}:${this.host}:${this.port}] ${this.name}`;
+                return `Tunnel [${this.id}:${this.host}:${this.port}] ${this.name}`;
             }
 
-            return 'ssh tunnel';
+            return 'SSH Tunnel';
         },
         labelStyle: function () {
             return this.credentials.host ? "node_label_italic" : "";

@@ -13,7 +13,7 @@ module.exports = function (RED) {
 
         var listenerCallback = (smeMsg) => {
             var clonedMsg = JSON.parse(JSON.stringify(smeMsg));
-            var nodeRedMsg = { payload: smeMsg };
+            var nodeRedMsg = { payload: null };
 
             var core = new Core();
             var smeHelper = new core.SmeHelper();

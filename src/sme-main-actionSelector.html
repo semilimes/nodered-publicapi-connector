@@ -26,7 +26,7 @@
         inputs: 1,
         outputs: 1,
         align: 'left',
-        icon: "font-awesome/fa-archive",
+        icon: "font-awesome/fa-arrows-alt",
         label: function() {
             return this.actionName ? `Action: ${this.actionName}` : "Action Selector";
         },
@@ -79,7 +79,7 @@
 
     function updateUI() {
         var actionName = $('#node-input-actionName').val();
-
+        
         //hide all panels
         $('#node-input-recipientIdPanel').hide();
         $('#node-input-messageIdPanel').hide();
@@ -87,6 +87,11 @@
         $('#node-input-recipientIdsPanel').hide();
         $('#node-input-groupChatIdPanel').hide();
         $('#node-input-channelIdPanel').hide();
+
+        $('#node-input-recipientId').removeAttr('required');
+        $('#node-input-groupChatId').removeAttr('required');
+        $('#node-input-channelId').removeAttr('required');
+        $('#node-input-messageId').removeAttr('required');
 
         switch (actionName) {
             case 'account_contacts': {
@@ -104,10 +109,12 @@
             }
             case 'p2p_message_send': {
                 $('#node-input-recipientIdPanel').show();
+                $('#node-input-recipientId').attr('required', '');
                 break;
             }
             case 'p2p_message_update': {
                 $('#node-input-messageIdPanel').show();
+                $('#node-input-messageId').attr('required', '');
                 break;
             }
             case 'groupchat': {
@@ -122,10 +129,12 @@
             }
             case 'groupchat_message_send': {
                 $('#node-input-groupChatIdPanel').show();
+                $('#node-input-groupChatId').attr('required', '');
                 break;
             }
             case 'groupchat_message_update': {
                 $('#node-input-messageIdPanel').show();
+                $('#node-input-messageId').attr('required', '');
                 break;
             }
             case 'channel_my': {
@@ -134,10 +143,12 @@
             }
             case 'channel_message_send': {
                 $('#node-input-channelIdPanel').show();
+                $('#node-input-channelId').attr('required', '');
                 break;
             }
             case 'channel_message_update': {
                 $('#node-input-messageIdPanel').show();
+                $('#node-input-messageId').attr('required', '');
                 break;
             }
             default: {
@@ -169,29 +180,35 @@
         </select>
     </div>
     <div class="form-row" id="node-input-recipientIdPanel">
-        <label for="node-input-recipientId"></label>
+        <label for="node-input-recipientId"> Recipient Id</label>
         <input type="text" id="node-input-recipientId" placeholder="Recipient Id">
+        <input type="hidden" id="node-input-recipientIdType">
     </div>
     <div class="form-row" id="node-input-messageIdPanel">
-        <label for="node-input-messageId"></label>
+        <label for="node-input-messageId"> Message Id</label>
         <input type="text" id="node-input-messageId" placeholder="Message Id">
+        <input type="hidden" id="node-input-messageIdType">
     </div>
     <div class="form-row" id="node-input-limitPanel">
-        <label for="node-input-limit"></label>
+        <label for="node-input-limit"> Limit</label>
         <input type="text" id="node-input-limit" placeholder="Limit">
+        <input type="hidden" id="node-input-limitType">
     </div>
     <div class="form-row" id="node-input-recipientIdsPanel">
-        <label for="node-input-recipientIds"></label>
+        <label for="node-input-recipientIds">Recipient Ids</label>
         <input type="text" id="node-input-recipientIds" placeholder="Recipient Ids">
+        <input type="hidden" id="node-input-recipientIdsType">
         <div style="font-size: smaller;max-width:500px;">Enter comma-separated recipients for multiple filtering</div>
     </div>
     <div class="form-row" id="node-input-groupChatIdPanel">
-        <label for="node-input-groupChatId"></label>
+        <label for="node-input-groupChatId"> Group Chat Id</label>
         <input type="text" id="node-input-groupChatId" placeholder="GroupChat Id">
+        <input type="hidden" id="node-input-groupChatIdType">
     </div>
     <div class="form-row" id="node-input-channelIdPanel">
-        <label for="node-input-channelId"></label>
+        <label for="node-input-channelId">Channel Id</label>
         <input type="text" id="node-input-channelId" placeholder="Channel Id">
+        <input type="hidden" id="node-input-channelIdType">
     </div>
 </script>
 

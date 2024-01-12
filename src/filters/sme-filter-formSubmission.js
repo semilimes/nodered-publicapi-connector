@@ -9,6 +9,8 @@ module.exports = function (RED) {
 
         this.reference = config.reference;
         this.referenceType = config.referenceType;
+        this.saveLocation = config.saveLocation;
+        this.saveLocationType = config.saveLocationType;
 
         var node = this;
 
@@ -18,7 +20,9 @@ module.exports = function (RED) {
             var core = new Core();
             var smeHelper = new core.SmeHelper();
             var smeReceivedMsg = smeHelper.getReceivedMsg(msg);
-
+            var referenceValue = smeHelper.getNodeConfigValue(node, msg, node.referenceType, node.reference);
+            console.log("referenceValue: ", referenceValue);
+            //filter submissions
             var isMatchedSubmissionMessage = 
                 smeReceivedMsg &&
                 smeReceivedMsg.eventType == "MessageReceived" &&
@@ -26,18 +30,37 @@ module.exports = function (RED) {
                 smeReceivedMsg.eventBody.dataComponent &&
                 smeReceivedMsg.eventBody.dataComponent.dataComponentType == "formsubmission";
             
-            if (isMatchedSubmissionMessage && node.reference) {
-                var referenceValue = smeHelper.getNodeConfigValue(node, msg, node.referenceType, node.reference);
-                node.log(`Node reference is: ${referenceValue}`);
+            if (isMatchedSubmissionMessage && referenceValue) {
+                //filter submissions by form reference
                 isMatchedSubmissionMessage = 
                     smeReceivedMsg.eventBody.dataComponent.replyTo &&
                     smeReceivedMsg.eventBody.dataComponent.replyTo.refName == referenceValue;
             }
 
             if (isMatchedSubmissionMessage) {
-                msg = {};
-                msg.payload = {};
-                msg.payload.submission = smeReceivedMsg;
+                if (node.saveLocation) {
+                    //Location specified: extract values and save into location
+                    var submission = {
+                        submission: {
+                            replyTo: smeReceivedMsg.eventBody.dataComponent.replyTo,
+                            formComponents: smeReceivedMsg.eventBody.dataComponent.formComponents
+                        }
+                    }
+                    switch (node.saveLocationType) {
+                        case 'msg': 
+                            msg[node.saveLocation] = submission; 
+                            break;
+                        case 'flow':
+                            node.context().flow.set(node.saveLocation, submission);
+                            break;
+                        case 'global':
+                            node.context().global.set(node.saveLocation, submission);
+                            break;
+                        default: 
+                            break;
+                    }
+                }
+
                 send(msg, false);
             }
 

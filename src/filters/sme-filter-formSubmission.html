@@ -4,7 +4,9 @@
         color: '#E2D96E',
         defaults: {
             reference: { value: "" },
-            referenceType: { value: "str" }
+            referenceType: { value: "str" },
+            saveLocation: { value: "" },
+            saveLocationType: { value: "msg"}
         },
         inputs: 1,
         outputs: 1,
@@ -23,6 +25,11 @@
                 types: ["str", "msg", "flow", "global"],
                 typeField: "#node-input-referenceType"
             });
+            $("#node-input-saveLocation").typedInput({
+                type: "msg",
+                types: ["msg", "flow", "global"],
+                typeField: "#node-input-saveLocationType"
+            });
         }
     });
 </script>
@@ -36,9 +43,14 @@
         <input type="hidden" id="node-input-referenceType">
     </div>
     <div style="font-size: smaller;max-width:500px;">Filter submissions of a specific form, via its reference name</div>
-    
+    <div class="form-row">
+        <label for="node-input-saveLocation"><i class="fa fa-tag"></i> Save Location</label>
+        <input type="text" id="node-input-saveLocation" placeholder="Location to save submission values">
+        <input type="hidden" id="node-input-saveLocationType">
+    </div>
+    <div style="font-size: smaller;max-width:500px;">Set this value to extract the submission values</div>
 </script>
 
 <script type="text/html" data-help-name="sme-filter-formSubmission">
-    <p>Filter submissions of a specific form, via its reference name</p>
+    <p>Filter submissions of a specific form via its reference name, and optionally extract submitted values for further processing</p>
 </script>

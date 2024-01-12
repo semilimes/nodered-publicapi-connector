@@ -1,12 +1,12 @@
 {
   "name": "@semilimes/node-red-semilimes",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "The new semilimes connector which integrates with the public API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Davide Ribezzo",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "node-red": {
     "version": ">=2.0.0",
     "nodes": {
@@ -16,6 +16,9 @@
       "sme-main-sender": "src/sme-main-sender.js",
       "sme-main-listener": "src/sme-main-listener.js",
       "sme-main-sshTunnel": "src/sme-main-sshTunnel.js",
+      "sme-main-formSaver": "src/sme-main-formSaver.js",
+      "sme-main-formLoader": "src/sme-main-formLoader.js",
+      "sme-main-formUpdater": "src/sme-main-formUpdater.js",
       "sme-comp-text": "src/data-components/sme-comp-text.js",
       "sme-comp-html": "src/data-components/sme-comp-html.js",
       "sme-comp-file": "src/data-components/sme-comp-file.js",
