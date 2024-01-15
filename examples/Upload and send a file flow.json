@@ -1,0 +1,190 @@
+[
+    {
+        "id": "4c42249f853d2aef",
+        "type": "tab",
+        "label": "Upload and send a file",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "2b4f96c3f2797ae1",
+        "type": "sme-main-uploader",
+        "z": "4c42249f853d2aef",
+        "connector": "fa4257e98eaed462",
+        "filePath": "",
+        "filePathType": "str",
+        "x": 340,
+        "y": 160,
+        "wires": [
+            [
+                "ef84e22a7af3eda3",
+                "c13c2cc4794c25d6"
+            ]
+        ]
+    },
+    {
+        "id": "ef84e22a7af3eda3",
+        "type": "debug",
+        "z": "4c42249f853d2aef",
+        "name": "debug 52",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "6b9c98122cdcebc0",
+        "type": "inject",
+        "z": "4c42249f853d2aef",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 160,
+        "wires": [
+            [
+                "2b4f96c3f2797ae1"
+            ]
+        ]
+    },
+    {
+        "id": "b4317d115bd4fd3d",
+        "type": "sme-comp-file",
+        "z": "4c42249f853d2aef",
+        "name": "",
+        "fileIds": "fileToSend",
+        "fileIdsType": "msg",
+        "x": 310,
+        "y": 280,
+        "wires": [
+            [
+                "8903cd528fdcdf82"
+            ]
+        ]
+    },
+    {
+        "id": "c13c2cc4794c25d6",
+        "type": "change",
+        "z": "4c42249f853d2aef",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "fileToSend",
+                "pt": "msg",
+                "to": "payload.uploadedFiles[0].fileId",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 150,
+        "y": 280,
+        "wires": [
+            [
+                "b4317d115bd4fd3d"
+            ]
+        ]
+    },
+    {
+        "id": "8903cd528fdcdf82",
+        "type": "sme-main-actionSelector",
+        "z": "4c42249f853d2aef",
+        "actionName": "channel_message_send",
+        "recipientId": "",
+        "recipientIdType": "str",
+        "messageId": "",
+        "messageIdType": "str",
+        "limit": 0,
+        "limitType": "num",
+        "recipientIds": "",
+        "recipientIdsType": "str",
+        "groupChatId": "",
+        "groupChatIdType": "str",
+        "channelId": "",
+        "channelIdType": "str",
+        "x": 510,
+        "y": 280,
+        "wires": [
+            [
+                "40f97102c0a6a008"
+            ]
+        ]
+    },
+    {
+        "id": "40f97102c0a6a008",
+        "type": "sme-main-sender",
+        "z": "4c42249f853d2aef",
+        "connector": "fa4257e98eaed462",
+        "async": "0",
+        "x": 770,
+        "y": 280,
+        "wires": [
+            [
+                "3e01f01435f480a8"
+            ]
+        ]
+    },
+    {
+        "id": "3e01f01435f480a8",
+        "type": "debug",
+        "z": "4c42249f853d2aef",
+        "name": "debug 53",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "eec0cd2fb162aa17",
+        "type": "comment",
+        "z": "4c42249f853d2aef",
+        "name": "1. Setup the uploader node with a connector and select the file you want to upload",
+        "info": "",
+        "x": 360,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "14b5764d1e32e1a9",
+        "type": "comment",
+        "z": "4c42249f853d2aef",
+        "name": "Set the destination of the action selector node. This part of the flow will send a file message to the selected destination",
+        "info": "",
+        "x": 480,
+        "y": 220,
+        "wires": []
+    }
+]

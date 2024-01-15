@@ -21,7 +21,7 @@ module.exports = function (RED) {
             var smeHelper = new core.SmeHelper();
             var smeReceivedMsg = smeHelper.getReceivedMsg(msg);
             var referenceValue = smeHelper.getNodeConfigValue(node, msg, node.referenceType, node.reference);
-            console.log("referenceValue: ", referenceValue);
+            
             //filter submissions
             var isMatchedSubmissionMessage = 
                 smeReceivedMsg &&

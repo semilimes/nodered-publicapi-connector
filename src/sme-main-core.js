@@ -4,6 +4,9 @@ const { clear } = require('console');
 const { publicDecrypt } = require('crypto');
 const { send } = require('process');
 const { debug } = require('util');
+const fs = require('fs');
+const FormData = require('form-data');
+const axios = require('axios');
 
 module.exports = function (RED) {
     const https = require('https');
@@ -148,12 +151,8 @@ module.exports = function (RED) {
                             ? (path.split('.').reduce((value,el) => value && value[el], obj)) 
                             : obj;
                 }
-
                 var firstProperty = String(selectionValue).split('.')[0];
                 var searchPath = String(selectionValue).replace(`${firstProperty}`, '');
-                console.log("SelectionValue: ", selectionValue);
-                console.log("firstProperty: ",firstProperty);
-                console.log("searchPath: ", searchPath);
 
                 switch (selectionType) {
                     case 'str': return selectionValue;
@@ -375,90 +374,124 @@ module.exports = function (RED) {
     function SmeApiClient(serverApiURL, apiKey, xAccount) {
 
         function callApi(endpoint, method, data) {
-            return new Promise((resolve, reject) => {
-                var body = data.body && JSON.stringify(data.body);
-                var query = '';
-                if (data.parameters) {
-                    query += '?';
-                    Object.entries(data.parameters).forEach((parameter, index) => {
-                        const [key, value] = parameter;
-                        query += key + '=' + value;
-                        if (index < Object.keys(data.parameters).length - 1) {
-                            query += '&';
-                        }
-                    });
-                }
+            if (endpoint == "/service/file/upload") {
 
-                var baseUrl = new URL(serverApiURL);
-                
-                var options = {
-                    hostname: baseUrl.hostname,
-                    port: 443,
-                    path: `${baseUrl.pathname == "/" ? "" : baseUrl.pathname}${endpoint}${query}`,
-                    method: method,
-                    rejectUnauthorized: false,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Content-Length': (body && body.length) || 0,
-                    },
-                    timeout: 3000
-                };
-                if (apiKey) {
-                    //Authorize
-                    options.headers.Authorization = `Bearer ${apiKey}`;
-                }
-                if (xAccount) {
-                    //dev mode
-                    options.headers['X-Account'] = `${xAccount}`;
-                }
-
-                console.log('Attempt to send call to:', options);
-                console.log('With data: ', body);
-
-                var req = https.request(options, (res) => {
-                    console.log("Status Code: ", res.statusCode);
-                    let totalBuffer = "";
-                    res.on('data', (buffer) => {
-                        totalBuffer += buffer.toString("utf8");
-                    });
+                return new Promise((resolve, reject) => {
                     
-                    res.on('end', () => {
-                        if (typeof (totalBuffer) == 'string' && totalBuffer.startsWith('{')) {
-                            try {
-                                var jsonData = JSON.parse(totalBuffer);
-                                if (jsonData) {
-                                    console.log('Call API resolved a JSON: ', jsonData);
-                                    resolve(jsonData);
-                                    return;
-                                } else {
-                                    console.log('Response raw data: ', totalBuffer);
+                    let formdata = new FormData();
+                    formdata.append('httpFiles', fs.createReadStream(`${data.filePath}`));
+
+                    let config = {
+                        method: method,
+                        maxBodyLength: Infinity,
+                        url: `${serverApiURL}${endpoint}`,
+                        headers: {
+                            'Authorization': `Bearer ${apiKey}`,
+                            ...formdata.getHeaders()
+                        },
+                        data : formdata
+                    };
+
+                    axios.request(config)
+                        .then((response) => {
+                            console.log(JSON.stringify(response.data));
+                            resolve(response.data);
+                        })
+                        .catch((error) => {
+                            console.log('Error when calling uploader API: ', error);
+                            reject(error);
+                        })
+                });
+
+            } else {
+                //Message endpoints
+                return new Promise((resolve, reject) => {
+                    var body = data.body && JSON.stringify(data.body);
+                    var query = '';
+                    if (data.parameters) {
+                        query += '?';
+                        Object.entries(data.parameters).forEach((parameter, index) => {
+                            const [key, value] = parameter;
+                            query += key + '=' + value;
+                            if (index < Object.keys(data.parameters).length - 1) {
+                                query += '&';
+                            }
+                        });
+                    }
+    
+                    var baseUrl = new URL(serverApiURL);
+                    
+                    var options = {
+                        hostname: baseUrl.hostname,
+                        port: 443,
+                        path: `${baseUrl.pathname == "/" ? "" : baseUrl.pathname}${endpoint}${query}`,
+                        method: method,
+                        rejectUnauthorized: false,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Content-Length': (body && body.length) || 0,
+                        },
+                        timeout: 3000
+                    };
+                    if (apiKey) {
+                        //Authorize
+                        options.headers.Authorization = `Bearer ${apiKey}`;
+                    }
+                    if (xAccount) {
+                        //dev mode
+                        options.headers['X-Account'] = `${xAccount}`;
+                    }
+    
+    
+                    console.log('Attempt to send call to:', options);
+                    console.log('With data: ', body);
+    
+                    var req = https.request(options, (res) => {
+                        console.log("Status Code: ", res.statusCode);
+                        let totalBuffer = "";
+                        res.on('data', (buffer) => {
+                            totalBuffer += buffer.toString("utf8");
+                        });
+                        
+                        res.on('end', () => {
+                            if (typeof (totalBuffer) == 'string' && totalBuffer.startsWith('{')) {
+                                try {
+                                    var jsonData = JSON.parse(totalBuffer);
+                                    if (jsonData) {
+                                        console.log('Call API resolved a JSON: ', jsonData);
+                                        resolve(jsonData);
+                                        return;
+                                    } else {
+                                        console.log('Response raw data: ', totalBuffer);
+                                    }
+                                }
+                                catch (ex) {
+                                    console.debug('Error parsing API JSON result: ', ex);
                                 }
                             }
-                            catch (ex) {
-                                console.debug('Error parsing API JSON result: ', ex);
-                            }
-                        }
-                        console.log('Call API resolved: ', totalBuffer);
-                        resolve(totalBuffer);
+                            console.log('Call API resolved: ', totalBuffer);
+                            resolve(totalBuffer);
+                        });
                     });
+    
+                    // use its "timeout" event to abort the request
+                    req.on('timeout', () => {
+                        console.log('API call timeout. Call aborted.')
+                        request.destroy();
+                    });
+    
+                    req.on('error', (e) => {
+                        console.log('Call API rejected: ', e);
+                        reject(e);
+                    });
+    
+                    if (body)
+                        req.write(body);
+    
+                    req.end();
                 });
+            }
 
-                // use its "timeout" event to abort the request
-                req.on('timeout', () => {
-                    console.log('API call timeout. Call aborted.')
-                    request.destroy();
-                });
-
-                req.on('error', (e) => {
-                    console.log('Call API rejected: ', e);
-                    reject(e);
-                });
-
-                if (body)
-                    req.write(body);
-
-                req.end();
-            });
         };
 
         //  Export.
