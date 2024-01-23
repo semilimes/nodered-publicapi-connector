@@ -45,21 +45,20 @@ You can install the nodes by either
 
 1. Add a new `Text` node and configure it with your preferred message
 
-2. Add an `Action Selector` node and select the `Account - Get Contacts` to get a list of contacts to send a message to.
-
-3. Add a `sender` node then config its `Connector` property to create a `connector` configuration.
-![Property editor of listener node](resources/images/sender_node_properties.jpg)
-
-1. Configure the `connector` node with your API key and connect it to semilimes.
+2. Add an `Intent` node and config its `Connector` property to create a `connector` configuration. Configure the node by selecting the `Channel - Create` intent and entering a title for the new channel.
 ![Config connector node](resources/images/connector_node_properties.jpg)
 
-1. Run the flow and get your contacts list. Save the preferred AccountId
+1. Add a `sender` node then config its `Connector` property by selecting the previously created connector.
+2. ![Property editor of sender node](resources/images/sender_node_properties.jpg)
 
-2. In another flow, add a `Text` node with a message
 
-3. Add an `Action Selector` node and select `P2P - Send Message` and set the AccountId you saved in the RecipientId field
+3. Run the flow to create the new channel.
 
-4. Add a `sender` node and run.
+4. In another flow, add a `Text` node with a message
+
+5. Add an `Intentr` node and select `Channel - Send Message` and configure the channel
+
+6. Add a `sender` node and run.
 
 The flow should look like this [example](https://github.com/semilimes/nodered-publicapi-connector/blob/main/examples/Connect%20To%20semilimes%20flow.json)
 

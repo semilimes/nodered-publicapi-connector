@@ -21,94 +21,9 @@
             "936084037c176bf7"
         ],
         "x": 74,
-        "y": 799,
+        "y": 659,
         "w": 652,
         "h": 82
-    },
-    {
-        "id": "fa6f0ce1f5bb3e30",
-        "type": "inject",
-        "z": "03f230443c464b5e",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 160,
-        "y": 160,
-        "wires": [
-            [
-                "98acef5587698b7b"
-            ]
-        ]
-    },
-    {
-        "id": "98acef5587698b7b",
-        "type": "sme-main-actionSelector",
-        "z": "03f230443c464b5e",
-        "actionName": "channel_my",
-        "recipientId": "",
-        "recipientIdType": "str",
-        "messageId": "",
-        "messageIdType": "str",
-        "limit": 0,
-        "limitType": "num",
-        "recipientIds": "",
-        "recipientIdsType": "str",
-        "groupChatId": "",
-        "groupChatIdType": "str",
-        "channelId": "",
-        "channelIdType": "str",
-        "x": 370,
-        "y": 160,
-        "wires": [
-            [
-                "945ead66a1316647"
-            ]
-        ]
-    },
-    {
-        "id": "c38e10f2c644a37f",
-        "type": "debug",
-        "z": "03f230443c464b5e",
-        "name": "debug 49",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "_sme.responseMsgs[0].data",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 760,
-        "y": 160,
-        "wires": []
-    },
-    {
-        "id": "945ead66a1316647",
-        "type": "sme-main-sender",
-        "z": "03f230443c464b5e",
-        "connector": "fa4257e98eaed462",
-        "async": "0",
-        "x": 570,
-        "y": 160,
-        "wires": [
-            [
-                "c38e10f2c644a37f"
-            ]
-        ]
     },
     {
         "id": "956f9a128667a6f0",
@@ -118,16 +33,6 @@
         "info": "",
         "x": 390,
         "y": 60,
-        "wires": []
-    },
-    {
-        "id": "018d064dad3b73bb",
-        "type": "comment",
-        "z": "03f230443c464b5e",
-        "name": "Step 1: Retrieve and select one of the existing channels for this account",
-        "info": "",
-        "x": 330,
-        "y": 100,
         "wires": []
     },
     {
@@ -152,7 +57,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 210,
-        "y": 380,
+        "y": 240,
         "wires": [
             [
                 "cc54de98776d42c8"
@@ -168,7 +73,7 @@
         "referenceType": "str",
         "title": "Lamp control panel",
         "x": 700,
-        "y": 380,
+        "y": 240,
         "wires": [
             [
                 "b1a1442954404377"
@@ -187,7 +92,7 @@
         "value": "lampSwitchValue",
         "valueType": "msg",
         "x": 670,
-        "y": 420,
+        "y": 280,
         "wires": [
             [
                 "9ad0a71ac177ad94"
@@ -213,7 +118,7 @@
         "step": "1",
         "stepType": "num",
         "x": 680,
-        "y": 460,
+        "y": 320,
         "wires": [
             [
                 "0b2bb1bf856bf412"
@@ -235,7 +140,7 @@
         "refName": "formReference",
         "refNameType": "msg",
         "x": 490,
-        "y": 380,
+        "y": 240,
         "wires": [
             [
                 "bb5ce74ccf794b08"
@@ -244,7 +149,7 @@
     },
     {
         "id": "6cc5dfcca8f2f468",
-        "type": "sme-main-actionSelector",
+        "type": "sme-main-intent",
         "z": "03f230443c464b5e",
         "actionName": "channel_message_send",
         "recipientId": "",
@@ -260,7 +165,7 @@
         "channelId": "",
         "channelIdType": "str",
         "x": 1090,
-        "y": 460,
+        "y": 320,
         "wires": [
             [
                 "7ec6477b8ee0a3e8"
@@ -281,17 +186,17 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1240,
-        "y": 540,
+        "y": 400,
         "wires": []
     },
     {
         "id": "7ec6477b8ee0a3e8",
         "type": "sme-main-sender",
         "z": "03f230443c464b5e",
-        "connector": "fa4257e98eaed462",
+        "connector": "",
         "async": "0",
         "x": 1170,
-        "y": 500,
+        "y": 360,
         "wires": [
             [
                 "f70dfda88b877f69"
@@ -325,7 +230,7 @@
         "to": "",
         "reg": false,
         "x": 200,
-        "y": 440,
+        "y": 300,
         "wires": [
             [
                 "91ca047551d8ae8a"
@@ -336,10 +241,10 @@
         "id": "3f090137152dcd32",
         "type": "comment",
         "z": "03f230443c464b5e",
-        "name": "Step 2: Send a control form to the channel and save its form and the message Id for further updates",
+        "name": "Step 1: Send a control form to a channel and save its form and the message Id for further updates",
         "info": "",
-        "x": 420,
-        "y": 260,
+        "x": 410,
+        "y": 140,
         "wires": []
     },
     {
@@ -349,16 +254,16 @@
         "name": "In the lamp form, submit is disabled and Retain Status is YES to allow the form to send commands on each edit and to maintain its current status on the messenger app",
         "info": "",
         "x": 630,
-        "y": 300,
+        "y": 180,
         "wires": []
     },
     {
         "id": "2d1bed82447ff22f",
         "type": "sme-main-listener",
         "z": "03f230443c464b5e",
-        "connector": "fa4257e98eaed462",
+        "connector": "",
         "x": 170,
-        "y": 660,
+        "y": 520,
         "wires": [
             [
                 "3a2497f836e72e1e"
@@ -379,7 +284,7 @@
         "finalize": "",
         "libs": [],
         "x": 200,
-        "y": 840,
+        "y": 700,
         "wires": [
             [
                 "bc637f7410c849d5"
@@ -398,7 +303,7 @@
         "finalize": "",
         "libs": [],
         "x": 270,
-        "y": 480,
+        "y": 340,
         "wires": [
             [
                 "a56f9ae41e78f648"
@@ -412,7 +317,7 @@
         "name": "Listen to submission for the saved form, extract values and send to lamp, update and send the form to achieve statefulness",
         "info": "",
         "x": 490,
-        "y": 560,
+        "y": 420,
         "wires": []
     },
     {
@@ -424,7 +329,7 @@
         "saveLocation": "savedSubmission",
         "saveLocationType": "msg",
         "x": 450,
-        "y": 660,
+        "y": 520,
         "wires": [
             [
                 "e209e805b09415e8"
@@ -438,7 +343,7 @@
         "location": "mySavedForm",
         "locationType": "flow",
         "x": 870,
-        "y": 460,
+        "y": 320,
         "wires": [
             [
                 "6cc5dfcca8f2f468"
@@ -452,7 +357,7 @@
         "location": "mySavedForm",
         "locationType": "flow",
         "x": 1050,
-        "y": 700,
+        "y": 560,
         "wires": [
             [
                 "98ad87a92732964b"
@@ -478,7 +383,7 @@
         "allowrate": false,
         "outputs": 1,
         "x": 430,
-        "y": 840,
+        "y": 700,
         "wires": [
             [
                 "936084037c176bf7"
@@ -492,7 +397,7 @@
         "name": "In this example, a dimmer set to 0 will bring the lamp switch to off",
         "info": "",
         "x": 310,
-        "y": 600,
+        "y": 460,
         "wires": []
     },
     {
@@ -509,7 +414,7 @@
         "finalize": "",
         "libs": [],
         "x": 630,
-        "y": 840,
+        "y": 700,
         "wires": [
             [
                 "396030b411e16a98"
@@ -528,7 +433,7 @@
         "compValue": "payload.lampSwitch.value",
         "compValueType": "msg",
         "x": 820,
-        "y": 660,
+        "y": 520,
         "wires": [
             [
                 "a33b65627d65a086"
@@ -547,7 +452,7 @@
         "compValue": "payload.lampDimmer.value",
         "compValueType": "msg",
         "x": 840,
-        "y": 720,
+        "y": 580,
         "wires": [
             [
                 "3bf47a245e003ea3"
@@ -556,7 +461,7 @@
     },
     {
         "id": "98ad87a92732964b",
-        "type": "sme-main-actionSelector",
+        "type": "sme-main-intent",
         "z": "03f230443c464b5e",
         "actionName": "channel_message_update",
         "recipientId": "",
@@ -572,7 +477,7 @@
         "channelId": "52cd6010-4d7d-46f3-9d7c-4286b5cf1600",
         "channelIdType": "str",
         "x": 1180,
-        "y": 760,
+        "y": 620,
         "wires": [
             [
                 "1c1da4e77b720db5"
@@ -583,10 +488,10 @@
         "id": "1c1da4e77b720db5",
         "type": "sme-main-sender",
         "z": "03f230443c464b5e",
-        "connector": "fa4257e98eaed462",
+        "connector": "",
         "async": "0",
         "x": 1270,
-        "y": 820,
+        "y": 680,
         "wires": [
             [
                 "7e4b042ba957e9ab"
@@ -607,7 +512,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1360,
-        "y": 880,
+        "y": 740,
         "wires": []
     },
     {
@@ -617,7 +522,7 @@
         "name": "Read this",
         "info": "The filter submission node saves:\n\n1. The messageId of the original form message.\nThis is useful to update a message with updated form values\n\n2. The refName of the form to identify which form has been filtered\n\n3. the formComponents of the submitted form, containing the actual settings and values of each component.\nThis is then extracted for local processing.\nLocal values can be reentered in an existing form and sent back to semilimes, using the original messageId",
         "x": 420,
-        "y": 700,
+        "y": 560,
         "wires": []
     }
 ]
