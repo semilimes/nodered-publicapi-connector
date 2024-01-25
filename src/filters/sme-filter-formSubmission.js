@@ -9,6 +9,8 @@ module.exports = function (RED) {
 
         this.reference = config.reference;
         this.referenceType = config.referenceType;
+        this.messageId = config.messageId;
+        this.messageIdType = config.messageIdType;
         this.saveLocation = config.saveLocation;
         this.saveLocationType = config.saveLocationType;
 
@@ -21,6 +23,7 @@ module.exports = function (RED) {
             var smeHelper = new core.SmeHelper();
             var smeReceivedMsg = smeHelper.getReceivedMsg(msg);
             var referenceValue = smeHelper.getNodeConfigValue(node, msg, node.referenceType, node.reference);
+            var messageIdValue = smeHelper.getNodeConfigValue(node, msg, node.messageIdType, node.messageId);
             
             //filter submissions
             var isMatchedSubmissionMessage = 
@@ -35,6 +38,13 @@ module.exports = function (RED) {
                 isMatchedSubmissionMessage = 
                     smeReceivedMsg.eventBody.dataComponent.replyTo &&
                     smeReceivedMsg.eventBody.dataComponent.replyTo.refName == referenceValue;
+            }
+
+            if (isMatchedSubmissionMessage && messageIdValue) {
+                //filter submissions by message id
+                isMatchedSubmissionMessage = 
+                    smeReceivedMsg.eventBody.dataComponent.replyTo &&
+                    smeReceivedMsg.eventBody.dataComponent.replyTo.messageId == messageIdValue;
             }
 
             if (isMatchedSubmissionMessage) {

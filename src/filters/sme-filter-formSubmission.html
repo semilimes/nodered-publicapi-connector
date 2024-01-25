@@ -5,6 +5,8 @@
         defaults: {
             reference: { value: "" },
             referenceType: { value: "str" },
+            messageId: { value: "" },
+            messageIdType: { value: "str" },
             saveLocation: { value: "" },
             saveLocationType: { value: "msg"}
         },
@@ -14,7 +16,14 @@
         icon: "font-awesome/fa-filter",
         paletteLabel: 'Filter - Submission',
         label: function () {
-            return this.reference ? ('submission of: ' + this.reference) : 'catch all submissions';
+            var filters = this.reference || this.messageId || '';
+            if (filters) {
+                return 'filter submission' 
+                    + (this.reference ? ' of form ' + this.reference : '') 
+                    + (this.messageId ? ' in message ' + this.messageId : ''); 
+            } else {
+                return 'catch all submissions';
+            }
         },
         labelStyle: function () {
             return this.reference ? "node_label_italic" : "";
@@ -24,6 +33,11 @@
                 type: "str",
                 types: ["str", "msg", "flow", "global"],
                 typeField: "#node-input-referenceType"
+            });
+            $("#node-input-messageId").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-messageIdType"
             });
             $("#node-input-saveLocation").typedInput({
                 type: "msg",
@@ -37,12 +51,21 @@
 <script type="text/html" data-template-name="sme-filter-formSubmission">
     <div style="max-width:500px;">When users submit forms, the submissions can be catched by this node and store to a specified variable.</div>
     <br />
+    <div style="font-size: smaller;max-width:500px;">Connector can be shared with other nodes.</div>
+    <br />
     <div class="form-row">
         <label for="node-input-reference"><i class="fa fa-tag"></i> Form Reference</label>
         <input type="text" id="node-input-reference" placeholder="Ref name of the original form">
         <input type="hidden" id="node-input-referenceType">
     </div>
     <div style="font-size: smaller;max-width:500px;">Filter submissions of a specific form, via its reference name</div>
+    <br />
+    <div class="form-row">
+        <label for="node-input-messageId"><i class="fa fa-tag"></i> Message Id</label>
+        <input type="text" id="node-input-messageId" placeholder="Original message of the published form">
+        <input type="hidden" id="node-input-messageIdType">
+    </div>
+    <div style="font-size: smaller;max-width:500px;">Filter submissions of a form sent in a specific message, via its message Id</div>
     <div class="form-row">
         <label for="node-input-saveLocation"><i class="fa fa-tag"></i> Save Location</label>
         <input type="text" id="node-input-saveLocation" placeholder="Location to save submission values">

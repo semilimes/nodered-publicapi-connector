@@ -46,13 +46,15 @@ module.exports = function (RED) {
                         var promise = smeConnector.sendMessage(smeMsg);
                         promise.then(
                             value => {
-                                value.requestId = smeMsg.requestId || '';
+                                if (typeof value === 'object') {
+                                    value.requestId = smeMsg.requestId || '';
+                                }
                                 smeHelper.addResponseMsg(msg, value);
                                 send(msg, false);
                                 done && done();
                             },
                             reason => {
-                                reason.requestId = smeMsg.requestId || '';
+                                //reason.requestId = smeMsg.requestId || '';
                                 smeHelper.addResponseMsg(msg, reason);
                                 msg.error = reason;
                                 send(msg, false);

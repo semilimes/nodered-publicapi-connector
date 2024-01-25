@@ -87,7 +87,7 @@
                 typeField: "#node-input-titleType"
             });
 
-            updateUI2();
+            updateIntentUI();
 
             //Preparing the search recipients button
             $('#node-config-input-scan-recipients').click(function()
@@ -127,7 +127,7 @@
                             $('#node-input-autoName').val(`Recipient: "${recipient.accountName}"`);
                         }
                     });
-                    updateUI2();
+                    updateIntentUI();
                 })
                 .fail(function()
                 {
@@ -140,7 +140,7 @@
                 var recipientName = $('#node-input-recipientId option:selected').text();
                 if (recipientName) {
                     $('#node-input-autoName').val(recipientName.length > 0 ? `Recipient: "${recipientName}"` : "");
-                    updateUI2();
+                    updateIntentUI();
                 }
             });
 
@@ -182,7 +182,7 @@
                             $('#node-input-autoName').val(`Group Chat: "${chat.title}"`);
                         }
                     });
-                    updateUI2();
+                    updateIntentUI();
                 })
                 .fail(function()
                 {
@@ -195,7 +195,7 @@
                 var chatName = $('#node-input-groupChatId option:selected').text();
                 if (chatName) {
                     $('#node-input-autoName').val(chatName.length > 0 ? `Group Chat: "${chatName}"` : "");
-                    updateUI2();
+                    updateIntentUI();
                 }
             });
 
@@ -236,7 +236,7 @@
                             $('#node-input-autoName').val(`Channel: "${channel.title}"`);
                         }
                     });
-                    updateUI2();
+                    updateIntentUI();
                 })
                 .fail(function()
                 {
@@ -250,12 +250,12 @@
                 if (channelName) {
                     $('#node-input-autoName').val(channelName.length > 0 ? `Channel: "${channelName}"` : "");
                 }
-                updateUI2();
+                updateIntentUI();
             });
         }
     });
 
-    function updateUI2() {
+    function updateIntentUI() {
         var actionName = $('#node-input-actionName').val();
         $('#node-input-actionText').val(
             $('#node-input-actionName option:selected').text()
@@ -357,7 +357,7 @@
     <br />
     <div class="form-row">
         <label for="node-input-actionName"><i class="fa fa-cog"></i> <span> Intent</span></label>
-        <select id="node-input-actionName" onchange="updateUI2()">
+        <select id="node-input-actionName" onchange="updateIntentUI()">
             <option value="account_contacts">Account - Get Contacts</option>
             <option value="p2p">P2P - Get Chats</option>
             <option value="p2p_message">P2P - Get Messages</option>
@@ -434,21 +434,52 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="sme-main-intent">
-    <p>Set recipient to the input messages.</p>
+<script type="text/html" data-help-name="sme-main-intent">
+    <p>Declares an intent of the current flow and prepares the actual calling message for the semilimes API.
+        This node has to be used before the <code>sender</code> node, which will actually send the intent to the server.</p>
     <h3>Inputs</h3>
     <dl class="message-properties">
-        <dt><code>msg.payload</code> <span class="property-type">sme-message</span></dt>
-        <dd>Must contain a valid semilimes payload according to the selected intent.</dd>
+        <dt><code>_sme.sendingMsgs[]</code> <span class="property-type">sme-message</span></dt>
+        <dd>Must contain a valid semilimes payload according to the selected intent.
+            This type of payload is automatically built when the flow contains at least one configured message node (e.g Text, Form, ...).
+            If more than one messages have been placed in the same flow, the same intent will be applied to both, and the <code>sender</code> node will perform one request per message.
+            <b>Note:</b> if a "Get" type of intent is selected, this payload will be discarded, as the intent will act only as a data getter from the server.
+        </dd>
     </dl>
     <h3>Outputs</h3>
     <dl class="message-properties">
-        <dt><code>msg.payload</code> <span class="property-type">sme-message</span></dt>
-        <dd>Returns the compiled request to be sent via the <code>sender</code> node.</dd>
+        <dt><code>_sme.sendingMsgs[]</code> <span class="property-type">sme-message</span></dt>
+        <dd>Returns the complete request, containing the intent and the message(s) content to be sent via the <code>sender</code> node.</dd>
     </dl>
+    <h3>Properties</h3>
+    <p>
+        <b>Intent:</b> this is a dynamic selector for the chosen intent. If a "Get"-type intent is selected, no messages will be required before this node, while a <code>debug</code> node will be useful after the <code>sender</code> to get the server response.
+        If a "Send"-type of intent is selected, the UI will show the necessary/optional parameters to compile the intent.
+    </p>
+    <p>
+        <b>Recipient Id:</b> this is the account Id of a contact of the current account. When sending a P2P message (private chat), this parameter will specify the account to whom the message will be sent to.
+    </p>
+    <p>
+        <b>Group Chat Id:</b> this is the unique Id of a group chat. This is required when getting or sending messages from/to a group chat.
+    </p>
+    <p>
+        <b>Channel Id:</b> this is the unique Id of a channel. This is required when getting or sending messages from/to a channel.
+    </p>
+    <p>
+        <b>Message Id:</b> this is the unique Id of a message published in any communication form (p2p, groupchat, channel). This is necessary when selecting an "Update Message" intent, so to identify the original message to update.
+        This kind of Id can be either retrieved just after a message is sent, or after using one of the "Get Messages" intents.
+        In both cases, you can read the server response and identify the messageId(s) returned (e.g. attaching a <debug>node</debug> after the sender and reading the <code>responseMsg</code> content).
+    </p>
+    <p>
+        <b>Limit:</b> this integer will limit the number of messages returned in a "Get Messages" intent. If the Limit is set to N, the most N recent messages will be returned by the server.
+    </p>
+    <p>
+        <b>Recipient Ids:</b> this multiple parameter (account Ids separated by commas) can be used for different purposes. When getting existing Group Chats, it will act as a filter, so that only chats with the specified accounts as members will be returned.
+        If used when creating a Group Chat, it will act as an automatic inviter, so that the specified members will be invited at creation time.
+    </p>
     <h3>References</h3>
     <ul>
-        <li><a href="https://www.semilimes.com/developers/">API documentation</a> - full description of messages and their components.</li>
-        <li><a href="https://github.com/semilimes/nodered-publicapi-connector">GitHub</a> - the nodes github repository</li>
+        <li><a href="https://www.semilimes.com/developers/" target="_blank">API documentation</a> - full description of messages and their components.</li>
+        <li><a href="https://github.com/semilimes/nodered-publicapi-connector" target="_blank">GitHub</a> - the nodes github repository</li>
     </ul>
 </script>

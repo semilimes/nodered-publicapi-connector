@@ -428,7 +428,7 @@ module.exports = function (RED) {
                         method: method,
                         rejectUnauthorized: false,
                         headers: {
-                            'Content-Type': 'application/json',
+                            'Content-Type': 'application/json; charset=UTF-8',
                             'Content-Length': (body && body.length) || 0,
                         },
                         timeout: 3000
@@ -485,8 +485,9 @@ module.exports = function (RED) {
                         reject(e);
                     });
     
-                    if (body)
-                        req.write(body);
+                    if (body) {
+                        req.write(Buffer.from(body));
+                    }
     
                     req.end();
                 });
