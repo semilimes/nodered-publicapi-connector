@@ -486,7 +486,7 @@ module.exports = function (RED) {
                     });
     
                     if (body) {
-                        req.write(Buffer.from(body));
+                        req.write(body);
                     }
     
                     req.end();
