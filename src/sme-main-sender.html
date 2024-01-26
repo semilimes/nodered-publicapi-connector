@@ -37,5 +37,53 @@
 </script>
 
 <script type="text/html" data-help-name="sme-main-sender">
-    <p>Execute action in semilimes via HTTP REST or WebSocket</p>
+    <p>Send an intent to the semilimes server via <i>HTTP REST</i> or <i>WebSocket</i>.</p>
+
+    <h3>Properties</h3>
+    <p>
+        <b>Intent</b>
+        <ul>
+            <li>
+                You can use <i>HTTP REST</i> for any type of intent you want to send. 
+                You can check the server response content immediately, by adding a <code>debug</code> node and read the output type specified in this node.
+            </li>
+            <li>
+                You can use <i>WebSocket</i> <b>only</b> for sending message intents. There won't be any server response to read after this node, but usually you will receive an asyncronous message event using the <code>listener</code> node. 
+                Read more on the <code>listener</code> documentation.
+            </li>
+        </ul>
+    </p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt><code>msg._sme.sendingMsgs[]</code> <span class="property-type">array</span></dt>
+        <dd>Must contain a valid semilimes payload, complete with the selected intent.
+            The payload should look like an array containing the following object:
+            <pre>
+{
+    "requestId":"...",
+    "endpoint":"...",
+    "httpMethod":"...",
+    "parameters": {...}
+    "body": {...}
+}                
+            </pre>
+        </dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt><code>msg._sme.responseMsgs[]</code> <span class="property-type">array</span></dt>
+        <dd>Contains the server response with the obtained content (for "Get" intents) or with the sent information.
+            The output should look like an array containing the following object:
+            <pre>
+{
+    "requestId":"...",
+    "success":true,
+    "data": {...}
+}                
+            </pre>
+            where data contains dynamic data depending on the executed intent.
+        </dd>
+    </dl>
 </script>

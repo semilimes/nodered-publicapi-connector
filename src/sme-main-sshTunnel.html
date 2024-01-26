@@ -18,7 +18,7 @@
         paletteLabel: 'SSH Tunnel',
         label: function () {
             if (this.host) {
-                return `Tunnel [${this.id}:${this.host}:${this.port}] ${this.name}`;
+                return `Tunnel "${this.name}" [${this.host}:${this.port}]`;
             }
 
             return 'SSH Tunnel';
@@ -92,4 +92,36 @@
 
 <script type="text/html" data-help-name="sme-main-sshTunnel">
     <p>Create a SSH tunnel to semilimes.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>msg.Command <span class="property-type">string</span></dt>
+        <dd>Must contain a valid command for operating the tunnel node.
+            <ul>
+                <li>
+                    <b>CREATE</b>: will create a new tunnel with the properties specified in this node. 
+                    The tunnel name is considered unique for the account, so if the tunnel is already existing in the semilimes tunnel service for that account, the existing tunnelId will be returned.
+                    If you want to create a tunnel with the same name but different properties, please first delete the tunnel and create it back.
+
+                    After creation, the node will keep the returned Tunnel ID saved in memory, so the other commands can be used without explicitly specify the tunnel Id generated.
+                    If you need a more reliable tunneling operation between node-red restarts, please save the tunnel ID returned and send it in the <code>msg.TunnelId</code> input within the other <code>msg.Command</code> values (OPEN, CLOSE, DELETE).
+                </li>
+                <li>
+                    <b>OPEN</b>: will request the connection information from the tunneling service and initiate an ssh connection. You can check the final URL for tunnel connection in the outputs.
+                </li>
+                <li>
+                    <b>CLOSE</b>: will terminate the ssh connection of the current tunnel
+                </li>
+                <li>
+                    <b>DELETE</b>: will request a permanent delete of the tunnel to the tunneling service. After this command, you will need to create a new tunnel before opening a connection.
+                </li>
+            </ul>
+        </dd>
+    </dl>
+    <dl class="message-properties">
+        <dt>msg.TunnelId <span class="property-type">string</span></dt>
+        <dd>Must contain a valid tunnel id for interacting with the tunneling service. 
+            This id should be kept the same among all the OPEN, CLOSE, DELETE commands it is used with, to avoid behaviour inconsistency.
+        </dd>
+    </dl>
 </script>

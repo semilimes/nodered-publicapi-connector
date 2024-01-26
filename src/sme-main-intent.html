@@ -439,7 +439,7 @@
         This node has to be used before the <code>sender</code> node, which will actually send the intent to the server.</p>
     <h3>Inputs</h3>
     <dl class="message-properties">
-        <dt><code>_sme.sendingMsgs[]</code> <span class="property-type">sme-message</span></dt>
+        <dt><code>msg._sme.sendingMsgs[]</code> <span class="property-type">array</span></dt>
         <dd>Must contain a valid semilimes payload according to the selected intent.
             This type of payload is automatically built when the flow contains at least one configured message node (e.g Text, Form, ...).
             If more than one messages have been placed in the same flow, the same intent will be applied to both, and the <code>sender</code> node will perform one request per message.
@@ -448,7 +448,7 @@
     </dl>
     <h3>Outputs</h3>
     <dl class="message-properties">
-        <dt><code>_sme.sendingMsgs[]</code> <span class="property-type">sme-message</span></dt>
+        <dt><code>msg._sme.sendingMsgs[]</code> <span class="property-type">array</span></dt>
         <dd>Returns the complete request, containing the intent and the message(s) content to be sent via the <code>sender</code> node.</dd>
     </dl>
     <h3>Properties</h3>

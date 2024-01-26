@@ -346,7 +346,7 @@
         If you specify a receiver, you can choose who is going to receive the submission among Contacts, Group Chats, and Channels.
     </p>
     <h3>Details</h3>
-    <p>If you debug the output of this node (complete msg object), you will find a new message in the sending array (<code>_sme.sendingMsgs</code>), like the schema below.
+    <p>If you debug the output of this node (complete msg object), you will find a new message in the sending array (<code>msg._sme.sendingMsgs[]</code>), like the schema below.
         The schema is not yet complete for sending, because it requires actual data fields (<code>"formComponents"</code>) to be added after this node.
         <pre>
 {
