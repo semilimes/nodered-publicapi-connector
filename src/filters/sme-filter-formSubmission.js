@@ -51,10 +51,8 @@ module.exports = function (RED) {
                 if (node.saveLocation) {
                     //Location specified: extract values and save into location
                     var submission = {
-                        submission: {
-                            replyTo: smeReceivedMsg.eventBody.dataComponent.replyTo,
-                            formComponents: smeReceivedMsg.eventBody.dataComponent.formComponents
-                        }
+                        replyTo: smeReceivedMsg.eventBody.dataComponent.replyTo,
+                        formComponents: smeReceivedMsg.eventBody.dataComponent.formComponents
                     }
                     switch (node.saveLocationType) {
                         case 'msg': 

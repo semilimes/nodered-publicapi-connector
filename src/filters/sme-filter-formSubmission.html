@@ -49,9 +49,7 @@
 </script>
 
 <script type="text/html" data-template-name="sme-filter-formSubmission">
-    <div style="max-width:500px;">When users submit forms, the submissions can be catched by this node and store to a specified variable.</div>
-    <br />
-    <div style="font-size: smaller;max-width:500px;">Connector can be shared with other nodes.</div>
+    <div style="max-width:500px;">When users submit forms, the submissions can be catched by this node and stored to a variable.</div>
     <br />
     <div class="form-row">
         <label for="node-input-reference"><i class="fa fa-tag"></i> Form Reference</label>
@@ -66,6 +64,7 @@
         <input type="hidden" id="node-input-messageIdType">
     </div>
     <div style="font-size: smaller;max-width:500px;">Filter submissions of a form sent in a specific message, via its message Id</div>
+    <br />
     <div class="form-row">
         <label for="node-input-saveLocation"><i class="fa fa-tag"></i> Save Location</label>
         <input type="text" id="node-input-saveLocation" placeholder="Location to save submission values">
@@ -76,4 +75,52 @@
 
 <script type="text/html" data-help-name="sme-filter-formSubmission">
     <p>Filter submissions of a specific form via its reference name, and optionally extract submitted values for further processing</p>
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt><code>msg.[Save Location]</code> <span class="property-type">array</span></dt>
+        <dd>Returns an object containing the details of the original form reference and message Id ("replyTo" property), and all the form components ("formComponents" property)
+            containing their properties and updated values ("value property"). Example object:
+            <pre>
+{
+    "replyTo": {
+        "messageId": "...",
+        "refName": "myFormReference" 
+    },
+    "formComponents": [
+        {
+            "formComponentType": "label",
+            "refName": "myLampLabel",
+            "title": "Lamp control panel"
+        },
+        { 
+            "formComponentType": "switch",
+            "refName": "myLampSwitch",
+            "title":"Switch", 
+            "value":0, 
+            "requiredSelection": false 
+        },
+        {
+            "formComponentType": "slider",
+            "refName": "myLampDimmer",
+            "title": "Dimmer",
+            "value": 8, 
+            "requiredSelection": false,
+            "min": 0,
+            "max": 10,
+            "step": 1
+        }
+    ]
+}                
+            </pre>
+    </dl>
+    <h3>Properties</h3>
+    <p>
+        <b>Form Reference:</b> Only catch submissions that reference this form name (Note: there can be multiple forms with the same reference name and different message Ids)
+    </p>
+    <p>
+        <b>Message Id:</b> Only catch submissions that reference a specific messageId. The combination of this parameter and the Form Reference ensures that the data comes from a single point of truth (e.g. a specific message in a specific channel).
+    </p>
+    <p>
+        <b>Save Location:</b> The destination variable where to send the output of the filtering.
+    </p>
 </script>

@@ -56,7 +56,7 @@ You can install the nodes by either
 
 4. In another flow, add a `Text` node with a message
 
-5. Add an `Intentr` node and select `Channel - Send Message` and configure the channel
+5. Add an `Intent` node and select `Channel - Send Message` and configure the channel
 
 6. Add a `sender` node and run.
 

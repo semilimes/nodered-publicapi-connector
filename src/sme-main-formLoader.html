@@ -4,7 +4,7 @@
         color: "#E2D96E",
         defaults: {
             location: {value: "", required: true},
-            locationType: {value: "flow"}
+            locationType: {value: "msg"}
         },
         inputs: 1,
         outputs: 1,
@@ -19,8 +19,8 @@
         },
         oneditprepare: function () {
             $("#node-input-location").typedInput({
-                type: "flow",
-                types: ["flow", "global"],
+                type: "msg",
+                types: ["msg", "flow", "global"],
                 typeField: "#node-input-locationType"
             });
         }
@@ -40,5 +40,5 @@
 </script>
 
 <script type="text/html" data-help-name="sme-main-formLoader">
-    <p>Load the form message from specified location and prepare for sending.</p>
+    <p>Load the form message from a specified location and prepare for sending.</p>
 </script>

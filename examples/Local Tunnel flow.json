@@ -15,11 +15,11 @@
         "name": "myNewTunnel",
         "host": "localhost",
         "port": "1880",
-        "path": "ui",
+        "path": "/",
         "retryInterval": 10,
         "retryTimeout": "1",
-        "x": 490,
-        "y": 280,
+        "x": 400,
+        "y": 180,
         "wires": [
             [
                 "2aea3326917ec6cb"
@@ -36,10 +36,6 @@
                 "p": "payload"
             },
             {
-                "p": "topic",
-                "vt": "str"
-            },
-            {
                 "p": "Command",
                 "v": "CREATE",
                 "vt": "str"
@@ -52,8 +48,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 160,
-        "y": 260,
+        "x": 100,
+        "y": 180,
         "wires": [
             [
                 "0524510749435a86"
@@ -70,10 +66,6 @@
                 "p": "payload"
             },
             {
-                "p": "topic",
-                "vt": "str"
-            },
-            {
                 "p": "Command",
                 "v": "OPEN",
                 "vt": "str"
@@ -86,11 +78,11 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 150,
-        "y": 300,
+        "x": 110,
+        "y": 400,
         "wires": [
             [
-                "0524510749435a86"
+                "8eb3b73956d04d6c"
             ]
         ]
     },
@@ -102,10 +94,6 @@
         "props": [
             {
                 "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
             },
             {
                 "p": "Command",
@@ -120,11 +108,11 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 160,
-        "y": 380,
+        "x": 120,
+        "y": 480,
         "wires": [
             [
-                "0524510749435a86"
+                "8eb3b73956d04d6c"
             ]
         ]
     },
@@ -136,10 +124,6 @@
         "props": [
             {
                 "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
             },
             {
                 "p": "Command",
@@ -154,11 +138,11 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 150,
-        "y": 340,
+        "x": 110,
+        "y": 440,
         "wires": [
             [
-                "0524510749435a86"
+                "8eb3b73956d04d6c"
             ]
         ]
     },
@@ -166,7 +150,7 @@
         "id": "2aea3326917ec6cb",
         "type": "debug",
         "z": "9c78f3e70aecce9f",
-        "name": "debug 41",
+        "name": "Check Tunnel Id",
         "active": true,
         "tosidebar": true,
         "console": false,
@@ -175,8 +159,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 560,
-        "y": 340,
+        "x": 820,
+        "y": 180,
         "wires": []
     },
     {
@@ -185,18 +169,75 @@
         "z": "9c78f3e70aecce9f",
         "name": "Open a local tunnel using the appropriate commands.",
         "info": "",
-        "x": 280,
-        "y": 120,
+        "x": 240,
+        "y": 60,
         "wires": []
     },
     {
         "id": "c641d861083a4b7c",
         "type": "comment",
         "z": "9c78f3e70aecce9f",
-        "name": "Configure the tunnel properties then Create and Open the tunnel. When done, Close. Delete if you are not going to use it anymore.",
+        "name": "1. Configure the tunnel properties and Create the tunnel",
         "info": "",
-        "x": 510,
-        "y": 160,
+        "x": 340,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "8eb3b73956d04d6c",
+        "type": "change",
+        "z": "9c78f3e70aecce9f",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "TunnelId",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 390,
+        "y": 280,
+        "wires": [
+            [
+                "0524510749435a86"
+            ]
+        ]
+    },
+    {
+        "id": "9803fb758cb28abb",
+        "type": "comment",
+        "z": "9c78f3e70aecce9f",
+        "name": "2. Copy the TunnelId generated in the response",
+        "info": "",
+        "x": 840,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "cdbb1ecff8288482",
+        "type": "comment",
+        "z": "9c78f3e70aecce9f",
+        "name": "3. Paste the TunnelId here for persistency",
+        "info": "",
+        "x": 420,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "2cb9309145681335",
+        "type": "comment",
+        "z": "9c78f3e70aecce9f",
+        "name": "4. Control the Tunnel with the configured Id",
+        "info": "",
+        "x": 200,
+        "y": 360,
         "wires": []
     }
 ]
