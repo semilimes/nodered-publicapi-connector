@@ -8,8 +8,8 @@ module.exports = function (RED) {
 
         this.filePath = config.filePath;
         this.filePathType = config.filePathType;
-        this.fileName = config.fileName;
-        this.fileNameType = config.fileNameType;
+        //this.fileName = config.fileName;
+        //this.fileNameType = config.fileNameType;
 
         var node = this;
 
@@ -25,7 +25,7 @@ module.exports = function (RED) {
 
             var filePathValue = smeHelper.getNodeConfigValue(node, msg, node.filePathType, node.filePath);
 
-            if (filePathValue && fileNameValue) {
+            if (filePathValue) {
                 
                 var endpoint = "/service/file/upload";
                 var httpMethod = "POST";
