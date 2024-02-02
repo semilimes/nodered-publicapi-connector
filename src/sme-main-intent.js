@@ -132,7 +132,7 @@ module.exports = function (RED) {
             var core = new Core();
             var smeHelper = new core.SmeHelper();
             var smeSendingBox = smeHelper.getSendingBox(msg);
-
+            
             switch (node.actionName) {
                 case 'account_contacts': {
                     smeHelper.clearSendingBox(msg);
@@ -324,6 +324,7 @@ module.exports = function (RED) {
                     if (smeSendingBox) {
                         var channelIdValue = smeHelper.getNodeConfigValue(node, msg, node.channelIdType, node.channelId);
                         smeSendingBox.forEach(smeMsg => {
+                            smeMsg.requestId = getNewRequestId();
                             smeMsg.endpoint = "/communication/channel/message/send";
                             smeMsg.httpMethod = "POST";
                             smeMsg.body = {
