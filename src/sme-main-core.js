@@ -431,7 +431,7 @@ module.exports = function (RED) {
                             'Content-Type': 'application/json; charset=UTF-8',
                             'Content-Length': (body && body.length) || 0,
                         },
-                        timeout: 3000
+                        timeout: 5000
                     };
                     if (apiKey) {
                         //Authorize
@@ -477,7 +477,7 @@ module.exports = function (RED) {
                     // use its "timeout" event to abort the request
                     req.on('timeout', () => {
                         console.log('API call timeout. Call aborted.')
-                        request.destroy();
+                        req.destroy();
                     });
     
                     req.on('error', (e) => {
