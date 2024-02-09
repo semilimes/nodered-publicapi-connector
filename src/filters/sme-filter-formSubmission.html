@@ -3,6 +3,7 @@
         category: 'semilimesAPI',
         color: '#E2D96E',
         defaults: {
+            name: { value: "" },
             reference: { value: "" },
             referenceType: { value: "str" },
             messageId: { value: "" },
@@ -16,6 +17,9 @@
         icon: "font-awesome/fa-filter",
         paletteLabel: 'Filter - Submission',
         label: function () {
+            if (this.name) {
+                return this.name;
+            }
             var filters = this.reference || this.messageId || '';
             if (filters) {
                 return 'filter submission' 
@@ -51,6 +55,10 @@
 <script type="text/html" data-template-name="sme-filter-formSubmission">
     <div style="max-width:500px;">When users submit forms, the submissions can be catched by this node and stored to a variable.</div>
     <br />
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
     <div class="form-row">
         <label for="node-input-reference"><i class="fa fa-tag"></i> Form Reference</label>
         <input type="text" id="node-input-reference" placeholder="Ref name of the original form">

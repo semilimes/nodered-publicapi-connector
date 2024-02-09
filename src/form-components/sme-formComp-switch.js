@@ -34,7 +34,7 @@ module.exports = function(RED) {
                     formComponentType: "switch",
                     title: titleValue || "",
                     requiredSelection: false,
-                    value: valueValue === true
+                    value: (valueValue === true || valueValue === 1) ? 1 : 0 
                 };
                 smeFormMsg.dataComponent.formComponents.push(component);
             }
