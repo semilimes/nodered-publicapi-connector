@@ -1,16 +1,12 @@
 "use strict";
 
 const Core = require('./sme-main-core.js');
-const crypto = require('crypto');
 
 module.exports = function (RED) {
 
-    function SmeIntentNode(config) {
+    function SmeSenderNode(config) {
         RED.nodes.createNode(this, config);
-
-        var smeConnector = config.connector && RED.nodes.getNode(config.connector);
-        if (!smeConnector)
-            return;
+        this.async = config.async != "0";
 
         this.name = config.name;
         this.autoName = config.autoName;
@@ -41,9 +37,16 @@ module.exports = function (RED) {
         this.messageId = config.messageId;
         this.messageIdType = config.messageIdType;
 
+        this.logToConsole = config.logToConsole;
+
+        var smeConnector = config.connector && RED.nodes.getNode(config.connector);
+        if (!smeConnector)
+            return;
+
         var node = this;
 
-        function getNewRequestId () {
+
+        function getNewRequestId() {
             return crypto.randomUUID();
         }
 
@@ -53,7 +56,7 @@ module.exports = function (RED) {
             var core = new Core();
             var smeHelper = new core.SmeHelper();
             var smeSendingBox = smeHelper.getSendingBox(msg);
-            
+
             switch (node.actionName) {
                 case 'account_contacts': {
                     smeHelper.clearSendingBox(msg);
@@ -278,12 +281,59 @@ module.exports = function (RED) {
                 
             }
 
-            send(msg, false);
-
-            done && done();
+            //SEND MESSAGE
+            smeSendingBox = smeHelper.getSendingBox(msg);
+            if (smeSendingBox && smeSendingBox.length > 0) {
+                if (node.async) {
+                    //  Send message via WebSocket
+                    smeSendingBox.forEach(smeMsg => {
+                        smeConnector.postMessage({
+                            requestId: smeMsg.requestId,
+                            requestType: smeMsg.endpoint,
+                            version: "2",
+                            parameters: smeMsg.parameters || {},
+                            body: smeMsg.body || {}
+                        },
+                        node.logToConsole)
+                    });
+                    smeHelper.clearSendingBox(msg);
+                    send(msg, false);
+                    done && done();
+                }
+                else {
+                    //  Send message via HTTP REST
+                    smeSendingBox.forEach((smeMsg, index) => {
+                        var promise = smeConnector.sendMessage(smeMsg, node.logToConsole);
+                        promise.then(
+                            value => {
+                                if (typeof value === 'object') {
+                                    value.requestId = smeMsg.requestId || '';
+                                }
+                                smeHelper.addResponseMsg(msg, value);
+                                send(msg, false);
+                                done && done();
+                            },
+                            reason => {
+                                //reason.requestId = smeMsg.requestId || '';
+                                smeHelper.addResponseMsg(msg, reason);
+                                msg.error = reason;
+                                send(msg, false);
+                                done && done(reason);
+                            }
+                        );
+                        //  Wait for last message sent.
+                        if (index == smeSendingBox.length - 1) {
+                            smeHelper.clearSendingBox(msg);
+                        }
+                    });
+                }
+            }
+            else {
+                node.debug('Sending box is empty!');
+                done && done();
+            }
         });
     };
 
-    RED.nodes.registerType("sme-main-intent", SmeIntentNode);
-
+    RED.nodes.registerType("sme-main-sender-new", SmeSenderNode);
 };

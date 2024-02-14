@@ -263,11 +263,9 @@ module.exports = function (RED) {
 
             if (apiKey) {
                 options.headers.Authorization = `Bearer ${apiKey}`;
-                //console.log(`...with apiKey = ${apiKey}`);
             }
             if (xAccount) {
                 options.headers['X-Account'] = `${xAccount}`;
-                //console.log(`...with xAccount = ${xAccount}`);
             }
 
             if (proxyAgent) {
@@ -306,7 +304,6 @@ module.exports = function (RED) {
                 if (buffer.length > 0) {
                     for (var i = 0; i < buffer.length; i++)
                         socket.send(buffer[i]);
-                    console.log('ws sent ', buffer.length, ' buffered messages.');
                     buffer.length = 0;
                 }
             });
@@ -329,12 +326,12 @@ module.exports = function (RED) {
             });
 
             socket.on('error', function (err) {
-                console.log('ws error!' + err);
+                console.error('ws error!' + err);
                 reconnect();
             });
         }
 
-        function send(msg) {
+        function send(msg, logEnabled = false) {
             if (msg) {
                 if (typeof (msg) === 'object')
                     msg = JSON.stringify(msg);
@@ -343,7 +340,7 @@ module.exports = function (RED) {
                     webSocket.send(msg);
                 else {
                     buffer.push(msg);
-                    console.log('buffered: ', msg);
+                    if (logEnabled) console.log('buffered: ', msg);
                 }
             }
         }
@@ -373,7 +370,7 @@ module.exports = function (RED) {
 
     function SmeApiClient(serverApiURL, apiKey, xAccount) {
 
-        function callApi(endpoint, method, data) {
+        function callApi(endpoint, method, data, logEnabled = false) {
             if (endpoint == "/service/file/upload") {
 
                 return new Promise((resolve, reject) => {
@@ -394,11 +391,11 @@ module.exports = function (RED) {
 
                     axios.request(config)
                         .then((response) => {
-                            console.log(JSON.stringify(response.data));
+                            if(logEnabled) console.log(JSON.stringify(response.data));
                             resolve(response.data);
                         })
                         .catch((error) => {
-                            console.log('Error when calling uploader API: ', error);
+                            console.error('Error when calling uploader API: ', error);
                             reject(error);
                         })
                 });
@@ -443,11 +440,11 @@ module.exports = function (RED) {
                     }
     
     
-                    console.log('Attempt to send call to:', options);
-                    console.log('With data: ', body);
+                    if(logEnabled) console.log('Attempt to send call to:', options);
+                    if(logEnabled) console.log('With data: ', body);
     
                     var req = https.request(options, (res) => {
-                        console.log("Status Code: ", res.statusCode);
+                        if(logEnabled) console.log("Status Code: ", res.statusCode);
                         let totalBuffer = "";
                         res.on('data', (buffer) => {
                             totalBuffer += buffer.toString("utf8");
@@ -458,30 +455,30 @@ module.exports = function (RED) {
                                 try {
                                     var jsonData = JSON.parse(totalBuffer);
                                     if (jsonData) {
-                                        console.log('Call API resolved a JSON: ', jsonData);
+                                        if(logEnabled) console.log('Call API resolved a JSON: ', jsonData);
                                         resolve(jsonData);
                                         return;
                                     } else {
-                                        console.log('Response raw data: ', totalBuffer);
+                                        if(logEnabled) console.log('Response raw data: ', totalBuffer);
                                     }
                                 }
                                 catch (ex) {
-                                    console.debug('Error parsing API JSON result: ', ex);
+                                    console.error('Error parsing API JSON result: ', ex);
                                 }
                             }
-                            console.log('Call API resolved: ', totalBuffer);
+                            if(logEnabled) console.log('Call API resolved: ', totalBuffer);
                             resolve(totalBuffer);
                         });
                     });
     
                     // use its "timeout" event to abort the request
                     req.on('timeout', () => {
-                        console.log('API call timeout. Call aborted.')
+                        console.error('API call timeout. Call aborted.')
                         req.destroy();
                     });
     
                     req.on('error', (e) => {
-                        console.log('Call API rejected: ', e);
+                        console.error('Call API rejected: ', e);
                         reject(e);
                     });
     

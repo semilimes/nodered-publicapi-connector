@@ -1,0 +1,523 @@
+<script type="text/javascript">
+    RED.nodes.registerType('sme-main-sender-new', {
+        category: 'semilimesAPI',
+        color: "#D7D7A0",
+        defaults: {
+            connector: { type: 'sme-main-connector', required: true },
+            async: { value: "0", required: true },
+
+            name: { value: "" },
+            autoName: { value: "" },
+            actionName: { value: "" },
+            actionText: { value: "" },
+
+            recipientId: { value: "" },
+            recipientIdType: { value: "str" },
+
+            messageId: { value: "" },
+            messageIdType: { value: "str" },
+
+            limit: { value: 0 },
+            limitType: { value: "num" },
+
+            recipientIds: { value: "" },
+            recipientIdsType: { value: "str" },
+
+            groupChatId: { value: "" },
+            groupChatIdType: { value: "str" },
+
+            channelId: { value: "" },
+            channelIdType: { value: "str" },
+
+            title: { value: ""},
+            titleType: {value: "str"},
+
+            logToConsole: { value: true }
+        },
+        inputs: 1,
+        outputs: 1,
+        align: 'right',
+        icon: "font-awesome/fa-rss",
+        paletteLabel: 'senderNew',
+        label: function() {
+            return this.name || `Intent: ${this.actionText ?? "?"}${this.actionText && this.autoName ? " | " + this.autoName : ""}`;
+        },
+        labelStyle: function () {
+            return this.actionName ? "node_label_italic" : "";
+        },
+        oneditsave: function() {
+            this.autoName = $('#node-input-autoName').val();
+            this.logToConsole = $('#node-input-logToConsole').prop("checked") == true;
+        },
+        oneditprepare: function () {
+            $('#node-input-logToConsole').prop("checked", this.logToConsole);
+
+            $("#node-input-recipientId").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-recipientIdType"
+            });
+
+            $("#node-input-messageId").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-messageIdType"
+            });
+
+            $("#node-input-limit").typedInput({
+                type: "num",
+                types: ["num", "msg", "flow", "global"],
+                typeField: "#node-input-limitType"
+            });
+
+            $("#node-input-recipientIds").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-recipientIdsType"
+            });
+
+            $("#node-input-groupChatId").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-groupChatIdType"
+            });
+
+            $("#node-input-channelId").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-channelIdType"
+            });
+
+            $("#node-input-title").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-titleType"
+            });
+
+            updateSenderUI();
+
+            //Preparing the search recipients button
+            $('#node-config-input-scan-recipients').click(function()
+                {
+                    if ($('#node-input-recipientId').prop("tagName").toLowerCase() === "input")
+                    {
+                        searchRecipients(); 
+                    }
+                }
+            );
+
+            function searchRecipients()
+            {   
+                var current = $('#node-input-recipientId').val();
+                $('#node-input-recipientId').replaceWith('<select id="node-input-recipientId" style="width: 100%"></select>');
+                $('#node-input-recipientId').append('<option selected="selected" value="null">searching recipients...</option>');
+
+                $.getJSON('sme/recipients')
+                .done(function(apiResponse) {
+                    console.log(apiResponse.data);
+
+                    var recipients = apiResponse.data ?? [];
+
+                    if (recipients.length <= 0) {
+                        RED.notify("No recipients found.", "error");
+                    }
+
+                    $('#node-input-recipientId').empty();
+
+                    //SET RECIPIENTS AS OPTIONS
+                    recipients.forEach(function(recipient, idx) {
+                        $('#node-input-recipientId').append(`<option ${idx == 0 ? " selected='selected'" : ""} value="${recipient.accountId}">${recipient.accountName}</option>`);
+                        if (idx == 0) {
+                            //SET FIRST VALUE
+                            $('#node-input-recipientId').val(recipient.accountId);
+                            //Set AutoName for node
+                            $('#node-input-autoName').val(`Recipient: "${recipient.accountName}"`);
+                        }
+                    });
+                    updateSenderUI();
+                })
+                .fail(function()
+                {
+                    RED.notify("Something went wrong. Please retry.", "error");
+                });
+            }
+
+            $(document).on('change', '#node-input-recipientId', function()
+            {
+                var recipientName = $('#node-input-recipientId option:selected').text();
+                if (recipientName) {
+                    $('#node-input-autoName').val(recipientName.length > 0 ? `Recipient: "${recipientName}"` : "");
+                    updateSenderUI();
+                }
+            });
+
+            //Preparing the search groupChats button
+            $('#node-config-input-scan-groupChats').click(function()
+                {
+                    if ($('#node-input-groupChatId').prop("tagName").toLowerCase() === "input")
+                    {
+                        searchGroupChats(); 
+                    }
+                }
+            );
+
+            function searchGroupChats()
+            {   
+                var current = $('#node-input-groupChatId').val();
+                $('#node-input-groupChatId').replaceWith('<select id="node-input-groupChatId" style="width: 100%"></select>');
+                $('#node-input-groupChatId').append('<option selected="selected" value="null">searching group chats...</option>');
+
+                $.getJSON('sme/groupChats')
+                .done(function(apiResponse) {
+                    console.log(apiResponse.data);
+
+                    var groupChats = apiResponse.data ?? [];
+
+                    if (groupChats.length <= 0) {
+                        RED.notify("No group chats found.", "error");
+                    }
+
+                    $('#node-input-groupChatId').empty();
+                    
+                    //SET GROUPCHATS AS OPTIONS
+                    groupChats.forEach(function(chat, idx) {
+                        $('#node-input-groupChatId').append(`<option ${idx == 0 ? " selected='selected'" : ""} value="${chat.groupChatId}">${chat.title}</option>`);
+                        if (idx == 0) {
+                            //SET FIRST VALUE
+                            $('#node-input-groupChatId').val(chat.groupChatId);
+                            //Set AutoName for node
+                            $('#node-input-autoName').val(`Group Chat: "${chat.title}"`);
+                        }
+                    });
+                    updateSenderUI();
+                })
+                .fail(function()
+                {
+                    RED.notify("Something went wrong. Please retry.", "error");
+                });
+            }
+
+            $(document).on('change', '#node-input-groupChatId', function()
+            {
+                var chatName = $('#node-input-groupChatId option:selected').text();
+                if (chatName) {
+                    $('#node-input-autoName').val(chatName.length > 0 ? `Group Chat: "${chatName}"` : "");
+                    updateSenderUI();
+                }
+            });
+
+            //Preparing the search channels button
+            $('#node-config-input-scan-channels').click(function()
+                {
+                    if ($('#node-input-channelId').prop("tagName").toLowerCase() === "input")
+                    {
+                        searchChannels(); 
+                    }
+                }
+            );
+
+            function searchChannels()
+            {   
+                var current = $('#node-input-channelId').val();
+                $('#node-input-channelId').replaceWith('<select id="node-input-channelId" style="width: 100%"></select>');
+                $('#node-input-channelId').append('<option selected="selected" value="null">searching channels...</option>');
+
+                $.getJSON('sme/channels')
+                .done(function(apiResponse) {
+                    console.log(apiResponse.data);
+
+                    var channels = apiResponse.data ?? [];
+
+                    if (channels.length <= 0) {
+                        RED.notify("No channels found.", "error");
+                    }
+
+                    $('#node-input-channelId').empty();
+                    //SET CHANNELS AS OPTIONS
+                    channels.forEach(function(channel, idx) {
+                        $('#node-input-channelId').append(`<option ${idx == 0 ? " selected='selected'" : ""} value="${channel.channelId}">${channel.title}</option>`);
+                        if (idx == 0) {
+                            //SET FIRST VALUE
+                            $('#node-input-channelId').val(channel.channelId);
+                            //Set AutoName for node
+                            $('#node-input-autoName').val(`Channel: "${channel.title}"`);
+                        }
+                    });
+                    updateSenderUI();
+                })
+                .fail(function()
+                {
+                    RED.notify("Something went wrong. Please retry.", "error");
+                });
+            }
+
+            $(document).on('change', '#node-input-channelId', function()
+            {
+                var channelName = $('#node-input-channelId option:selected').text();
+                if (channelName) {
+                    $('#node-input-autoName').val(channelName.length > 0 ? `Channel: "${channelName}"` : "");
+                }
+                updateSenderUI();
+            });
+        }
+    });
+
+    function updateSenderUI() {
+        var actionName = $('#node-input-actionName').val();
+        $('#node-input-actionText').val(
+            $('#node-input-actionName option:selected').text()
+        );
+        this.actionText = $('#node-input-actionText').val();
+
+        //hide all panels
+        $('#node-input-recipientIdPanel').hide();
+        $('#node-input-messageIdPanel').hide();
+        $('#node-input-limitPanel').hide();
+        $('#node-input-titlePanel').hide();
+        $('#node-input-recipientIdsPanel').hide();
+        $('#node-input-groupChatIdPanel').hide();
+        $('#node-input-channelIdPanel').hide();
+
+        switch (actionName) {
+            case 'account_contacts': {
+                break;
+            }
+            case 'p2p': {
+                //No parameters
+                break;
+            }
+            case 'p2p_message': {
+                $('#node-input-recipientIdPanel').show();
+                $('#node-input-messageIdPanel').show();
+                $('#node-input-limitPanel').show();
+                break;
+            }
+            case 'p2p_message_send': {
+                $('#node-input-recipientIdPanel').show();
+                break;
+            }
+            case 'p2p_message_update': {
+                $('#node-input-messageIdPanel').show();
+                break;
+            }
+            case 'groupchat': {
+                $('#node-input-recipientIdsPanel').show();
+                break;
+            }
+            case 'groupchat_create': {
+                $('#node-input-titlePanel').show();
+                $('#node-input-recipientIdsPanel').show();
+                break;
+            }
+            case 'groupchat_message': {
+                $('#node-input-groupChatIdPanel').show();
+                $('#node-input-messageIdPanel').show();
+                $('#node-input-limitPanel').show();
+                break;
+            }
+            case 'groupchat_message_send': {
+                $('#node-input-groupChatIdPanel').show();
+                break;
+            }
+            case 'groupchat_message_update': {
+                $('#node-input-messageIdPanel').show();
+                break;
+            }
+            case 'channel_my': {
+                //No parameters
+                break;
+            }
+            case 'channel_create': {
+                $('#node-input-titlePanel').show();
+                break;
+            }
+            case 'channel_message_send': {
+                $('#node-input-channelIdPanel').show();
+                break;
+            }
+            case 'channel_message_update': {
+                $('#node-input-messageIdPanel').show();
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+</script>
+
+<script type="text/html" data-template-name="sme-main-sender-new">
+    <div style="max-width:500px;">To interact with the semilimes API, you have to select a connector, an intent to execute, and a sending mode.</div>
+    <br />
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-cog"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="" />
+        <input type="hidden" id="node-input-autoName">
+    </div>
+    <div class="form-row">
+        <label for="node-input-connector"><i class="fa fa-cog"></i> Connector</label>
+        <input type="text" id="node-input-connector" placeholder="semilimes connector" />
+    </div>
+    <div style="font-size: smaller;max-width:500px;">Connector can be shared with other nodes.</div>
+    <br />
+    <div class="form-row">
+        <label for="node-input-async"><i class="fa fa-spinner"></i> <span> Send</span></label>
+        <select id="node-input-async">
+            <option value="1">Websocket</option>
+            <option value="0" selected>HTTP REST</option>
+        </select>
+    </div>
+    <br />
+    <div class="form-row">
+        <label for="node-input-actionName"><i class="fa fa-cog"></i> <span> Intent</span></label>
+        <select id="node-input-actionName" onchange="updateSenderUI()">
+            <option value="account_contacts">Account - Get Contacts</option>
+            <option value="p2p">P2P - Get Chats</option>
+            <option value="p2p_message">P2P - Get Messages</option>
+            <option value="p2p_message_send">P2P - Send Message</option>
+            <option value="p2p_message_update">P2P - Update Message</option>
+            <option value="groupchat">GroupChat - Get Chats</option>
+            <option value="groupchat_create">GroupChat - Create</option>
+            <option value="groupchat_message">GroupChat - Get Messages</option>
+            <option value="groupchat_message_send">GroupChat - Send Message</option>
+            <option value="groupchat_message_update">GroupChat - Update Message</option>
+            <option value="channel_my">Channel - My Channels</option>
+            <option value="channel_create">Channel - Create</option>
+            <option value="channel_message_send">Channel - Send Message</option>
+            <option value="channel_message_update">Channel - Update Message</option>
+        </select>
+        <input type="hidden" id="node-input-actionText">
+    </div>
+    <div class="form-row" id="node-input-recipientIdPanel">
+        <label for="node-input-recipientId"> Recipient Id</label>
+        <div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-input-recipientId" placeholder="Recipient Id" style="width: 100%">
+                <input type="hidden" id="node-input-recipientIdType">
+            </div>
+            <a id="node-config-input-scan-recipients" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+    </div>
+    <div class="form-row" id="node-input-titlePanel">
+        <label for="node-input-title"> Title</label>
+        <input type="text" id="node-input-title" placeholder="Title">
+        <input type="hidden" id="node-input-titleType">
+    </div>
+    <div class="form-row" id="node-input-recipientIdsPanel">
+        <label for="node-input-recipientIds">Recipient Ids</label>
+        <input type="text" id="node-input-recipientIds" placeholder="Recipient Ids">
+        <input type="hidden" id="node-input-recipientIdsType">
+        <div style="font-size: smaller;max-width:500px;">Enter comma-separated recipients if multiple</div>
+    </div>
+    <div class="form-row" id="node-input-groupChatIdPanel">
+        <label for="node-input-groupChatId"> Group Chat Id</label>
+        <div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-input-groupChatId" placeholder="Group Chat Id" style="width: 100%"/>
+                <input type="hidden" id="node-input-groupChatIdType">
+            </div>
+            <a id="node-config-input-scan-groupChats" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+    </div>
+    <div class="form-row" id="node-input-channelIdPanel">
+        <label for="node-input-channelId">Channel Id</label>
+        <div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-input-channelId" placeholder="Channel Id" style="width: 100%"/>
+                <input type="hidden" id="node-input-channelIdType">
+            </div>
+            <a id="node-config-input-scan-channels" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+    </div>
+    <div class="form-row" id="node-input-messageIdPanel">
+        <label for="node-input-messageId"> Message Id</label>
+        <input type="text" id="node-input-messageId" placeholder="Message Id">
+        <input type="hidden" id="node-input-messageIdType">
+    </div>
+    <div class="form-row" id="node-input-limitPanel">
+        <label for="node-input-limit"> Limit</label>
+        <input type="text" id="node-input-limit" placeholder="Limit">
+        <input type="hidden" id="node-input-limitType">
+    </div>
+    <br />
+    <div class="form-row">
+        <label for="node-input-logToConsole"> Log to Console</label>
+        <input type="checkbox" id="node-input-logToConsole" name="logToConsole" value="1">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="sme-main-sender-new">
+    <p>Send an intent to the semilimes server via <i>HTTP REST</i> or <i>WebSocket</i>.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt><code>msg._sme.sendingMsgs[]</code> <span class="property-type">array</span></dt>
+        <dd>Must contain a valid semilimes payload according to the selected intent.
+            This type of payload is automatically built when the flow contains at least one configured message node (e.g Text, Form, ...).
+            If more than one messages have been placed in the same flow, the same intent will be applied to both, and the <code>sender</code> node will perform one request per message.
+            <b>Note:</b> if a "Get" type of intent is selected, this payload will be discarded, as the intent will act only as a data getter from the server.
+        </dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt><code>msg._sme.responseMsgs[]</code> <span class="property-type">array</span></dt>
+        <dd>Contains the server response with the obtained content (for "Get" intents) or with the sent information.
+            The output should look like an array containing the following object:
+            <pre>
+{
+    "requestId":"...",
+    "success":true,
+    "data": {...}
+}                
+            </pre>
+            where data contains dynamic data depending on the executed intent.
+        </dd>
+    </dl>
+
+    <h3>Properties</h3>
+    <p>
+        <b>Intent</b>
+        <ul>
+            <li>
+                You can use <i>HTTP REST</i> for any type of intent you want to send. 
+                You can check the server response content immediately, by adding a <code>debug</code> node and read the output type specified in this node.
+            </li>
+            <li>
+                You can use <i>WebSocket</i> <b>only</b> for sending message intents. There won't be any server response to read after this node, but usually you will receive an asyncronous message event using the <code>listener</code> node. 
+                Read more on the <code>listener</code> documentation.
+            </li>
+        </ul>
+    </p>
+    <p>
+        <b>Intent:</b> this is a dynamic selector for the chosen intent. If a "Get"-type intent is selected, no messages will be required before this node, while a <code>debug</code> node will be useful after the <code>sender</code> to get the server response.
+        If a "Send"-type of intent is selected, the UI will show the necessary/optional parameters to compile the intent.
+    </p>
+    <p>
+        <b>Recipient Id:</b> this is the account Id of a contact of the current account. When sending a P2P message (private chat), this parameter will specify the account to whom the message will be sent to.
+    </p>
+    <p>
+        <b>Group Chat Id:</b> this is the unique Id of a group chat. This is required when getting or sending messages from/to a group chat.
+    </p>
+    <p>
+        <b>Channel Id:</b> this is the unique Id of a channel. This is required when getting or sending messages from/to a channel.
+    </p>
+    <p>
+        <b>Message Id:</b> this is the unique Id of a message published in any communication form (p2p, groupchat, channel). This is necessary when selecting an "Update Message" intent, so to identify the original message to update.
+        This kind of Id can be either retrieved just after a message is sent, or after using one of the "Get Messages" intents.
+        In both cases, you can read the server response and identify the messageId(s) returned (e.g. attaching a <debug>node</debug> after the sender and reading the <code>responseMsg</code> content).
+    </p>
+    <p>
+        <b>Limit:</b> this integer will limit the number of messages returned in a "Get Messages" intent. If the Limit is set to N, the most N recent messages will be returned by the server.
+    </p>
+    <p>
+        <b>Recipient Ids:</b> this multiple parameter (account Ids separated by commas) can be used for different purposes. When getting existing Group Chats, it will act as a filter, so that only chats with the specified accounts as members will be returned.
+        If used when creating a Group Chat, it will act as an automatic inviter, so that the specified members will be invited at creation time.
+    </p>
+</script>

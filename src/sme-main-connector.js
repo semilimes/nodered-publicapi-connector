@@ -68,20 +68,20 @@ module.exports = function (RED) {
             done();
         });
 		
-        function sendWebSocketMessage(msg) {
+        function sendWebSocketMessage(msg, logEnabled = false) {
             msg = validateMessage(msg);
-            webSocket.send(msg);
+            webSocket.send(msg, logEnabled);
         }
 
-        function sendApiMessage(msg) {
+        function sendApiMessage(msg, logEnabled = false) {
             msg = validateMessage(msg);
             var endpoint = msg.endpoint || "NoEndpointSet";
             var method = msg.httpMethod || "NoHttpMethodSet";
-            return apiClient.callApi(endpoint, method, msg);
+            return apiClient.callApi(endpoint, method, msg, logEnabled);
         }
 
-        function callApi(endpoint, method, data) {
-            return apiClient.callApi(endpoint, method, data);
+        function callApi(endpoint, method, data, logEnabled = false) {
+            return apiClient.callApi(endpoint, method, data, logEnabled);
         }
 
         function addMessageListener(listener) {
@@ -103,6 +103,77 @@ module.exports = function (RED) {
         this.addMessageListener = addMessageListener;
         this.removeMessageListener = removeMessageListener;
         this.addStatusListener = addStatusListener;
+
+                //Get my P2P Chats (Contacts)
+                RED.httpAdmin.get('/sme/recipients', function (req, res, next) {
+                    var endpoint = "/account/contacts";
+                    var httpMethod = "GET";
+                    var data = {
+                        parameters: {}
+                    };
+        
+                    callApi(endpoint, httpMethod, data)
+                        .then(
+                            value => {
+                                res.json(value);
+                            },
+                            error => {
+                                res.sendStatus(500).send(error);
+                            }
+                        )
+                        .catch(error => {
+                            res.sendStatus(500).send(error);
+                        })
+                });
+        
+                //Get my groupChats
+                RED.httpAdmin.get('/sme/groupChats', function (req, res, next) {
+                    var endpoint = "/communication/groupChat";
+                    var httpMethod = "GET";
+                    var data = {
+                        parameters: {}
+                    };
+        
+                    callApi(endpoint, httpMethod, data)
+                        .then(
+                            value => {
+                                res.json(value);
+                            },
+                            error => {
+                                res.sendStatus(500).send(error);
+                            }
+                        )
+                        .catch(error => {
+                            res.sendStatus(500).send(error);
+                        })
+                });
+        
+                //Get my channels
+                RED.httpAdmin.get('/sme/channels', function (req, res, next) {
+                    var endpoint = "/communication/channel/my";
+                    var httpMethod = "GET";
+                    var data = {
+                        parameters: {
+                            owner: true,
+                            editor: true,
+                            subscriber: true
+                        }
+                    };
+        
+                    callApi(endpoint, httpMethod, data)
+                        .then(
+                            value => {
+                                res.json(value);
+                            },
+                            error => {
+                                res.sendStatus(500).send(error);
+                            }
+                        )
+                        .catch(error => {
+                            res.sendStatus(500).send(error);
+                        })
+                });
+
     };
 	
     RED.nodes.registerType("sme-main-connector", SmeConnectorNode, {

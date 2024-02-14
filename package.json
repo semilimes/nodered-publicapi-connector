@@ -1,6 +1,6 @@
 {
   "name": "@semilimes/node-red-semilimes",
-  "version": "0.9.10",
+  "version": "0.9.11",
   "description": "The new semilimes connector which integrates with the public API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,6 +14,7 @@
       "sme-main-connector": "src/sme-main-connector.js",
       "sme-main-intent": "src/sme-main-intent.js",
       "sme-main-sender": "src/sme-main-sender.js",
+      "sme-main-sender-new": "src/sme-main-senderNew.js",
       "sme-main-listener": "src/sme-main-listener.js",
       "sme-main-sshTunnel": "src/sme-main-sshTunnel.js",
       "sme-main-formSaver": "src/sme-main-formSaver.js",
