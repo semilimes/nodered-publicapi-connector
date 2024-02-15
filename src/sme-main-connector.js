@@ -29,6 +29,7 @@ module.exports = function (RED) {
         var server = (this.credentials && this.credentials.server) || "api.semilimes.net";
         var apiKey = this.credentials.apiKey;
         var xAccount = this.credentials.xAccount;
+        var connectorId = this.id;
 
         var serverApiURL = `https://${server}`;
         var serverWsURL = `wss://${server}/service/ws`;
@@ -104,75 +105,75 @@ module.exports = function (RED) {
         this.removeMessageListener = removeMessageListener;
         this.addStatusListener = addStatusListener;
 
-                //Get my P2P Chats (Contacts)
-                RED.httpAdmin.get('/sme/recipients', function (req, res, next) {
-                    var endpoint = "/account/contacts";
-                    var httpMethod = "GET";
-                    var data = {
-                        parameters: {}
-                    };
-        
-                    callApi(endpoint, httpMethod, data)
-                        .then(
-                            value => {
-                                res.json(value);
-                            },
-                            error => {
-                                res.sendStatus(500).send(error);
-                            }
-                        )
-                        .catch(error => {
-                            res.sendStatus(500).send(error);
-                        })
-                });
-        
-                //Get my groupChats
-                RED.httpAdmin.get('/sme/groupChats', function (req, res, next) {
-                    var endpoint = "/communication/groupChat";
-                    var httpMethod = "GET";
-                    var data = {
-                        parameters: {}
-                    };
-        
-                    callApi(endpoint, httpMethod, data)
-                        .then(
-                            value => {
-                                res.json(value);
-                            },
-                            error => {
-                                res.sendStatus(500).send(error);
-                            }
-                        )
-                        .catch(error => {
-                            res.sendStatus(500).send(error);
-                        })
-                });
-        
-                //Get my channels
-                RED.httpAdmin.get('/sme/channels', function (req, res, next) {
-                    var endpoint = "/communication/channel/my";
-                    var httpMethod = "GET";
-                    var data = {
-                        parameters: {
-                            owner: true,
-                            editor: true,
-                            subscriber: true
-                        }
-                    };
-        
-                    callApi(endpoint, httpMethod, data)
-                        .then(
-                            value => {
-                                res.json(value);
-                            },
-                            error => {
-                                res.sendStatus(500).send(error);
-                            }
-                        )
-                        .catch(error => {
-                            res.sendStatus(500).send(error);
-                        })
-                });
+        //Get my P2P Chats (Contacts)
+        RED.httpAdmin.get(`/${connectorId}/sme/recipients`, function (req, res, next) {
+            var endpoint = "/account/contacts";
+            var httpMethod = "GET";
+            var data = {
+                parameters: {}
+            };
+
+            callApi(endpoint, httpMethod, data)
+                .then(
+                    value => {
+                        res.json(value);
+                    },
+                    error => {
+                        res.sendStatus(500).send(error);
+                    }
+                )
+                .catch(error => {
+                    res.sendStatus(500).send(error);
+                })
+        });
+
+        //Get my groupChats
+        RED.httpAdmin.get(`/${connectorId}/sme/groupChats`, function (req, res, next) {
+            var endpoint = "/communication/groupChat";
+            var httpMethod = "GET";
+            var data = {
+                parameters: {}
+            };
+
+            callApi(endpoint, httpMethod, data)
+                .then(
+                    value => {
+                        res.json(value);
+                    },
+                    error => {
+                        res.sendStatus(500).send(error);
+                    }
+                )
+                .catch(error => {
+                    res.sendStatus(500).send(error);
+                })
+        });
+
+        //Get my channels
+        RED.httpAdmin.get(`/${connectorId}/sme/channels`, function (req, res, next) {
+            var endpoint = "/communication/channel/my";
+            var httpMethod = "GET";
+            var data = {
+                parameters: {
+                    owner: true,
+                    editor: true,
+                    subscriber: true
+                }
+            };
+
+            callApi(endpoint, httpMethod, data)
+                .then(
+                    value => {
+                        res.json(value);
+                    },
+                    error => {
+                        res.sendStatus(500).send(error);
+                    }
+                )
+                .catch(error => {
+                    res.sendStatus(500).send(error);
+                })
+        });
 
     };
 	

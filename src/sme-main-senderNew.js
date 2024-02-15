@@ -45,7 +45,6 @@ module.exports = function (RED) {
 
         var node = this;
 
-
         function getNewRequestId() {
             return crypto.randomUUID();
         }
