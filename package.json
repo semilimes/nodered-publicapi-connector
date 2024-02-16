@@ -30,6 +30,7 @@
       "sme-comp-channel": "src/data-components/sme-comp-channel.js",
       "sme-comp-tunnel": "src/data-components/sme-comp-tunnel.js",
       "sme-comp-form": "src/data-components/sme-comp-form.js",
+      "formComponent": "src/form-components/formComponent.js",
       "sme-formComp-label": "src/form-components/sme-formComp-label.js",
       "sme-formComp-textBox": "src/form-components/sme-formComp-textBox.js",
       "sme-formComp-buttonList": "src/form-components/sme-formComp-buttonList.js",

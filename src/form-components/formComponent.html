@@ -1,0 +1,175 @@
+<script type="text/javascript">
+    RED.nodes.registerType('formComponent', {
+        category: 'semilimesAPI',
+        color: '#E6E0F8',
+        defaults: {
+            name: { value: "" },
+            reference: { value: "", required: true},
+            referenceType: { value: "str" },
+            saveLocation: { value: "", required: true},
+            saveLocationType: { value: "str" },
+
+            component: { value: "", required: true },
+
+            //Form Fields
+            //Label
+            title: { value: "" },
+            titleType: { value: "str" },
+
+            //Textbox
+            /// title
+            required: { value: "0" },
+            text: { value: "" },
+            textType: { value: "str"},
+            
+            //ButtonList
+            /// title
+            /// required
+            verticalList: { value : "1"},
+            buttons: { value : [{id: "btn1", value: "myBtn1"},{id: "btn2", value: "myBtn2"}] }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-th-large",
+        paletteLabel: 'Form Component',
+        label: function () {
+            return this.name || this.component || "Form Component";
+        },
+        oneditprepare: function () {
+            
+
+            $("#node-input-reference").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-referenceType"
+            });
+            $("#node-input-saveLocation").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-referenceType"
+            });
+
+            $("#node-input-component").typedInput({
+                type: "components",
+                types: [{ value: "components", options: [
+                    {value: "label", label: "Label"},
+                    {value: "textbox", label: "TextBox"},
+                    {value: "buttonlist", label: "Button List"}
+                ]}]
+            });
+            $("#node-input-component").on('change', function (_, _, _) { updateFormComponentUI() });
+
+            $("#node-input-title").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-titleType"
+            });
+            $("#node-input-text").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-textType"
+            });
+            $("#buttons-list").editableList({
+                header: $("<div>").append($.parseHTML("<div style='width:100%; display: inline-grid'>Buttons</div>")),
+                addItem: function(row, index, data) {
+                    console.log("Added data is: ", data);
+                    $(row).html(`<label for="button${index+1}">Button ${index+1}</label><input type="text" id="button${index+1}" class="button" value="${JSON.stringify(data) === "{}" ? "" : data}" placeholder="Button ${index+1} title">`);
+                }
+            });
+            console.log("Loaded buttons: ", this.buttons.map(obj => obj.value));
+            $("#buttons-list").editableList('addItems', this.buttons.map(obj => obj.value));
+
+        },
+        oneditsave: function () {
+            var buttonList = $("#buttons-list").editableList('items');
+            console.log("buttonList: ", buttonList);
+            this.buttons = [];
+            for(var idx = 0; idx < buttonList.length; idx++) {
+                this.buttons.push({id: `btn${idx+1}`, value: buttonList[idx].find(".button").val()});  
+            }
+            console.log("Saved Button list: ", this.buttons);
+        },
+        oneditcancel: function () {
+        }
+    });
+
+    function updateFormComponentUI() {
+        var chosenComponent = $("#node-input-component").typedInput('value');
+        
+        //Hide all
+        $(".componentField").hide();
+        switch(chosenComponent) {
+            case 'label':
+                $("#titlePanel").show();
+                break;
+            case 'textbox':
+                $("#titlePanel").show();
+                $("#requiredPanel").show();
+                $("#textPanel").show();
+                break;
+            case 'buttonlist':
+                $("#titlePanel").show();
+                $("#requiredPanel").show();
+                $("#verticalListPanel").show();
+                $("#buttonsPanel").show();
+                break;
+            default:
+                break;
+        }
+    }
+</script>
+
+<script type="text/html" data-template-name="formComponent">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-reference"><i class="fa fa-tag"></i> Reference</label>
+        <input type="text" id="node-input-reference" placeholder="Form component reference name">
+        <input type="hidden" id="node-input-referenceType">
+    </div>
+    <br />
+    <div class="form-row">
+        <label for="node-input-saveLocation"><i class="fa fa-tag"></i> Save Location</label>
+        <input type="text" id="node-input-saveLocation" placeholder="Save configured component here">
+        <input type="hidden" id="node-input-saveLocationType">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-component"><i class="fa fa-tag"></i> Component</label>
+        <input type="text" id="node-input-component">
+    </div>
+
+    <div class="form-row componentField" id="titlePanel">
+        <label for="node-input-title"><i class="fa fa-tag"></i> Title</label>
+        <input type="text" id="node-input-title">
+        <input type="hidden" id="node-input-titleType">
+    </div>
+    <div class="form-row componentField" id="requiredPanel">
+        <label for="node-input-required"><i class="fa fa-tag"></i> Required</label>
+        <select id="node-input-required">
+            <option value="1">Yes</option>
+            <option value="0" selected>No</option>
+        </select>
+    </div>
+    <div class="form-row componentField" id="textPanel">
+        <label for="node-input-text"><i class="fa fa-tag"></i> Text</label>
+        <input type="text" id="node-input-text">
+        <input type="hidden" id="node-input-textType">
+    </div>
+    <div class="form-row componentField" id="verticalListPanel">
+        <label for="node-input-verticalList"><i class="fa fa-tag"></i> Vertical List</label>
+        <select id="node-input-verticalList">
+            <option value="1" selected>Yes</option>
+            <option value="0">No</option>
+        </select>
+    </div>
+    <div class="form-row componentField" id="buttonsPanel">
+        <ol id="buttons-list" ></ol>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="formComponent">
+    <p>Creates a label with text in a form component</p>
+</script>
