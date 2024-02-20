@@ -141,7 +141,7 @@ module.exports = function (RED) {
 
         function getNodeConfigValue(node, msg, selectionType, selectionValue) {
             
-            if (selectionType && selectionValue) {
+            if (selectionType && selectionValue !== undefined) {
                 //Function to make nested properties work in UI
                 const leaf = (obj, path) => {
                     if (path.startsWith('.')) {
@@ -195,6 +195,8 @@ module.exports = function (RED) {
         function isTrue(obj) {
             if (obj == null)
                 return false;
+            if (obj === true)
+                return true;
             if (isNaN(obj))
                 return ['TRUE', 'YES'].indexOf(('' + obj).toUpperCase()) >= 0;
             return obj > 0;

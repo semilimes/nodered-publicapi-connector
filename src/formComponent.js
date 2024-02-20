@@ -102,7 +102,7 @@ module.exports = function(RED) {
                     location.formComponents.push({
                         refName: referenceFieldValue || "",
                         formComponentType: node.component,
-                        title: titleFieldValue
+                        title: titleFieldValue ?? ""
                     });
                     break;
                 case 'textbox':
@@ -112,7 +112,7 @@ module.exports = function(RED) {
                     location.formComponents.push({
                         refName: referenceFieldValue || "",
                         formComponentType: node.component,
-                        title: titleFieldValue,
+                        title: titleFieldValue ?? "",
                         requiredSelection: requiredFieldValue,
                         value: textFieldValue
                     });
@@ -131,7 +131,7 @@ module.exports = function(RED) {
                     location.formComponents.push({
                         refName: referenceFieldValue || "",
                         formComponentType: node.component,
-                        title: titleFieldValue,
+                        title: titleFieldValue ?? "",
                         requiredSelection: requiredFieldValue,
                         verticalList: verticalListFieldValue,
                         options: optionsFieldValue
@@ -152,18 +152,20 @@ module.exports = function(RED) {
                     location.formComponents.push({
                         refName: referenceFieldValue || "",
                         formComponentType: node.component,
-                        title: titleFieldValue,
+                        title: titleFieldValue ?? "",
                         requiredSelection: requiredFieldValue,
                         options: optionsFieldValue
                     });
                     break;
                 case 'switch':
                     var titleFieldValue = smeHelper.getNodeConfigValue(node, msg, node.titleType, node.title);
+                    console.log('switch value is: '+node.switchValue);
                     var switchFieldValue = smeHelper.getNodeConfigValue(node, msg, node.switchValueType, node.switchValue);
+                    console.log('switch field value is: '+switchFieldValue);
                     location.formComponents.push({
                         refName: referenceFieldValue || "",
                         formComponentType: node.component,
-                        title: titleFieldValue,
+                        title: titleFieldValue ?? "",
                         value: switchFieldValue
                     });
                     break;
@@ -177,7 +179,7 @@ module.exports = function(RED) {
                     location.formComponents.push({
                         refName: referenceFieldValue || "",
                         formComponentType: node.component,
-                        title: titleFieldValue,
+                        title: titleFieldValue ?? "",
                         requiredSelection: requiredFieldValue,
                         min: sliderMinFieldValue,
                         max: sliderMaxFieldValue,
@@ -196,7 +198,7 @@ module.exports = function(RED) {
                     location.formComponents.push({
                         refName: referenceFieldValue || "",
                         formComponentType: node.component,
-                        title: titleFieldValue,
+                        title: titleFieldValue ?? "",
                         requiredSelection: requiredFieldValue,
                         actionButtonTitle: actionButtonFieldValue
                     });
@@ -213,7 +215,7 @@ module.exports = function(RED) {
                     location.formComponents.push({
                         refName: referenceFieldValue || "",
                         formComponentType: node.component,
-                        title: titleFieldValue,
+                        title: titleFieldValue ?? "",
                         requiredSelection: requiredFieldValue,
                         actionButtonTitle: actionButtonFieldValue,
                         multiSelection: multiSelectionFieldValue
@@ -236,7 +238,7 @@ module.exports = function(RED) {
                     location.formComponents.push({
                         refName: referenceFieldValue || "",
                         formComponentType: node.component,
-                        title: titleFieldValue,
+                        title: titleFieldValue ?? "",
                         requiredSelection: requiredFieldValue,
                         filter: {
                             types: bucketFiltersArray
@@ -262,7 +264,7 @@ module.exports = function(RED) {
                     location.formComponents.push({
                         refName: referenceFieldValue || "",
                         formComponentType: node.component,
-                        title: titleFieldValue,
+                        title: titleFieldValue ?? "",
                         requiredSelection: requiredFieldValue,
                         actionButtonTitle: actionButtonFieldValue
                     });
