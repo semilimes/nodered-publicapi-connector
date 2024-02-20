@@ -37,6 +37,9 @@ module.exports = function (RED) {
         this.messageId = config.messageId;
         this.messageIdType = config.messageIdType;
 
+        this.saveLocation = config.saveLocation;
+        this.saveLocationType = config.saveLocationType;
+
         this.logToConsole = config.logToConsole;
 
         var smeConnector = config.connector && RED.nodes.getNode(config.connector);
@@ -55,6 +58,8 @@ module.exports = function (RED) {
             var core = new Core();
             var smeHelper = new core.SmeHelper();
             var smeSendingBox = smeHelper.getSendingBox(msg);
+
+            var saveMode = "";
 
             switch (node.actionName) {
                 case 'account_contacts': {
@@ -95,6 +100,7 @@ module.exports = function (RED) {
                     break;
                 }
                 case 'p2p_message_send': {
+                    saveMode = "messageId";
                     if (smeSendingBox) {
                         var recipientIdValue = smeHelper.getNodeConfigValue(node, msg, node.recipientIdType, node.recipientId);
                         smeSendingBox.forEach(smeMsg => {
@@ -146,6 +152,7 @@ module.exports = function (RED) {
                     break;
                 }
                 case 'groupchat_create': {
+                    saveMode = "groupChatId";
                     smeHelper.clearSendingBox(msg);
                     var request = {
                         requestId: getNewRequestId(),
@@ -184,6 +191,7 @@ module.exports = function (RED) {
                     break;
                 }
                 case 'groupchat_message_send': {
+                    saveMode = "messageId";
                     if (smeSendingBox) {
                         var groupChatIdValue = smeHelper.getNodeConfigValue(node, msg, node.groupChatIdType, node.groupChatId);
                         smeSendingBox.forEach(smeMsg => {
@@ -231,6 +239,7 @@ module.exports = function (RED) {
                     break;
                 }
                 case 'channel_create': {
+                    saveMode = "channelId";
                     smeHelper.clearSendingBox(msg);
                     var request = {
                         requestId: getNewRequestId(),
@@ -243,7 +252,25 @@ module.exports = function (RED) {
                     smeHelper.addSendingMsg(msg, request);
                     break;
                 }
+                case 'groupchat_message' : {
+                    smeHelper.clearSendingBox(msg);
+                    var request = {
+                        requestId: getNewRequestId(),
+                        endpoint: "/communication/channel/message",
+                        httpMethod: "GET",
+                        parameters: {}
+                    };
+                    var channelIdValue = smeHelper.getNodeConfigValue(node, msg, node.channelIdType, node.channelId);
+                    var messageIdValue = smeHelper.getNodeConfigValue(node, msg, node.messageIdType, node.messageId);
+                    var limitValue = smeHelper.getNodeConfigValue(node, msg, node.limitType, node.limit);
+                    if (channelIdValue) request.parameters.channelId = channelIdValue;
+                    if (messageIdValue) request.parameters.messageId = messageIdValue;
+                    if (limitValue) request.parameters.limit = limitValue;
+                    smeHelper.addSendingMsg(msg, request);
+                    break;
+                }
                 case 'channel_message_send': {
+                    saveMode = "messageId";
                     if (smeSendingBox) {
                         var channelIdValue = smeHelper.getNodeConfigValue(node, msg, node.channelIdType, node.channelId);
                         smeSendingBox.forEach(smeMsg => {
@@ -309,6 +336,44 @@ module.exports = function (RED) {
                                     value.requestId = smeMsg.requestId || '';
                                 }
                                 smeHelper.addResponseMsg(msg, value);
+
+                                //Save entity id (message, groupchat, channel) in saved location
+                                if (saveMode) {
+                                    if (node.saveLocation) {
+                                        var valueToSave = undefined;
+                                        switch (saveMode) {
+                                            case 'messageId':
+                                                valueToSave = value.data?.sentMessage?.messageId;
+                                                break;
+                                            case 'groupChatId':
+                                                valueToSave = value.data?.createdGroupChat?.groupChatId;
+                                                break;
+                                            case 'channelId':
+                                                valueToSave = value.data?.createdChannel?.channelId;
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        if (valueToSave) {
+                                            switch (node.saveLocationType) {
+                                                case 'msg':
+                                                    msg[node.saveLocation] = valueToSave;
+                                                    break;
+                                                case 'flow':
+                                                    node.context().flow.set(node.saveLocation, valueToSave);
+                                                    break;
+                                                case 'global':
+                                                    node.context().global.set(node.saveLocation, valueToSave);
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }
+                                    } else {
+                                        node.warn('Save location value is invalid!');
+                                    }
+                                }
+                                
                                 send(msg, false);
                                 done && done();
                             },
@@ -334,5 +399,5 @@ module.exports = function (RED) {
         });
     };
 
-    RED.nodes.registerType("sme-main-sender-new", SmeSenderNode);
+    RED.nodes.registerType("sender", SmeSenderNode);
 };

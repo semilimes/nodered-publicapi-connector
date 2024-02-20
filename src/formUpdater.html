@@ -1,7 +1,7 @@
 <script type="text/javascript">
-    RED.nodes.registerType('sme-main-formUpdater', {
-        category: 'semilimesAPI_deprecated',
-        color: "#E2D96E",
+    RED.nodes.registerType('formUpdater', {
+        category: 'semilimesAPI',
+        color: "#E6E0F8",
         defaults: {
             name: {value: ""},
             location: {value: "", required: true},
@@ -15,7 +15,7 @@
         outputs: 1,
         align: 'left',
         icon: "font-awesome/fa-refresh",
-        paletteLabel: 'Form Values Updater',
+        paletteLabel: 'Form Updater',
         label: function () {
             return this.name || `Update Form Value`;
         },
@@ -35,14 +35,14 @@
             });
             $("#node-input-compValue").typedInput({
                 type: "str",
-                types: ["str","num", "bool", "msg", "flow", "global"],
+                types: ["str","num", "bool", "json", "msg", "flow", "global"],
                 typeField: "#node-input-compValueType"
             });
         }
     });
 </script>
 
-<script type="text/html" data-template-name="sme-main-formUpdater">
+<script type="text/html" data-template-name="formUpdater">
     <div style="max-width:500px;">Use this node to update a component value of a previously saved form.</div>
     <br />
 
@@ -68,6 +68,6 @@
     
 </script>
 
-<script type="text/html" data-help-name="sme-main-formUpdater">
+<script type="text/html" data-help-name="formUpdater">
     <p>Update a component value of a saved form.</p>
 </script>

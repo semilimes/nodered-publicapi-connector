@@ -1,6 +1,6 @@
 <script type="text/javascript">
     RED.nodes.registerType('sme-main-sender', {
-        category: 'semilimesAPI',
+        category: 'semilimesAPI_deprecated',
         color: "#D7D7A0",
         defaults: {
             connector: { type: 'sme-main-connector', required: true },
@@ -10,7 +10,7 @@
         outputs: 1,
         align: 'right',
         icon: "font-awesome/fa-rss",
-        paletteLabel: 'sender',
+        paletteLabel: 'sender_OLD',
         label: function () {
             return 'send to semilimes';
         }

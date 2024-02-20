@@ -1,6 +1,6 @@
 {
   "name": "@semilimes/node-red-semilimes",
-  "version": "0.9.11",
+  "version": "0.10.1",
   "description": "The new semilimes connector which integrates with the public API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,11 +10,15 @@
   "node-red": {
     "version": ">=2.0.0",
     "nodes": {
+      "sender": "src/sender.js",
+      "formSetup": "src/formSetup.js",
+      "formComponent": "src/formComponent.js",
+      "formUpdater": "src/formUpdater.js",
+      "message": "src/message.js",
       "sme-main-core": "src/sme-main-core.js",
       "sme-main-connector": "src/sme-main-connector.js",
       "sme-main-intent": "src/sme-main-intent.js",
       "sme-main-sender": "src/sme-main-sender.js",
-      "sme-main-sender-new": "src/sme-main-senderNew.js",
       "sme-main-listener": "src/sme-main-listener.js",
       "sme-main-sshTunnel": "src/sme-main-sshTunnel.js",
       "sme-main-formSaver": "src/sme-main-formSaver.js",
@@ -30,7 +34,6 @@
       "sme-comp-channel": "src/data-components/sme-comp-channel.js",
       "sme-comp-tunnel": "src/data-components/sme-comp-tunnel.js",
       "sme-comp-form": "src/data-components/sme-comp-form.js",
-      "formComponent": "src/form-components/formComponent.js",
       "sme-formComp-label": "src/form-components/sme-formComp-label.js",
       "sme-formComp-textBox": "src/form-components/sme-formComp-textBox.js",
       "sme-formComp-buttonList": "src/form-components/sme-formComp-buttonList.js",

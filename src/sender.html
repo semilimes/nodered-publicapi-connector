@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('sme-main-sender-new', {
+    RED.nodes.registerType('sender', {
         category: 'semilimesAPI',
         color: "#D7D7A0",
         defaults: {
@@ -33,15 +33,18 @@
             title: { value: ""},
             titleType: {value: "str"},
 
+            saveLocation: { value: "savedEntityId" },
+            saveLocationType: { value: "msg" },
+
             logToConsole: { value: true }
         },
         inputs: 1,
         outputs: 1,
         align: 'right',
         icon: "font-awesome/fa-rss",
-        paletteLabel: 'senderNew',
+        paletteLabel: 'sender',
         label: function() {
-            return this.name || `Intent: ${this.actionText ?? "?"}${this.actionText && this.autoName ? " | " + this.autoName : ""}`;
+            return this.name || `${this.actionText ?? "?"}${this.actionText && this.autoName ? " | " + this.autoName : ""}` || "Send...";
         },
         labelStyle: function () {
             return this.actionName ? "node_label_italic" : "";
@@ -101,6 +104,12 @@
             .typedInput('types',["str", "msg", "flow", "global"])
             .typedInput('type',"str");
             
+            $("#node-input-saveLocation").typedInput({
+                type: "msg",
+                types: ["msg", "flow", "global"],
+                typeField: "#node-input-saveLocationType"
+            });
+
             updateSenderUI();
 
             //Preparing the search recipients button
@@ -309,6 +318,14 @@
         );
         this.actionText = $('#node-input-actionText').val();
 
+        var defaultSaveLocations = [
+            "",
+            "savedEntityId",
+            "savedMessageId",
+            "savedGroupChatId",
+            "savedChannelId"
+        ];
+
         //hide all panels
         $('#node-input-recipientIdPanel').hide();
         $('#node-input-messageIdPanel').hide();
@@ -317,6 +334,7 @@
         $('#node-input-recipientIdsPanel').hide();
         $('#node-input-groupChatIdPanel').hide();
         $('#node-input-channelIdPanel').hide();
+        $('#node-input-saveLocationPanel').hide();
 
         switch (actionName) {
             case 'account_contacts': {
@@ -334,6 +352,15 @@
             }
             case 'p2p_message_send': {
                 $('#node-input-recipientIdPanel').show();
+                $('#node-input-saveLocationPanel label').html("Save MessageId");
+                if (defaultSaveLocations.includes($('#node-input-saveLocation').typedInput('value')))
+                {
+                    $('#node-input-saveLocation').typedInput('value', "savedMessageId")
+                }
+                if($('#node-input-async').val() === "0") {
+                    $('#node-input-saveLocationPanel').show();
+                }
+                
                 break;
             }
             case 'p2p_message_update': {
@@ -347,6 +374,14 @@
             case 'groupchat_create': {
                 $('#node-input-titlePanel').show();
                 $('#node-input-recipientIdsPanel').show();
+                $('#node-input-saveLocationPanel label').html("Save GroupChatId");
+                if (defaultSaveLocations.includes($('#node-input-saveLocation').typedInput('value')))
+                {
+                    $('#node-input-saveLocation').typedInput('value', "savedGroupChatId")
+                }
+                if($('#node-input-async').val() === "0") {
+                    $('#node-input-saveLocationPanel').show();
+                }
                 break;
             }
             case 'groupchat_message': {
@@ -357,6 +392,14 @@
             }
             case 'groupchat_message_send': {
                 $('#node-input-groupChatIdPanel').show();
+                $('#node-input-saveLocationPanel label').html("Save MessageId");
+                if (defaultSaveLocations.includes($('#node-input-saveLocation').typedInput('value')))
+                {
+                    $('#node-input-saveLocation').typedInput('value', "savedMessageId")
+                }
+                if($('#node-input-async').val() === "0") {
+                    $('#node-input-saveLocationPanel').show();
+                }
                 break;
             }
             case 'groupchat_message_update': {
@@ -369,10 +412,32 @@
             }
             case 'channel_create': {
                 $('#node-input-titlePanel').show();
+                $('#node-input-saveLocationPanel label').html("Save ChannelId");
+                if (defaultSaveLocations.includes($('#node-input-saveLocation').typedInput('value')))
+                {
+                    $('#node-input-saveLocation').typedInput('value', "savedChannelId")
+                }
+                if($('#node-input-async').val() === "0") {
+                    $('#node-input-saveLocationPanel').show();
+                }
+                break;
+            }
+            case 'channel_message': {
+                $('#node-input-channelIdPanel').show();
+                $('#node-input-messageIdPanel').show();
+                $('#node-input-limitPanel').show();
                 break;
             }
             case 'channel_message_send': {
                 $('#node-input-channelIdPanel').show();
+                $('#node-input-saveLocationPanel label').html("Save MessageId");
+                if (defaultSaveLocations.includes($('#node-input-saveLocation').typedInput('value')))
+                {
+                    $('#node-input-saveLocation').typedInput('value', "savedMessageId")
+                }
+                if($('#node-input-async').val() === "0") {
+                    $('#node-input-saveLocationPanel').show();
+                }
                 break;
             }
             case 'channel_message_update': {
@@ -386,7 +451,7 @@
     }
 </script>
 
-<script type="text/html" data-template-name="sme-main-sender-new">
+<script type="text/html" data-template-name="sender">
     <div style="max-width:500px;">Execute actions in semilimes server via HTTP endpoints or WebSocket messages.</div>
     <br />
     <div class="form-row">
@@ -402,7 +467,7 @@
     <br />
     <div class="form-row">
         <label for="node-input-async"><i class="fa fa-spinner"></i> <span> Send</span></label>
-        <select id="node-input-async">
+        <select id="node-input-async" onchange="updateSenderUI()">
             <option value="1">Websocket</option>
             <option value="0" selected>HTTP REST</option>
         </select>
@@ -423,6 +488,7 @@
             <option value="groupchat_message_update">GroupChat - Update Message</option>
             <option value="channel_my">Channel - My Channels</option>
             <option value="channel_create">Channel - Create</option>
+            <option value="channel_message">Channel - Get Messages</option>
             <option value="channel_message_send">Channel - Send Message</option>
             <option value="channel_message_update">Channel - Update Message</option>
         </select>
@@ -486,13 +552,18 @@
         <input type="hidden" id="node-input-limitType">
     </div>
     <br />
+    <div class="form-row" id="node-input-saveLocationPanel">
+        <label for="node-input-saveLocation"> Save </label>
+        <input type="text" id="node-input-saveLocation" placeholder="">
+        <input type="hidden" id="node-input-saveLocationType">
+    </div>
     <div class="form-row">
         <label for="node-input-logToConsole"> Log to Console</label>
         <input type="checkbox" id="node-input-logToConsole" name="logToConsole" value="1">
     </div>
 </script>
 
-<script type="text/html" data-help-name="sme-main-sender-new">
+<script type="text/html" data-help-name="sender">
     <p>Send an intent to the semilimes server via <i>HTTP REST</i> or <i>WebSocket</i>.</p>
 
     <h3>Inputs</h3>

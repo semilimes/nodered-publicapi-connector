@@ -1,0 +1,395 @@
+<script type="text/javascript">
+    RED.nodes.registerType('formComponent', {
+        category: 'semilimesAPI',
+        color: '#E6E0F8',
+        defaults: {
+            name: { value: "" },
+            reference: { value: "", required: true},
+            referenceType: { value: "str" },
+            //saveLocation: { value: "myFormStructure", required: true},
+            //saveLocationType: { value: "flow" },
+
+            component: { value: "", required: true },
+
+            //Form Fields
+            //Label
+            title: { value: "" },
+            titleType: { value: "str" },
+
+            //Textbox
+            /// title
+            required: { value: false },
+            requiredType: { value: "bool" },
+
+            text: { value: "" },
+            textType: { value: "str"},
+            
+            //ButtonList
+            verticalList: { value : true},
+            verticalListType: { value: "bool" },
+            buttons: { value : [] },
+
+            // Single/Multi Choice
+            choices: { value: [] },
+
+            //Switch
+            switchValue: { value: false },
+            switchValueType: { value: "bool" },
+
+            //Slider
+            sliderMin: { value: 0, required: true },
+            sliderMinType: { value: "num" },
+
+            sliderMax: { value: 10, required: true },
+            sliderMaxType: { value: "num" }, 
+
+            sliderStep: { value: 0, required: true },
+            sliderStepType: { value: "num" },
+
+            sliderValue: { value: 0, required: true },
+            sliderValueType: { value: "num" },
+
+            // Date/Time/Location/Photo/File/Contact/Bucket Pickers
+            actionButtonTitle: { value: "Select", required: true },
+            actionButtonTitleType: { value: "str" },
+
+            // Photo/File/Contact/Bucket Pickers
+            multiSelection: { value: false },
+            multiSelectionType: { value: "bool" },
+
+            // Bucket Picker
+            bucketFilter: { value: "all" },
+
+
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-th-large",
+        paletteLabel: 'Form Component',
+        label: function () {
+            return this.name || (this.component ? `${this.component}: ${this.reference}` : null)  || "Form Component";
+        },
+        oneditprepare: function () {
+            $("#node-input-reference").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-referenceType"
+            });
+
+            $("#node-input-component").typedInput({
+                type: "components",
+                types: [{ value: "components", options: [
+                    {value: "label", label: "Label"},
+                    {value: "textbox", label: "TextBox"},
+                    {value: "buttonlist", label: "Button List"},
+                    {value: "singlechoice", label: "Single Choice"},
+                    {value: "multichoice", label: "Multi Choice"},
+                    {value: "switch", label: "Switch"},
+                    {value: "slider", label: "Slider"},
+                    {value: "datepicker", label: "Date Picker"},
+                    {value: "timepicker", label: "Time Picker"},
+                    {value: "locationpicker", label: "Location Picker"},
+                    {value: "photopicker", label: "Photo Picker"},
+                    {value: "filepicker", label: "File Picker"},
+                    {value: "contactpicker", label: "Contact Picker"},
+                    {value: "bucketpicker", label: "Bucket Picker"},
+                    {value: "hiddenvalue", label: "Hidden Value"},
+                    {value: "qrcodescanner", label: "QRCode Scanner"},
+                    {value: "nfcreader", label: "NFC Reader"}
+                ]}]
+            });
+            $("#node-input-component").on('change', function (_, _, _) { updateFormComponentUI() });
+
+
+            $("#node-input-title").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-titleType"
+            });
+
+            /* Textbox */
+            $("#node-input-text").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-textType"
+            });
+
+            $("#node-input-required").typedInput({
+                type: "bool",
+                types: ["bool", "msg", "flow", "global"],
+                typeField: "#node-input-requiredType"
+            });
+
+            /* Buttons */
+            $("#node-input-verticalList").typedInput({
+                type: "bool",
+                types: ["bool", "msg", "flow", "global"],
+                typeField: "#node-input-verticalListType"
+            });
+
+            $("#buttons-list").editableList({
+                removable: true,
+                header: $("<div>").append($.parseHTML("<div style='width:100%; display: inline-grid'>Buttons</div>")),
+                addItem: function(row, index, data) {
+                    //console.log("Added buttons are: ", data);
+                    $(row).html(`<label for="button${index+1}">Button ${index+1}</label><input type="text" id="button${index+1}" class="button" value="${JSON.stringify(data) === "{}" ? "" : data}" placeholder="Button ${index+1} title">`);
+                }
+            });
+            //console.log("Loaded buttons: ", this.buttons.map(obj => obj.value));
+            $("#buttons-list").editableList('addItems', this.buttons.map(obj => obj.value));
+
+            /* Single and Multi choices */
+            $("#choices-list").editableList({
+                removable: true,
+                header: $("<div>").append($.parseHTML("<div style='width:100%; display: inline-grid'>Choices</div>")),
+                addItem: function(row, index, data) {
+                    //console.log("Added choices are: ", data);
+                    $(row).html(`<label for="choice${index+1}">Choice ${index+1}</label><input type="text" id="choice${index+1}" class="choice" value="${JSON.stringify(data) === "{}" ? "" : data}" placeholder="Choice ${index+1} text">`);
+                }
+            });
+            //console.log("Loaded buttons: ", this.buttons.map(obj => obj.value));
+            $("#choices-list").editableList('addItems', this.choices.map(obj => obj.value));
+
+            /* Switch */
+            $("#node-input-switchValue").typedInput({
+                type: "bool",
+                types: ["bool", "msg", "flow", "global"],
+                typeField: "#node-input-switchValueType"
+            });
+
+            /* Slider */
+            $("#node-input-sliderMin").typedInput({
+                type: "num",
+                types: ["num", "msg", "flow", "global"],
+                typeField: "#node-input-sliderMinType"
+            });
+            $("#node-input-sliderMax").typedInput({
+                type: "num",
+                types: ["num", "msg", "flow", "global"],
+                typeField: "#node-input-sliderMaxType"
+            });
+            $("#node-input-sliderStep").typedInput({
+                type: "num",
+                types: ["num", "msg", "flow", "global"],
+                typeField: "#node-input-sliderStepType"
+            });
+            $("#node-input-sliderValue").typedInput({
+                type: "num",
+                types: ["num", "msg", "flow", "global"],
+                typeField: "#node-input-sliderValueType"
+            });
+
+            /* Date/Time/Location/Photo/File/Contact/Bucket Pickers */
+            $("#node-input-actionButtonTitle").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-actionButtonTitleType"
+            });
+
+            /* Photo/File/Contact/Bucket Pickers */
+            $("#node-input-multiSelection").typedInput({
+                type: "bool",
+                types: ["bool", "msg", "flow", "global"],
+                typeField: "#node-input-multiSelectionType"
+            });
+
+            /* Bucket Picker */
+            $("#node-input-bucketFilter").typedInput({
+                type: "bucketFilters",
+                types: [{ value: "bucketFilters", options: [
+                    {value: "all", label: "All"},
+                    {value: "post", label: "Post"},
+                    {value: "profile", label: "Profile"},
+                    {value: "groupchat", label: "Group Chat"},
+                    {value: "channel", label: "Channel"}
+                ]}]
+            });
+
+        },
+        oneditsave: function () {
+            var buttonList = $("#buttons-list").editableList('items');
+            console.log("buttonList: ", buttonList);
+            this.buttons = [];
+            for(var idx = 0; idx < buttonList.length; idx++) {
+                this.buttons.push({id: `btn${idx+1}`, value: buttonList[idx].find(".button").val()});  
+            }
+            //console.log("Saved Button list: ", this.buttons);
+
+            var choiceList = $("#choices-list").editableList('items');
+            console.log("choiceList: ", choiceList);
+            this.choices = [];
+            for(var idx = 0; idx < choiceList.length; idx++) {
+                this.choices.push({id: `btn${idx+1}`, value: choiceList[idx].find(".choice").val()});  
+            }
+            //console.log("Saved Choice list: ", this.choices);
+
+        },
+        oneditcancel: function () {
+        }
+    });
+
+    function updateFormComponentUI() {
+        var chosenComponent = $("#node-input-component").typedInput('value');
+        
+        //Hide all
+        $(".componentField").hide();
+        switch(chosenComponent) {
+            case 'label':
+                $("#titlePanel").show();
+                break;
+            case 'textbox':
+                $("#titlePanel").show();
+                $("#requiredPanel").show();
+                $("#textPanel").show();
+                break;
+            case 'buttonlist':
+                $("#titlePanel").show();
+                $("#requiredPanel").show();
+                $("#verticalListPanel").show();
+                $("#buttonsPanel").show();
+                break;
+            case 'singlechoice':
+            case 'multichoice':
+                $("#titlePanel").show();
+                $("#requiredPanel").show();
+                $("#choicesPanel").show();
+                break;
+            case 'switch':
+                $("#titlePanel").show();
+                $("#switchValuePanel").show();
+                break;
+            case 'slider':
+                $("#titlePanel").show();
+                $("#sliderValuePanel").show();
+                $("#sliderMinPanel").show();
+                $("#sliderMaxPanel").show();
+                $("#sliderStepPanel").show();
+                break;
+            case 'datepicker':
+            case 'timepicker':
+            case 'locationpicker':
+                $('titlePanel').show();
+                $("#requiredPanel").show();
+                $('#actionButtonTitlePanel').show();
+                break;
+            case 'photopicker':
+            case 'filepicker':
+            case 'contactpicker':
+                $('titlePanel').show();
+                $("#requiredPanel").show();
+                $('#actionButtonTitlePanel').show();
+                $('#multiSelectionPanel').show();
+                break;
+            case 'bucketpicker':
+                $('titlePanel').show();
+                $("#requiredPanel").show();
+                $('#actionButtonTitlePanel').show();
+                $('#multiSelectionPanel').show();
+                $('#bucketFilterPanel').show();
+                break;
+            case 'hiddenvalue':
+                $("#textPanel").show();
+                break;
+            case 'qrcodescanner':
+            case 'nfcreader':
+                $('titlePanel').show();
+                $("#requiredPanel").show();
+                $('#actionButtonTitle').typedInput('value', )
+                $('#actionButtonTitlePanel').show();
+                break;
+            default:
+                break;
+        }
+    }
+</script>
+
+<script type="text/html" data-template-name="formComponent">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-reference"><i class="fa fa-tag"></i> Reference</label>
+        <input type="text" id="node-input-reference" placeholder="Form component reference name">
+        <input type="hidden" id="node-input-referenceType">
+    </div>
+    <!-- <div class="form-row">
+        <label for="node-input-saveLocation"><i class="fa fa-tag"></i> Save Location</label>
+        <input type="text" id="node-input-saveLocation" placeholder="Save configured component here">
+        <input type="hidden" id="node-input-saveLocationType">
+    </div> -->
+    <div class="form-row">
+        <label for="node-input-component"><i class="fa fa-tag"></i> Component</label>
+        <input type="text" id="node-input-component">
+    </div>
+    <br />
+    <div class="form-row componentField" id="titlePanel">
+        <label for="node-input-title"><i class="fa fa-tag"></i> Title</label>
+        <input type="text" id="node-input-title">
+        <input type="hidden" id="node-input-titleType">
+    </div>
+    <div class="form-row componentField" id="requiredPanel">
+        <label for="node-input-required"><i class="fa fa-tag"></i> Required</label>
+        <input type="text" id="node-input-required">
+        <input type="hidden" id="node-input-requiredType">
+    </div>
+    <div class="form-row componentField" id="textPanel">
+        <label for="node-input-text"><i class="fa fa-tag"></i> Text</label>
+        <input type="text" id="node-input-text">
+        <input type="hidden" id="node-input-textType">
+    </div>
+    <div class="form-row componentField" id="verticalListPanel">
+        <label for="node-input-verticalList"><i class="fa fa-tag"></i> Vertical</label>
+        <input type="text" id="node-input-verticalList">
+        <input type="hidden" id="node-input-verticalListType">
+    </div>
+    <div class="form-row componentField" id="buttonsPanel">
+        <ol id="buttons-list" ></ol>
+    </div>
+    <div class="form-row componentField" id="choicesPanel">
+        <ol id="choices-list" ></ol>
+    </div>
+    <div class="form-row componentField" id="switchValuePanel">
+        <label for="node-input-switchValue"><i class="fa fa-tag"></i> Value</label>
+        <input type="text" id="node-input-switchValue">
+        <input type="hidden" id="node-input-switchValueType">
+    </div>
+    <div class="form-row componentField" id="sliderMinPanel">
+        <label for="node-input-sliderMin"><i class="fa fa-tag"></i> Min</label>
+        <input type="text" id="node-input-sliderMin" placeholder="Minimum slider value">
+        <input type="hidden" id="node-input-sliderMinType">
+    </div>
+    <div class="form-row componentField" id="sliderMaxPanel">
+        <label for="node-input-sliderMax"><i class="fa fa-tag"></i> Max</label>
+        <input type="text" id="node-input-sliderMax" placeholder="Maximum slider value">
+        <input type="hidden" id="node-input-sliderMaxType">
+    </div>
+    <div class="form-row componentField" id="sliderStepPanel">
+        <label for="node-input-sliderStep"><i class="fa fa-tag"></i> Step</label>
+        <input type="text" id="node-input-sliderStep" placeholder="Slider minimum steps">
+        <input type="hidden" id="node-input-sliderStepType">
+    </div>
+    <div class="form-row componentField" id="sliderValuePanel">
+        <label for="node-input-sliderValue"><i class="fa fa-tag"></i> Value</label>
+        <input type="text" id="node-input-sliderValue">
+        <input type="hidden" id="node-input-sliderValueType">
+    </div>
+    <div class="form-row componentField" id="bucketFilterPanel">
+        <label for="node-input-bucketFilter"><i class="fa fa-tag"></i> Bucket type</label>
+        <input type="text" id="node-input-bucketFilter">
+    </div>
+    <div class="form-row componentField" id="actionButtonTitlePanel">
+        <label for="node-input-actionButtonTitle"><i class="fa fa-tag"></i> Action Label</label>
+        <input type="text" id="node-input-actionButtonTitle" placeholder="Pick/Select button title">
+        <input type="hidden" id="node-input-actionButtonTitleType">
+    </div>
+    <div class="form-row componentField" id="multiSelectionPanel">
+        <label for="node-input-multiSelection"><i class="fa fa-tag"></i> MultiSelect</label>
+        <input type="text" id="node-input-multiSelection">
+        <input type="hidden" id="node-input-multiSelectionType">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="formComponent">
+    <p>Creates a form component based to its format selection</p>
+</script>

@@ -1,10 +1,12 @@
 <script type="text/javascript">
-    RED.nodes.registerType('sme-comp-form', {
-        category: 'semilimesAPI_deprecated',
-        color: '#a6bbcf',
+    RED.nodes.registerType('formSetup', {
+        category: 'semilimesAPI',
+        color: '#E6E0F8',
         defaults: {
             connector: { type: 'sme-main-connector', required: true },
             name: { value: "" },
+            saveLocation: { value: "savedForm" },
+            saveLocationType: { value: "flow" },
             submitEnabled: { value: "1"},
             retainStatus: { value: "0" },
             submitText: { value: "Submit" },
@@ -16,15 +18,31 @@
             channelId: { value: "" },
             channelIdType: { value: "str" },
             receiverType: { value: "none" },
-            refName: { value: "" },
+            refName: { value: "", required: true },
             refNameType: { value: "str" }
         },
         inputs: 1,
         outputs: 1,
-        icon: "font-awesome/fa-comment-o",
-        paletteLabel: 'Form',
+        icon: "font-awesome/fa-cogs",
+        paletteLabel: 'Form Setup',
         label: function() {
-            return this.name || "Form" + (this.refName ? ` | Ref: ${this.refName}`: "");
+            return this.name || "Form Setup" + (this.refName ? ` | Ref: ${this.refName}`: "");
+        },
+        oneditsave: function() {
+            $("#node-input-recipientId")
+            .typedInput({typeField: "#node-input-recipientIdType"})
+            .typedInput('types',["str", "msg", "flow", "global"])
+            .typedInput('type',"str");
+
+            $("#node-input-groupChatId")
+            .typedInput({typeField: "#node-input-groupChatIdType"})
+            .typedInput('types',["str", "msg", "flow", "global"])
+            .typedInput('type',"str");
+
+            $("#node-input-channelId")
+            .typedInput({typeField: "#node-input-channelIdType"})
+            .typedInput('types',["str", "msg", "flow", "global"])
+            .typedInput('type',"str");
         },
         oneditprepare: function () {
             $("#node-input-submitText").typedInput({
@@ -32,58 +50,93 @@
                 types: ["str", "msg", "flow", "global"],
                 typeField: "#node-input-submitTextType"
             });
-            $("#node-input-receiverId").typedInput({
-                type: "str",
-                types: ["str", "msg", "flow", "global"],
-                typeField: "#node-input-receiverIdType"
-            });
+
+            $("#node-input-recipientId")
+            .typedInput({typeField: "#node-input-recipientIdType"})
+            .typedInput('types',["str", "msg", "flow", "global"])
+            .typedInput('type',"str");
+
+            $("#node-input-groupChatId")
+            .typedInput({typeField: "#node-input-groupChatIdType"})
+            .typedInput('types',["str", "msg", "flow", "global"])
+            .typedInput('type',"str");
+            
+            $("#node-input-channelId")
+            .typedInput({typeField: "#node-input-channelIdType"})
+            .typedInput('types',["str", "msg", "flow", "global"])
+            .typedInput('type',"str");
+
             $("#node-input-refName").typedInput({
                 type: "str",
                 types: ["str", "msg", "flow", "global"],
                 typeField: "#node-input-refNameType"
             });
+            $("#node-input-saveLocation").typedInput({
+                type: "flow",
+                types: ["msg", "flow", "global"],
+                typeField: "#node-input-saveLocationType"
+            });
 
-            updateFormUI();
+            updateFormSetupUI();
 
-            //Preparing the search recipients button
-            $('#node-config-input-scan-recipients').click(function()
+           //Preparing the search recipients button
+           $('#node-config-input-scan-recipients').click(function()
                 {
-                    if ($('#node-input-recipientId').prop("tagName").toLowerCase() === "input")
-                    {
-                        searchRecipients(); 
+                    if (["str", "msg", "flow", "global"].includes($('#node-input-recipientId').typedInput('type')))
+                    { 
+                        searchRecipients();
+                    }
+                    else if ($('#node-input-recipientId').typedInput('type') === "recipientsList") {
+                        //Bring field back to text
+                        $("#node-input-recipientId")
+                            .typedInput('types', ["str", "msg", "flow", "global"])
+                            .typedInput('type', "str");
+
+                        //Edit -> Search icon
+                        $('#node-config-input-scan-recipients').html('<i class="fa fa-search"></i>');
+
                     }
                 }
             );
 
-            function searchRecipients()
+            function searchRecipients(connId)
             {   
-                var current = $('#node-input-recipientId').val();
-                $('#node-input-recipientId').replaceWith('<select id="node-input-recipientId" style="width: 100%"></select>');
-                $('#node-input-recipientId').append('<option selected="selected" value="null">searching recipients...</option>');
+                var connId = $('#node-input-connector').val();
+                var currValue = $('#node-input-recipientId').typedInput('value');
 
-                $.getJSON('sme/recipients')
+                if (connId === undefined || connId === "_ADD_") {
+                    RED.notify("Select a connector first!.", "error");
+                    return;
+                }
+
+                $.getJSON(`${connId}/sme/recipients`)
                 .done(function(apiResponse) {
-                    console.log(apiResponse.data);
-
                     var recipients = apiResponse.data ?? [];
 
-                    if (recipients.length <= 0) {
+                    if (recipients.length == 0) {
                         RED.notify("No recipients found.", "error");
+                        return;
                     }
-
-                    $('#node-input-recipientId').empty();
-
-                    //SET RECIPIENTS AS OPTIONS
+                    var rOptions = [];
+                    
                     recipients.forEach(function(recipient, idx) {
-                        $('#node-input-recipientId').append(`<option ${idx == 0 ? " selected='selected'" : ""} value="${recipient.accountId}">${recipient.accountName}</option>`);
-                        if (idx == 0) {
-                            //SET FIRST VALUE
-                            $('#node-input-recipientId').val(recipient.accountId);
-                            //Set AutoName for node
-                            $('#node-input-autoName').val(`Recipient: "${recipient.accountName}"`);
-                        }
+                        rOptions.push({value: recipient.accountId.toString(), label: recipient.accountName});
                     });
-                    updateFormUI();
+
+                    $('#node-input-recipientId')
+                    .typedInput('types', [{ value: "recipientsList", options: rOptions }])
+                    .typedInput('type', "recipientsList");
+
+                    //Set selected option if the channel was previously set, otherwise select first channel
+                    var optionToSet = rOptions.find((opt) => opt.value === currValue) ?? rOptions[0];
+                    
+                    //Update selected option
+                    $('#node-input-recipientId').typedInput('value', optionToSet.value);
+
+                    //Search -> Edit icon
+                    $('#node-config-input-scan-recipients').html('<i class="fa fa-pencil"></i>');
+
+                    updateFormSetupUI();
                 })
                 .fail(function()
                 {
@@ -94,42 +147,60 @@
             //Preparing the search groupChats button
             $('#node-config-input-scan-groupChats').click(function()
                 {
-                    if ($('#node-input-groupChatId').prop("tagName").toLowerCase() === "input")
-                    {
-                        searchGroupChats(); 
+                    if (["str", "msg", "flow", "global"].includes($('#node-input-groupChatId').typedInput('type')))
+                    { 
+                        searchGroupChats();
+                    }
+                    else if ($('#node-input-groupChatId').typedInput('type') === "groupChatsList") {
+                        //Bring field back to text
+                        $("#node-input-groupChatId")
+                            .typedInput('types', ["str", "msg", "flow", "global"])
+                            .typedInput('type', "str");
+
+                        //Edit -> Search icon
+                        $('#node-config-input-scan-groupChats').html('<i class="fa fa-search"></i>');
                     }
                 }
             );
 
-            function searchGroupChats()
+            function searchGroupChats(connId)
             {   
-                var current = $('#node-input-groupChatId').val();
-                $('#node-input-groupChatId').replaceWith('<select id="node-input-groupChatId" style="width: 100%"></select>');
-                $('#node-input-groupChatId').append('<option selected="selected" value="null">searching group chats...</option>');
+                var connId = $('#node-input-connector').val();
+                var currValue = $('#node-input-groupChatId').typedInput('value');
 
-                $.getJSON('sme/groupChats')
+                if (connId === undefined || connId === "_ADD_") {
+                    RED.notify("Select a connector first!.", "error");
+                    return;
+                }
+
+                $.getJSON(`${connId}/sme/groupChats`)
                 .done(function(apiResponse) {
-                    console.log(apiResponse.data);
-
                     var groupChats = apiResponse.data ?? [];
 
-                    if (groupChats.length <= 0) {
+                    if (groupChats.length == 0) {
                         RED.notify("No group chats found.", "error");
+                        return;
                     }
-
-                    $('#node-input-groupChatId').empty();
+                    var gcOptions = [];
                     
-                    //SET GROUPCHATS AS OPTIONS
-                    groupChats.forEach(function(chat, idx) {
-                        $('#node-input-groupChatId').append(`<option ${idx == 0 ? " selected='selected'" : ""} value="${chat.groupChatId}">${chat.title}</option>`);
-                        if (idx == 0) {
-                            //SET FIRST VALUE
-                            $('#node-input-groupChatId').val(chat.groupChatId);
-                            //Set AutoName for node
-                            $('#node-input-autoName').val(`Group Chat: "${chat.title}"`);
-                        }
+                    groupChats.forEach(function(groupChat, idx) {
+                        gcOptions.push({value: groupChat.groupChatId.toString(), label: groupChat.title});
                     });
-                    updateFormUI();
+
+                    $('#node-input-groupChatId')
+                    .typedInput('types', [{ value: "groupChatsList", options: gcOptions }])
+                    .typedInput('type', "groupChatsList");
+
+                    //Set selected option if the channel was previously set, otherwise select first channel
+                    var optionToSet = gcOptions.find((opt) => opt.value === currValue) ?? gcOptions[0];
+                    
+                    //Update selected option
+                    $('#node-input-groupChatId').typedInput('value', optionToSet.value);
+
+                    //Search -> Edit icon
+                    $('#node-config-input-scan-groupChats').html('<i class="fa fa-pencil"></i>');
+
+                    updateFormSetupUI();
                 })
                 .fail(function()
                 {
@@ -140,41 +211,64 @@
             //Preparing the search channels button
             $('#node-config-input-scan-channels').click(function()
                 {
-                    if ($('#node-input-channelId').prop("tagName").toLowerCase() === "input")
-                    {
-                        searchChannels(); 
+                    if (["str", "msg", "flow", "global"].includes($('#node-input-channelId').typedInput('type')))
+                    { 
+                        searchChannels();
+                    }
+                    else if ($('#node-input-channelId').typedInput('type') === "channelsList") {
+                        //Bring field back to text
+                        $("#node-input-channelId")
+                            .typedInput({typeField: "#node-input-channelIdType"})
+                            .typedInput('types', ["str", "msg", "flow", "global"])
+                            .typedInput('type', "str");
+
+                        //Edit -> Search icon
+                        $('#node-config-input-scan-channels').html('<i class="fa fa-search"></i>');
+
                     }
                 }
             );
 
+
             function searchChannels()
             {   
-                var current = $('#node-input-channelId').val();
-                $('#node-input-channelId').replaceWith('<select id="node-input-channelId" style="width: 100%"></select>');
-                $('#node-input-channelId').append('<option selected="selected" value="null">searching channels...</option>');
+                var connId = $('#node-input-connector').val();
+                var currValue = $('#node-input-channelId').typedInput('value');
 
-                $.getJSON('sme/channels')
+                if (connId === undefined || connId === "_ADD_") {
+                    RED.notify("Select a connector first!.", "error");
+                    return;
+                }
+
+                $.getJSON(`${connId}/sme/channels`)
                 .done(function(apiResponse) {
-                    console.log(apiResponse.data);
-
                     var channels = apiResponse.data ?? [];
 
-                    if (channels.length <= 0) {
+                    if (channels.length == 0) {
                         RED.notify("No channels found.", "error");
+                        return;
                     }
-
-                    $('#node-input-channelId').empty();
-                    //SET CHANNELS AS OPTIONS
+                    var chOptions = [];
+                    
                     channels.forEach(function(channel, idx) {
-                        $('#node-input-channelId').append(`<option ${idx == 0 ? " selected='selected'" : ""} value="${channel.channelId}">${channel.title}</option>`);
-                        if (idx == 0) {
-                            //SET FIRST VALUE
-                            $('#node-input-channelId').val(channel.channelId);
-                            //Set AutoName for node
-                            $('#node-input-autoName').val(`Channel: "${channel.title}"`);
-                        }
+                        chOptions.push({value: channel.channelId.toString(), label: channel.title});
                     });
-                    updateFormUI();
+
+                    $('#node-input-channelId')
+                    .typedInput({typeField: "#node-input-channelIdType"})
+                    .typedInput('types', [{ value: "channelsList", options: chOptions }])
+                    .typedInput('type', "channelsList");
+
+                    //Set selected option if the channel was previously set, otherwise select first channel
+                    var optionToSet = chOptions.find((opt) => opt.value === currValue) ?? chOptions[0];
+                    
+                    //Update selected option
+                    $('#node-input-channelId').typedInput('value', optionToSet.value);
+
+                    //Search -> Edit icon
+                    $('#node-config-input-scan-channels').html('<i class="fa fa-pencil"></i>');
+
+                    updateFormSetupUI();
                 })
                 .fail(function()
                 {
@@ -185,7 +279,7 @@
     });
 
     
-    function updateFormUI() {
+    function updateFormSetupUI() {
         var receiverType = $('#node-input-receiverType').val();
         var submitEnabled = $('#node-input-submitEnabled').val();
 
@@ -222,7 +316,7 @@
 
 </script>
 
-<script type="text/html" data-template-name="sme-comp-form">
+<script type="text/html" data-template-name="formSetup">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name"/>
@@ -235,6 +329,11 @@
     <div style="font-size: smaller;max-width:500px;">Connector can be shared with other nodes.</div>
     <br />
     <div class="form-row">
+        <label for="node-input-saveLocation"><i class="fa fa-tag"></i> Save Location</label>
+        <input type="text" id="node-input-saveLocation" placeholder="Save form into...">
+        <input type="hidden" id="node-input-saveLocationType">
+    </div>
+    <div class="form-row">
         <label for="node-input-refName"><i class="fa fa-tag"></i>Form Reference Name</label>
         <input type="text" id="node-input-refName" placeholder="Reference Name">
         <input type="hidden" id="node-input-refNameType">
@@ -242,7 +341,7 @@
     <div style="font-size: smaller;max-width:500px;">Compile this for giving this form schema a name you can refer to in other parts of the flow</div>
     <div class="form-row">
         <label for="node-input-submitEnabled"><i class="fa fa-tag"></i>Submit Enabled</label>
-        <select id="node-input-submitEnabled" onchange="updateFormUI()">
+        <select id="node-input-submitEnabled" onchange="updateFormSetupUI()">
             <option value="0">No</option>
             <option value="1" selected>Yes</option>
         </select>
@@ -261,7 +360,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-receiverType"><i class="fa fa-tag"></i>Receiver Type</label>
-        <select id="node-input-receiverType" onchange="updateFormUI()">
+        <select id="node-input-receiverType" onchange="updateFormSetupUI()">
             <option value="none" selected> - </option>
             <option value="contact">Contact</option>
             <option value="groupchat">Group Chat</option>
@@ -312,7 +411,7 @@
 
 
 
-<script type="text/html" data-help-name="sme-comp-form">
+<script type="text/html" data-help-name="formSetup">
     <p>
         This node creates a form message skeleton. 
         When you want to send a form message, you have to setup this node first, 

@@ -1,0 +1,285 @@
+<script type="text/javascript">
+    RED.nodes.registerType('message', {
+        category: 'semilimesAPI',
+        color: '#a6bbcf',
+        defaults: {
+            name: { value: "" },
+            message: { value: "", required: true },
+
+            //Text
+            text: { value: "This is a text message." },
+            textType: { value: "str"},
+
+            //Html
+            html: { value: "<b>This is an html message</b>"},
+            htmlType: { value: "str" },
+
+            //File
+            fileIds: { value: "" },
+            fileIdsType: { value: "str"},
+
+            //Contact
+            contactIds: { value: "" },
+            contactIdsType: { value: "str"},
+
+            //Location
+            locationName: { value: "myLocation" },
+            locationNameType: { value: "str"},
+
+            latitude: { value: ""},
+            latitudeType: { value : "str"},
+
+            longitude: { value: ""},
+            longitudeType: { value : "str"},
+
+            //WebView
+            url: { value: "" },
+            urlType: { value: "str"},
+
+            enableFullScreenView: { value: "1"},
+
+            viewSize: { value: "1:2" },
+
+            //Channel
+            channelId: { value: "" },
+            channelIdType: { value: "str"},
+
+            //Channel
+            tunnelId: { value: "" },
+            tunnelIdType: { value: "str" },
+
+            //Form
+            formLocation: { value: "savedForm" },
+            formLocationType: { value: "flow" }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-comment-o",
+        paletteLabel: 'Message',
+        label: function() {
+            return this.name || (this.message ?? null) || "Message";
+        },
+        oneditprepare: function () {
+            $("#node-input-message").typedInput({
+                type: "messages",
+                types: [{ value: "messages", options: [
+                    {value: "text", label: "Text"},
+                    {value: "html", label: "Html"},
+                    {value: "file", label: "File"},
+                    {value: "contact", label: "Contact"},
+                    {value: "location", label: "Location"},
+                    {value: "webview", label: "WebView"},
+                    {value: "channel", label: "Channel"},
+                    {value: "tunnel", label: "Tunnel"},
+                    {value: "form", label: "Form"}
+                ]}]
+            });
+            $("#node-input-message").on('change', function (_, _, _) { updateMessageUI() });
+
+            //Text
+            $("#node-input-text").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-textType"
+            });
+
+            //Html
+            $("#node-input-html").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-htmlType"
+            });
+
+            //File
+            $("#node-input-fileIds").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-fileIdsType"
+            });
+
+            //Contact
+            $("#node-input-contactIds").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-contactIdsType"
+            });
+
+            //Location
+            $("#node-input-locationName").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-locationNameType"
+            });
+
+            $("#node-input-latitude").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-latitudeType"
+            });
+
+            $("#node-input-longitude").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-longitudeType"
+            });
+
+            //WebView
+            $("#node-input-url").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-urlType"
+            });
+
+            //Channel
+            $("#node-input-channelId").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-channelIdType"
+            });
+
+            //Tunnel
+            $("#node-input-tunnelId").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-tunnelIdType"
+            });
+
+            //Form
+            $("#node-input-formLocation").typedInput({
+                type: "msg",
+                types: ["msg", "flow", "global"],
+                typeField: "#node-input-formLocationType"
+            });
+        }
+    });
+
+    function updateMessageUI() {
+        var chosenMessage = $("#node-input-message").typedInput('value');
+
+        $(".messageField").hide();
+        switch(chosenMessage) {
+            case 'text':
+                $('#textPanel').show();
+                break;
+            case 'html':
+                $('#htmlPanel').show();
+                break;
+            case 'file':
+                $('#filePanel').show();
+                break;
+            case 'contact':
+                $('#contactPanel').show();
+                break;
+            case 'location':
+                $('#locationNamePanel').show();
+                $('#locationLatitudePanel').show();
+                $('#locationLongitudePanel').show();
+                break;
+            case 'webview':
+                $('#webviewUrlPanel').show();
+                $('#webviewFullScreenPanel').show();
+                $('#webviewViewSizePanel').show();
+                break;
+            case 'channel':
+                $('#channelIdPanel').show();
+                break;
+            case 'tunnel':
+                $('#tunnelIdPanel').show();
+                break;
+            case 'form': 
+                $('#formPanel').show();
+                break;   
+            default:
+                break;
+        }
+    }
+</script>
+
+<script type="text/html" data-template-name="message">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name"/>
+    </div>
+    <div class="form-row">
+        <label for="node-input-message"><i class="fa fa-tag"></i> Message</label>
+        <input type="text" id="node-input-message">
+    </div>
+    <br />
+    <div class="form-row messageField" id="textPanel">
+        <label for="node-input-text"><i class="fa fa-tag"></i> Text</label>
+        <input type="text" id="node-input-text" placeholder="The text message to send">
+        <input type="hidden" id="node-input-textType">
+    </div>
+    <div class="form-row messageField" id="htmlPanel">
+        <label for="node-input-html"><i class="fa fa-tag"></i> Text</label>
+        <input type="text" id="node-input-html" placeholder="The html message to send">
+        <input type="hidden" id="node-input-htmlType">
+    </div>
+    <div class="form-row messageField" id="filePanel">
+        <label for="node-input-fileIds"><i class="fa fa-tag"></i> File ID</label>
+        <input type="text" id="node-input-fileIds" placeholder="The file Ids to reference">
+        <input type="hidden" id="node-input-fileIdsType">
+        <div style="font-size: smaller;max-width:500px;">Enter comma-separated fileIds to reference multiple files</div>
+    </div>
+    <div class="form-row messageField" id="contactPanel">
+        <label for="node-input-contactIds"><i class="fa fa-tag"></i> Contact ID</label>
+        <input type="text" id="node-input-contactIds" placeholder="The contact Ids to reference">
+        <input type="hidden" id="node-input-contactIdsType">
+        <div style="font-size: smaller;max-width:500px;">Enter comma-separated fileIds to reference multiple contacts</div>
+    </div>
+    <div class="form-row messageField" id="locationNamePanel">
+        <label for="node-input-locationName"><i class="fa fa-tag"></i> Location Name</label>
+        <input type="text" id="node-input-locationName" placeholder="The location name">
+        <input type="hidden" id="node-input-locationNameType">
+    </div>
+    <div class="form-row messageField" id="locationLatitudePanel">
+        <label for="node-input-latitude"><i class="fa fa-tag"></i> Latitude</label>
+        <input type="text" id="node-input-latitude" placeholder="Latitude coordinates">
+        <input type="hidden" id="node-input-latitudeType">
+    </div>
+    <div class="form-row messageField" id="locationLongitudePanel">
+        <label for="node-input-longitude"><i class="fa fa-tag"></i> Longitude</label>
+        <input type="text" id="node-input-longitude" placeholder="Longitude coordinates">
+        <input type="hidden" id="node-input-longitudeType">
+    </div>
+    <div class="form-row messageField" id="webviewUrlPanel">
+        <label for="node-input-url"><i class="fa fa-tag"></i> Url</label>
+        <input type="text" id="node-input-url" placeholder="The webview address">
+        <input type="hidden" id="node-input-urlType">
+    </div>
+    <div class="form-row messageField" id="webviewFullScreenPanel">
+        <label for="node-input-enableFullScreenView"><i class="fa fa-tag"></i> Enable Full Screen</label>
+        <select id="node-input-enableFullScreenView">
+            <option value="0">No</option>
+            <option value="1" selected>Yes</option>
+        </select>
+    </div>
+    <div class="form-row messageField" id="webviewViewSizePanel">
+        <label for="node-input-viewSize"><i class="fa fa-tag"></i> View Size</label>
+        <select id="node-input-viewSize">
+            <option value="1:2" selected>1:2</option>
+            <option value="1:1">1:1</option>
+            <option value="3:2">3:2</option>
+            <option value="2:1">2:1</option>
+        </select>
+    </div>
+    <div class="form-row messageField" id="channelIdPanel">
+        <label for="node-input-channelId"><i class="fa fa-tag"></i> Channel Id</label>
+        <input type="text" id="node-input-channelId" placeholder="Channel reference id">
+        <input type="hidden" id="node-input-channelIdType">
+    </div>
+    <div class="form-row messageField" id="tunnelIdPanel">
+        <label for="node-input-tunnelId"><i class="fa fa-tag"></i> Tunnel Id</label>
+        <input type="text" id="node-input-tunnelId" placeholder="Tunnel reference id">
+        <input type="hidden" id="node-input-tunnelIdType">
+    </div>
+    <div class="form-row messageField" id="formPanel">
+        <label for="node-input-formLocation"><i class="fa fa-tag"></i> Form Location</label>
+        <input type="text" id="node-input-formLocation" placeholder="Load form setup">
+        <input type="hidden" id="node-input-formLocationType">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="message">
+    <p>This node creates a message component based on the selected option</p>
+</script>
