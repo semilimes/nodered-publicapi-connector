@@ -8,33 +8,18 @@
         "env": []
     },
     {
-        "id": "70c0dfe52c7b7577",
-        "type": "sme-comp-text",
-        "z": "4f55a344bb541810",
-        "name": "",
-        "text": "payload",
-        "textType": "msg",
-        "x": 970,
-        "y": 180,
-        "wires": [
-            [
-                "8ff75643ae632989"
-            ]
-        ]
-    },
-    {
         "id": "36aeab613c4299d9",
         "type": "function",
         "z": "4f55a344bb541810",
         "name": "Random Value 18-25",
-        "func": "function getRandomFloatInclusive(min, max) {\n  min = Math.ceil(min);\n  max = Math.floor(max);\n  var rawNumber = (Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive\n  return Math.round((rawNumber + Number.EPSILON) * 10) / 10;\n\n}\n\nmsg.payload = `${getRandomFloatInclusive(18, 25)}`;\nreturn msg;",
+        "func": "function getRandomFloatInclusive(min, max) {\n  min = Math.ceil(min);\n  max = Math.floor(max);\n  var rawNumber = (Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive\n  return Math.round((rawNumber + Number.EPSILON) * 10) / 10;\n\n}\n\nmsg.payload = `${getRandomFloatInclusive(18, 25)}`;\nnode.status({fill: \"green\", shape: \"dot\", text: msg.payload});\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
-        "initialize": "",
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nnode.status({ fill: \"grey\", shape: \"dot\", text: \"off\" });",
         "finalize": "",
         "libs": [],
-        "x": 320,
+        "x": 640,
         "y": 180,
         "wires": [
             [
@@ -43,58 +28,15 @@
         ]
     },
     {
-        "id": "8ff75643ae632989",
-        "type": "sme-main-intent",
-        "z": "4f55a344bb541810",
-        "name": "Send to Channel",
-        "autoName": "",
-        "connector": "",
-        "actionName": "channel_message_send",
-        "actionText": "Channel - Send Message",
-        "recipientId": "",
-        "recipientIdType": "str",
-        "messageId": "",
-        "messageIdType": "str",
-        "limit": 0,
-        "limitType": "num",
-        "recipientIds": "",
-        "recipientIdsType": "str",
-        "groupChatId": "",
-        "groupChatIdType": "str",
-        "channelId": "channelId",
-        "channelIdType": "flow",
-        "title": "TG-Temp",
-        "titleType": "str",
-        "x": 1190,
-        "y": 180,
-        "wires": [
-            [
-                "9a3398d46bb88e4b"
-            ]
-        ]
-    },
-    {
-        "id": "9a3398d46bb88e4b",
-        "type": "sme-main-sender",
-        "z": "4f55a344bb541810",
-        "connector": "",
-        "async": "0",
-        "x": 1410,
-        "y": 180,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "517e54e1797828ec",
         "type": "switch",
         "z": "4f55a344bb541810",
-        "name": "",
-        "property": "channelId",
+        "name": "First Run?",
+        "property": "#:(file)::savedChannelId",
         "propertyType": "flow",
         "rules": [
             {
-                "t": "nempty"
+                "t": "null"
             },
             {
                 "t": "else"
@@ -103,24 +45,69 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 590,
-        "y": 260,
+        "x": 890,
+        "y": 180,
         "wires": [
             [
-                "70c0dfe52c7b7577"
+                "43ba545769c6ceca"
             ],
             [
-                "47c2587f703b6942"
+                "62d9071598d16562"
             ]
         ]
     },
     {
-        "id": "312d8db38ea94b6e",
-        "type": "sme-main-intent",
+        "id": "f25be305b3e17085",
+        "type": "comment",
         "z": "4f55a344bb541810",
-        "name": "",
-        "autoName": "",
+        "name": "Simulates a sensor periodically sending a value for 2 minutes to a new channel, then the flow is stopped",
+        "info": "",
+        "x": 410,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "07b8748966175b2e",
+        "type": "inject",
+        "z": "4f55a344bb541810",
+        "name": "Start",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 130,
+        "y": 180,
+        "wires": [
+            [
+                "15406208bd3d60c6"
+            ]
+        ]
+    },
+    {
+        "id": "fd215e6f5af9f432",
+        "type": "comment",
+        "z": "4f55a344bb541810",
+        "name": "Simulate Sensor value",
+        "info": "",
+        "x": 640,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "43ba545769c6ceca",
+        "type": "sender",
+        "z": "4f55a344bb541810",
         "connector": "",
+        "async": "0",
+        "name": "",
         "actionName": "channel_create",
         "actionText": "Channel - Create",
         "recipientId": "",
@@ -135,167 +122,253 @@
         "groupChatIdType": "str",
         "channelId": "",
         "channelIdType": "str",
-        "title": "channelName",
-        "titleType": "msg",
-        "x": 1190,
-        "y": 300,
+        "title": "sensorChannel",
+        "titleType": "str",
+        "saveLocation": "#:(file)::savedChannelId",
+        "saveLocationType": "flow",
+        "logToConsole": false,
+        "x": 1220,
+        "y": 180,
         "wires": [
             [
-                "e5c0d8e014507453"
+                "62d9071598d16562"
             ]
         ]
     },
     {
-        "id": "e5c0d8e014507453",
-        "type": "sme-main-sender",
+        "id": "62d9071598d16562",
+        "type": "message",
+        "z": "4f55a344bb541810",
+        "name": "Text Message",
+        "message": "text",
+        "text": "payload",
+        "textType": "msg",
+        "html": "<b>This is an html message</b>",
+        "htmlType": "str",
+        "fileIds": "",
+        "fileIdsType": "str",
+        "contactIds": "",
+        "contactIdsType": "str",
+        "locationName": "myLocation",
+        "locationNameType": "str",
+        "latitude": "",
+        "latitudeType": "str",
+        "longitude": "",
+        "longitudeType": "str",
+        "url": "",
+        "urlType": "str",
+        "enableFullScreenView": "1",
+        "viewSize": "1:2",
+        "channelId": "",
+        "channelIdType": "str",
+        "tunnelId": "",
+        "tunnelIdType": "str",
+        "formLocation": "savedForm",
+        "formLocationType": "flow",
+        "x": 660,
+        "y": 300,
+        "wires": [
+            [
+                "265c9edf54a182fc"
+            ]
+        ]
+    },
+    {
+        "id": "2abd7828d5866352",
+        "type": "sender",
         "z": "4f55a344bb541810",
         "connector": "",
         "async": "0",
-        "x": 1430,
-        "y": 300,
+        "name": "",
+        "actionName": "channel_message_send",
+        "actionText": "Channel - Send Message",
+        "recipientId": "",
+        "recipientIdType": "str",
+        "messageId": "",
+        "messageIdType": "str",
+        "limit": 0,
+        "limitType": "num",
+        "recipientIds": "",
+        "recipientIdsType": "str",
+        "groupChatId": "",
+        "groupChatIdType": "str",
+        "channelId": "#:(file)::savedChannelId",
+        "channelIdType": "flow",
+        "title": "",
+        "titleType": "str",
+        "saveLocation": "#:(file)::savedMessageId",
+        "saveLocationType": "flow",
+        "logToConsole": true,
+        "x": 1250,
+        "y": 280,
         "wires": [
-            [
-                "b8c62456e4ab5a70"
-            ]
+            []
         ]
     },
     {
-        "id": "fe3c92c44f4fbdbd",
-        "type": "inject",
+        "id": "265c9edf54a182fc",
+        "type": "switch",
         "z": "4f55a344bb541810",
-        "name": "Test Trigger",
-        "props": [
+        "name": "First Message?",
+        "property": "#:(file)::savedMessageId",
+        "propertyType": "flow",
+        "rules": [
             {
-                "p": "payload"
+                "t": "null"
             },
             {
-                "p": "topic",
-                "vt": "str"
+                "t": "else"
             }
         ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "test value",
-        "payloadType": "str",
-        "x": 150,
-        "y": 300,
-        "wires": [
-            [
-                "517e54e1797828ec"
-            ]
-        ]
-    },
-    {
-        "id": "b8c62456e4ab5a70",
-        "type": "function",
-        "z": "4f55a344bb541810",
-        "name": "Save/Reset ChannelId",
-        "func": "if (msg.reset == true) {\n    flow.set('channelId', undefined);\n} else {\n    var channelId = msg._sme?.responseMsgs[0]?.data?.createdChannel?.channelId;\n    if (!channelId) {\n        node.error(\"Error in getting created channel Id. Please try again!\");\n        return null;\n    }\n    flow.set('channelId', channelId);\n    return msg;\n}",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1680,
-        "y": 300,
-        "wires": [
-            [
-                "70c0dfe52c7b7577"
-            ]
-        ]
-    },
-    {
-        "id": "63151dbe403de7f4",
-        "type": "inject",
-        "z": "4f55a344bb541810",
-        "name": "Reset ChannelId",
-        "props": [
-            {
-                "p": "reset",
-                "v": "true",
-                "vt": "bool"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 160,
-        "y": 400,
-        "wires": [
-            [
-                "ef050f205e88d489"
-            ]
-        ]
-    },
-    {
-        "id": "47c2587f703b6942",
-        "type": "function",
-        "z": "4f55a344bb541810",
-        "name": "Set Random Channel Name",
-        "func": "function getRandomIntInclusive(min, max) {\n  min = Math.ceil(min);\n  max = Math.floor(max);\n  return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive\n}\n\nvar randomInt = getRandomIntInclusive(10000, 99999);\n\nmsg.channelName = \"myAutoChannel\" + randomInt;\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
         "x": 920,
         "y": 300,
         "wires": [
             [
-                "312d8db38ea94b6e"
+                "2abd7828d5866352"
+            ],
+            [
+                "7c1a323d6a5eaac5"
             ]
         ]
     },
     {
-        "id": "ef050f205e88d489",
-        "type": "link out",
+        "id": "7c1a323d6a5eaac5",
+        "type": "sender",
         "z": "4f55a344bb541810",
-        "name": "out_resetChannelId",
-        "mode": "link",
-        "links": [
-            "42aeab5144e334f3"
-        ],
-        "x": 285,
-        "y": 400,
-        "wires": []
+        "connector": "",
+        "async": "0",
+        "name": "",
+        "actionName": "channel_message_update",
+        "actionText": "Channel - Update Message",
+        "recipientId": "",
+        "recipientIdType": "str",
+        "messageId": "#:(file)::savedMessageId",
+        "messageIdType": "flow",
+        "limit": 0,
+        "limitType": "num",
+        "recipientIds": "",
+        "recipientIdsType": "str",
+        "groupChatId": "",
+        "groupChatIdType": "str",
+        "channelId": "",
+        "channelIdType": "str",
+        "title": "",
+        "titleType": "str",
+        "saveLocation": "savedEntityId",
+        "saveLocationType": "msg",
+        "logToConsole": true,
+        "x": 1240,
+        "y": 320,
+        "wires": [
+            []
+        ]
     },
     {
-        "id": "42aeab5144e334f3",
-        "type": "link in",
+        "id": "2b88d93c2806e70d",
+        "type": "delay",
         "z": "4f55a344bb541810",
-        "name": "in_resetChannelId",
-        "links": [
-            "ef050f205e88d489"
-        ],
-        "x": 1505,
-        "y": 340,
+        "name": "Stop timer 2 mins",
+        "pauseType": "delay",
+        "timeout": "2",
+        "timeoutUnits": "minutes",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 230,
+        "y": 280,
         "wires": [
             [
-                "b8c62456e4ab5a70"
+                "271e876468ea1578"
             ]
         ]
     },
     {
-        "id": "f25be305b3e17085",
-        "type": "comment",
+        "id": "15406208bd3d60c6",
+        "type": "switch",
         "z": "4f55a344bb541810",
-        "name": "Creates a random-named channel and send values to it until it is reset by the appropriate command or the server is restarted",
-        "info": "",
-        "x": 480,
-        "y": 60,
-        "wires": []
+        "name": "Timer running?",
+        "property": "#:(file)::stop",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "null"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 1,
+        "x": 400,
+        "y": 180,
+        "wires": [
+            [
+                "36aeab613c4299d9"
+            ]
+        ]
     },
     {
-        "id": "07b8748966175b2e",
+        "id": "312a93283d56f658",
         "type": "inject",
         "z": "4f55a344bb541810",
-        "name": "Start",
+        "name": "Auto Stop",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 140,
+        "y": 240,
+        "wires": [
+            [
+                "2b88d93c2806e70d"
+            ]
+        ]
+    },
+    {
+        "id": "271e876468ea1578",
+        "type": "change",
+        "z": "4f55a344bb541810",
+        "name": "Set Stop flag",
+        "rules": [
+            {
+                "t": "set",
+                "p": "#:(file)::stop",
+                "pt": "flow",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 290,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2d2585c6354ab466",
+        "type": "inject",
+        "z": "4f55a344bb541810",
+        "name": "Restart",
         "props": [
             {
                 "p": "payload"
@@ -309,81 +382,34 @@
         "payload": "",
         "payloadType": "str",
         "x": 130,
-        "y": 180,
+        "y": 380,
         "wires": [
             [
-                "36aeab613c4299d9"
+                "b0c8157f9f55fa9d"
             ]
         ]
     },
     {
-        "id": "fd215e6f5af9f432",
-        "type": "comment",
+        "id": "b0c8157f9f55fa9d",
+        "type": "change",
         "z": "4f55a344bb541810",
-        "name": "Generate input value",
-        "info": "",
-        "x": 310,
-        "y": 140,
-        "wires": []
-    },
-    {
-        "id": "11a3c5feb1424274",
-        "type": "comment",
-        "z": "4f55a344bb541810",
-        "name": "Send a fixed test value",
-        "info": "",
-        "x": 160,
-        "y": 260,
-        "wires": []
-    },
-    {
-        "id": "867ad805444514d3",
-        "type": "comment",
-        "z": "4f55a344bb541810",
-        "name": "Reset the saved channel. At the next \"start\", a new channel will be created.",
-        "info": "",
-        "x": 320,
-        "y": 360,
-        "wires": []
-    },
-    {
-        "id": "efb2d7132d11805e",
-        "type": "comment",
-        "z": "4f55a344bb541810",
-        "name": "Check if channel exists",
-        "info": "",
-        "x": 600,
-        "y": 220,
-        "wires": []
-    },
-    {
-        "id": "d49c668e2f0924f0",
-        "type": "comment",
-        "z": "4f55a344bb541810",
-        "name": "Save created channel in flow context",
-        "info": "",
-        "x": 1720,
-        "y": 340,
-        "wires": []
-    },
-    {
-        "id": "c7f35f3fb0c3777a",
-        "type": "comment",
-        "z": "4f55a344bb541810",
-        "name": "Sending branch",
-        "info": "",
-        "x": 1000,
-        "y": 140,
-        "wires": []
-    },
-    {
-        "id": "b68b79a1b3289635",
-        "type": "comment",
-        "z": "4f55a344bb541810",
-        "name": "Creating branch",
-        "info": "",
-        "x": 880,
-        "y": 260,
-        "wires": []
+        "name": "Reset Stop flag",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "#:(file)::stop",
+                "pt": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 300,
+        "y": 380,
+        "wires": [
+            []
+        ]
     }
 ]

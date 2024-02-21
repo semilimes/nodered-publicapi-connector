@@ -1,6 +1,6 @@
 <script type="text/javascript">
-    RED.nodes.registerType('sme-filter-formSubmission', {
-        category: 'semilimesAPI_deprecated',
+    RED.nodes.registerType('filterSubmission', {
+        category: 'semilimesAPI',
         color: '#E2D96E',
         defaults: {
             name: { value: "" },
@@ -9,7 +9,8 @@
             messageId: { value: "" },
             messageIdType: { value: "str" },
             saveLocation: { value: "" },
-            saveLocationType: { value: "msg"}
+            saveLocationType: { value: "msg"},
+            extractValues: { value: true }
         },
         inputs: 1,
         outputs: 1,
@@ -17,22 +18,20 @@
         icon: "font-awesome/fa-filter",
         paletteLabel: 'Filter - Submission',
         label: function () {
-            if (this.name) {
-                return this.name;
-            }
-            var filters = this.reference || this.messageId || '';
-            if (filters) {
-                return 'filter submission' 
-                    + (this.reference ? ' of form ' + this.reference : '') 
-                    + (this.messageId ? ' in message ' + this.messageId : ''); 
-            } else {
-                return 'catch all submissions';
-            }
+            refType = this.referenceType === "str" ? "" : this.referenceType + ".";
+            return this.name ||
+                (this.reference ? `Filter Submission | ${refType}${this.reference}`: null) || 
+                'Catch All Submissions';
         },
         labelStyle: function () {
             return this.reference ? "node_label_italic" : "";
         },
+        oneditsave: function () {
+            this.extractValues = $('#node-input-extractValues').prop("checked") == true;
+        },
         oneditprepare: function () {
+            $('#node-input-extractValues').prop("checked", this.extractValues);
+
             $("#node-input-reference").typedInput({
                 type: "str",
                 types: ["str", "msg", "flow", "global"],
@@ -52,7 +51,7 @@
     });
 </script>
 
-<script type="text/html" data-template-name="sme-filter-formSubmission">
+<script type="text/html" data-template-name="filterSubmission">
     <div style="max-width:500px;">When users submit forms, the submissions can be catched by this node and stored to a variable.</div>
     <br />
     <div class="form-row">
@@ -75,13 +74,19 @@
     <br />
     <div class="form-row">
         <label for="node-input-saveLocation"><i class="fa fa-tag"></i> Save Location</label>
-        <input type="text" id="node-input-saveLocation" placeholder="Location to save submission values">
+        <input type="text" id="node-input-saveLocation" placeholder="Location to save form submission">
         <input type="hidden" id="node-input-saveLocationType">
     </div>
-    <div style="font-size: smaller;max-width:500px;">Set this value to extract the submission values</div>
+    <div style="font-size: smaller;max-width:500px;">Set this value to extract the submission form</div>
+    <br />
+    <div class="form-row">
+        <label for="node-input-extractValues"> Extract Values</label>
+        <input type="checkbox" id="node-input-extractValues" name="extractValues" value="1">
+    </div>
+    <div style="font-size: smaller;max-width:500px;">Check this to extract each submission value in <code>msg</code> property. Only works if <code>Save Location</code> property is set.</div>
 </script>
 
-<script type="text/html" data-help-name="sme-filter-formSubmission">
+<script type="text/html" data-help-name="filterSubmission">
     <p>Filter submissions of a specific form via its reference name, and optionally extract submitted values for further processing</p>
     <h3>Outputs</h3>
     <dl class="message-properties">

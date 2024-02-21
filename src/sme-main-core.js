@@ -440,10 +440,19 @@ module.exports = function (RED) {
                         //dev mode
                         options.headers['X-Account'] = `${xAccount}`;
                     }
-    
-    
-                    if(logEnabled) console.log('Attempt to send call to:', options);
-                    if(logEnabled) console.log('With data: ', body);
+                    
+                    if (logEnabled && 
+                        options.headers.Authorization && 
+                        options.headers.Authorization.length > 20) {
+                        var optionsMasked = JSON.parse(JSON.stringify(options));
+                        var authText = optionsMasked.headers.Authorization;
+                        var firstChunk = authText.substring(0,12);
+                        var lastChunk = authText.substring(authText.length - 5, authText.length);
+                        var authMasked = `${firstChunk}*****${lastChunk}`;
+                        optionsMasked.headers.Authorization = authMasked;
+                        console.log('Attempt to send call to:', optionsMasked);
+                        console.log('With data: ', body);
+                    }                  
     
                     var req = https.request(options, (res) => {
                         if(logEnabled) console.log("Status Code: ", res.statusCode);

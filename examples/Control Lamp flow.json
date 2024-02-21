@@ -8,24 +8,6 @@
         "env": []
     },
     {
-        "id": "c96f4fe387066a5d",
-        "type": "group",
-        "z": "03f230443c464b5e",
-        "name": "Local processing",
-        "style": {
-            "label": true
-        },
-        "nodes": [
-            "e209e805b09415e8",
-            "bc637f7410c849d5",
-            "936084037c176bf7"
-        ],
-        "x": 74,
-        "y": 659,
-        "w": 652,
-        "h": 82
-    },
-    {
         "id": "956f9a128667a6f0",
         "type": "comment",
         "z": "03f230443c464b5e",
@@ -36,17 +18,33 @@
         "wires": []
     },
     {
-        "id": "95fea712dc60ba78",
+        "id": "3f090137152dcd32",
+        "type": "comment",
+        "z": "03f230443c464b5e",
+        "name": "Setup a form and its components",
+        "info": "",
+        "x": 210,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "e7a8a880c6b45291",
+        "type": "comment",
+        "z": "03f230443c464b5e",
+        "name": "Catch submission values of the form",
+        "info": "",
+        "x": 200,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "90fc77df92c915ec",
         "type": "inject",
         "z": "03f230443c464b5e",
-        "name": "Send New Form Message",
+        "name": "START",
         "props": [
             {
                 "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
             }
         ],
         "repeat": "",
@@ -55,103 +53,176 @@
         "onceDelay": 0.1,
         "topic": "",
         "payload": "",
-        "payloadType": "date",
-        "x": 210,
-        "y": 240,
+        "payloadType": "str",
+        "x": 130,
+        "y": 180,
         "wires": [
             [
-                "cc54de98776d42c8"
+                "b0457e1234daea35"
             ]
         ]
     },
     {
-        "id": "bb5ce74ccf794b08",
-        "type": "sme-formComp-label",
+        "id": "b0457e1234daea35",
+        "type": "formSetup",
         "z": "03f230443c464b5e",
-        "name": "Lamp Control Panel",
-        "reference": "myLampLabel",
-        "referenceType": "str",
-        "title": "Lamp control panel",
-        "x": 700,
-        "y": 240,
-        "wires": [
-            [
-                "b1a1442954404377"
-            ]
-        ]
-    },
-    {
-        "id": "b1a1442954404377",
-        "type": "sme-formComp-switch",
-        "z": "03f230443c464b5e",
-        "name": "Lamp Switch",
-        "reference": "myLampSwitch",
-        "referenceType": "str",
-        "title": "Switch",
-        "titleType": "str",
-        "value": "lampSwitchValue",
-        "valueType": "msg",
-        "x": 670,
-        "y": 280,
-        "wires": [
-            [
-                "9ad0a71ac177ad94"
-            ]
-        ]
-    },
-    {
-        "id": "9ad0a71ac177ad94",
-        "type": "sme-formComp-slider",
-        "z": "03f230443c464b5e",
-        "name": "Lamp Dimmer",
-        "reference": "myLampDimmer",
-        "referenceType": "str",
-        "title": "Dimmer",
-        "titleType": "str",
-        "required": "0",
-        "value": "lampDimmerValue",
-        "valueType": "msg",
-        "min": "0",
-        "minType": "num",
-        "max": 10,
-        "maxType": "num",
-        "step": "1",
-        "stepType": "num",
-        "x": 680,
-        "y": 320,
-        "wires": [
-            [
-                "0b2bb1bf856bf412"
-            ]
-        ]
-    },
-    {
-        "id": "a56f9ae41e78f648",
-        "type": "sme-comp-form",
-        "z": "03f230443c464b5e",
-        "name": "Lamp Form",
+        "connector": "",
+        "name": "",
+        "saveLocation": "#:(file)::savedForm",
+        "saveLocationType": "flow",
         "submitEnabled": "0",
         "retainStatus": "1",
         "submitText": "Submit",
         "submitTextType": "str",
-        "receiverId": "",
-        "receiverIdType": "str",
+        "recipientId": "",
+        "recipientIdType": "str",
+        "groupChatId": "",
+        "groupChatIdType": "str",
+        "channelId": "",
+        "channelIdType": "str",
         "receiverType": "none",
-        "refName": "formReference",
-        "refNameType": "msg",
-        "x": 490,
-        "y": 240,
+        "refName": "myLampForm",
+        "refNameType": "str",
+        "x": 390,
+        "y": 180,
         "wires": [
             [
-                "bb5ce74ccf794b08"
+                "e7ceccba1f668321"
             ]
         ]
     },
     {
-        "id": "6cc5dfcca8f2f468",
-        "type": "sme-main-intent",
+        "id": "e7ceccba1f668321",
+        "type": "formComponent",
         "z": "03f230443c464b5e",
-        "actionName": "channel_message_send",
+        "name": "",
+        "reference": "lampLabel",
+        "referenceType": "str",
+        "component": "label",
+        "title": "Lamp Control Panel",
+        "titleType": "str",
+        "required": "false",
+        "requiredType": "bool",
+        "text": "",
+        "textType": "str",
+        "verticalList": "true",
+        "verticalListType": "bool",
+        "buttons": [],
+        "choices": [],
+        "switchValue": "false",
+        "switchValueType": "bool",
+        "sliderMin": 0,
+        "sliderMinType": "num",
+        "sliderMax": 10,
+        "sliderMaxType": "num",
+        "sliderStep": 0,
+        "sliderStepType": "num",
+        "sliderValue": 0,
+        "sliderValueType": "num",
+        "actionButtonTitle": "Select",
+        "actionButtonTitleType": "str",
+        "multiSelection": "false",
+        "multiSelectionType": "bool",
+        "bucketFilter": "all",
+        "x": 440,
+        "y": 220,
+        "wires": [
+            [
+                "5c67027a550b710a"
+            ]
+        ]
+    },
+    {
+        "id": "5c67027a550b710a",
+        "type": "formComponent",
+        "z": "03f230443c464b5e",
+        "name": "",
+        "reference": "lampSwitch",
+        "referenceType": "str",
+        "component": "switch",
+        "title": "On/Off",
+        "titleType": "str",
+        "required": "false",
+        "requiredType": "bool",
+        "text": "",
+        "textType": "str",
+        "verticalList": "true",
+        "verticalListType": "bool",
+        "buttons": [],
+        "choices": [],
+        "switchValue": "false",
+        "switchValueType": "bool",
+        "sliderMin": 0,
+        "sliderMinType": "num",
+        "sliderMax": 10,
+        "sliderMaxType": "num",
+        "sliderStep": 0,
+        "sliderStepType": "num",
+        "sliderValue": 0,
+        "sliderValueType": "num",
+        "actionButtonTitle": "Select",
+        "actionButtonTitleType": "str",
+        "multiSelection": "false",
+        "multiSelectionType": "bool",
+        "bucketFilter": "all",
+        "x": 430,
+        "y": 260,
+        "wires": [
+            [
+                "dbaf74245d994ed9"
+            ]
+        ]
+    },
+    {
+        "id": "dbaf74245d994ed9",
+        "type": "formComponent",
+        "z": "03f230443c464b5e",
+        "name": "",
+        "reference": "lampDimmer",
+        "referenceType": "str",
+        "component": "slider",
+        "title": "Brightness",
+        "titleType": "str",
+        "required": "false",
+        "requiredType": "bool",
+        "text": "",
+        "textType": "str",
+        "verticalList": "true",
+        "verticalListType": "bool",
+        "buttons": [],
+        "choices": [],
+        "switchValue": "false",
+        "switchValueType": "bool",
+        "sliderMin": 0,
+        "sliderMinType": "num",
+        "sliderMax": 10,
+        "sliderMaxType": "num",
+        "sliderStep": "1",
+        "sliderStepType": "num",
+        "sliderValue": 0,
+        "sliderValueType": "num",
+        "actionButtonTitle": "Select",
+        "actionButtonTitleType": "str",
+        "multiSelection": "false",
+        "multiSelectionType": "bool",
+        "bucketFilter": "all",
+        "x": 430,
+        "y": 300,
+        "wires": [
+            [
+                "c09de169b9f32be1"
+            ]
+        ]
+    },
+    {
+        "id": "f2e6da331084d27b",
+        "type": "sender",
+        "z": "03f230443c464b5e",
+        "connector": "",
+        "async": "0",
+        "name": "",
+        "actionName": "channel_create",
+        "actionText": "Channel - Create",
         "recipientId": "",
         "recipientIdType": "str",
         "messageId": "",
@@ -164,64 +235,184 @@
         "groupChatIdType": "str",
         "channelId": "",
         "channelIdType": "str",
-        "x": 1090,
-        "y": 320,
+        "title": "lampChannel",
+        "titleType": "str",
+        "saveLocation": "#:(file)::savedChannelId",
+        "saveLocationType": "flow",
+        "logToConsole": false,
+        "x": 950,
+        "y": 180,
         "wires": [
             [
-                "7ec6477b8ee0a3e8"
+                "7989acea16e68a4f"
             ]
         ]
     },
     {
-        "id": "f70dfda88b877f69",
-        "type": "debug",
+        "id": "c09de169b9f32be1",
+        "type": "switch",
         "z": "03f230443c464b5e",
-        "name": "debug 50",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1240,
-        "y": 400,
-        "wires": []
+        "name": "First run?",
+        "property": "#:(file)::savedChannelId",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "null"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 700,
+        "y": 180,
+        "wires": [
+            [
+                "f2e6da331084d27b"
+            ],
+            [
+                "7989acea16e68a4f"
+            ]
+        ]
     },
     {
-        "id": "7ec6477b8ee0a3e8",
-        "type": "sme-main-sender",
+        "id": "7989acea16e68a4f",
+        "type": "message",
+        "z": "03f230443c464b5e",
+        "name": "",
+        "message": "form",
+        "text": "This is a text message.",
+        "textType": "str",
+        "html": "<b>This is an html message</b>",
+        "htmlType": "str",
+        "fileIds": "",
+        "fileIdsType": "str",
+        "contactIds": "",
+        "contactIdsType": "str",
+        "locationName": "myLocation",
+        "locationNameType": "str",
+        "latitude": "",
+        "latitudeType": "str",
+        "longitude": "",
+        "longitudeType": "str",
+        "url": "",
+        "urlType": "str",
+        "enableFullScreenView": "1",
+        "viewSize": "1:2",
+        "channelId": "",
+        "channelIdType": "str",
+        "tunnelId": "",
+        "tunnelIdType": "str",
+        "formLocation": "#:(file)::savedForm",
+        "formLocationType": "flow",
+        "x": 710,
+        "y": 280,
+        "wires": [
+            [
+                "be5c0dec26e0218c"
+            ]
+        ]
+    },
+    {
+        "id": "be5c0dec26e0218c",
+        "type": "sender",
         "z": "03f230443c464b5e",
         "connector": "",
         "async": "0",
-        "x": 1170,
-        "y": 360,
+        "name": "",
+        "actionName": "channel_message_send",
+        "actionText": "Channel - Send Message",
+        "recipientId": "",
+        "recipientIdType": "str",
+        "messageId": "",
+        "messageIdType": "str",
+        "limit": 0,
+        "limitType": "num",
+        "recipientIds": "",
+        "recipientIdsType": "str",
+        "groupChatId": "",
+        "groupChatIdType": "str",
+        "channelId": "#:(file)::savedChannelId",
+        "channelIdType": "flow",
+        "title": "",
+        "titleType": "str",
+        "saveLocation": "#:(file)::savedMessageId",
+        "saveLocationType": "flow",
+        "logToConsole": false,
+        "x": 910,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bbaca621aa7988a2",
+        "type": "filterSubmission",
+        "z": "03f230443c464b5e",
+        "name": "",
+        "reference": "myLampForm",
+        "referenceType": "str",
+        "messageId": "#:(file)::savedMessageId",
+        "messageIdType": "flow",
+        "saveLocation": "savedSubmission",
+        "saveLocationType": "msg",
+        "extractValues": true,
+        "x": 400,
+        "y": 420,
         "wires": [
             [
-                "f70dfda88b877f69"
+                "8ae9ea17937ebc91"
             ]
         ]
     },
     {
-        "id": "cc54de98776d42c8",
+        "id": "6b2b5babc8813314",
+        "type": "function",
+        "z": "03f230443c464b5e",
+        "name": "Lamp HW Simulator",
+        "func": "if (msg.payload.on === true) {\n    node.status({fill:\"green\",shape:\"dot\",text:`on - brightness: ${msg.payload.brightness}`});\n} else if (msg.payload.on === false) {\n    node.status({fill:\"red\",shape:\"ring\",text:\"off\"});\n}\n\nmsg = {\n    payload: {\n        on: msg.payload.on,\n        brightness: msg.payload.brightness\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nnode.status({ fill: \"grey\", shape: \"dot\", text: \"unknown\" });",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 520,
+        "wires": [
+            [
+                "bed0529f732b3dad"
+            ]
+        ]
+    },
+    {
+        "id": "8ae9ea17937ebc91",
         "type": "change",
         "z": "03f230443c464b5e",
-        "name": "Set default form values",
+        "name": "Set values to payload",
         "rules": [
             {
                 "t": "set",
-                "p": "lampSwitchValue",
+                "p": "payload",
                 "pt": "msg",
-                "to": "true",
-                "tot": "bool"
+                "to": "{}",
+                "tot": "json"
             },
             {
                 "t": "set",
-                "p": "lampDimmerValue",
+                "p": "payload.on",
                 "pt": "msg",
-                "to": "5",
-                "tot": "num"
+                "to": "lampSwitch",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.brightness",
+                "pt": "msg",
+                "to": "lampDimmer",
+                "tot": "msg"
             }
         ],
         "action": "",
@@ -229,300 +420,233 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 200,
-        "y": 300,
+        "x": 160,
+        "y": 520,
         "wires": [
             [
-                "91ca047551d8ae8a"
+                "6b2b5babc8813314"
             ]
         ]
     },
     {
-        "id": "3f090137152dcd32",
+        "id": "bed0529f732b3dad",
+        "type": "formUpdater",
+        "z": "03f230443c464b5e",
+        "name": "Update Lamp Switch",
+        "location": "#:(file)::savedForm",
+        "locationType": "flow",
+        "compRefName": "lampSwitch",
+        "compRefNameType": "str",
+        "compValue": "payload.on",
+        "compValueType": "msg",
+        "x": 660,
+        "y": 520,
+        "wires": [
+            [
+                "fc0d1374928ff214"
+            ]
+        ]
+    },
+    {
+        "id": "fc0d1374928ff214",
+        "type": "formUpdater",
+        "z": "03f230443c464b5e",
+        "name": "Update Lamp Dimmer",
+        "location": "#:(file)::savedForm",
+        "locationType": "flow",
+        "compRefName": "lampDimmer",
+        "compRefNameType": "str",
+        "compValue": "payload.brightness",
+        "compValueType": "msg",
+        "x": 660,
+        "y": 560,
+        "wires": [
+            [
+                "528c6ddbf42a3395"
+            ]
+        ]
+    },
+    {
+        "id": "afdc102d04f52a44",
         "type": "comment",
         "z": "03f230443c464b5e",
-        "name": "Step 1: Send a control form to a channel and save its form and the message Id for further updates",
+        "name": "Create/Reuse a channel and send the form",
         "info": "",
-        "x": 410,
+        "x": 800,
         "y": 140,
         "wires": []
     },
     {
-        "id": "4fd3a1174e716f48",
+        "id": "97706d3dcf3e9fda",
         "type": "comment",
         "z": "03f230443c464b5e",
-        "name": "In the lamp form, submit is disabled and Retain Status is YES to allow the form to send commands on each edit and to maintain its current status on the messenger app",
+        "name": "Send values to the lamp",
         "info": "",
-        "x": 630,
-        "y": 180,
+        "x": 260,
+        "y": 480,
         "wires": []
     },
     {
-        "id": "2d1bed82447ff22f",
-        "type": "sme-main-listener",
+        "id": "4f00f533490c63f7",
+        "type": "comment",
         "z": "03f230443c464b5e",
-        "connector": "",
-        "x": 170,
-        "y": 520,
+        "name": "Update the online form to get statefulness",
+        "info": "",
+        "x": 660,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "5493b5d456e400ff",
+        "type": "inject",
+        "z": "03f230443c464b5e",
+        "name": "Manual Lamp ON",
+        "props": [
+            {
+                "p": "payload.on",
+                "v": "true",
+                "vt": "bool"
+            },
+            {
+                "p": "payload.brightness",
+                "v": "5",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 140,
+        "y": 620,
         "wires": [
             [
-                "3a2497f836e72e1e"
+                "6b2b5babc8813314"
             ]
         ]
     },
     {
-        "id": "e209e805b09415e8",
-        "type": "function",
+        "id": "d1f9db30710ef961",
+        "type": "inject",
         "z": "03f230443c464b5e",
-        "g": "c96f4fe387066a5d",
-        "name": "Send values to lamp",
-        "func": "var valuesArr = msg.savedSubmission.submission.formComponents;\n\nmsg.payload = {};\nvar lampSwitch = valuesArr.find(o => o.refName == \"myLampSwitch\");\nvar lampDimmer = valuesArr.find(o => o.refName == \"myLampDimmer\");\n\nmsg.payload.lampSwitch = {\n    refName: lampSwitch.refName,\n    value: lampSwitch.value\n};\n\nmsg.payload.lampDimmer = {\n    refName: lampDimmer.refName,\n    value: lampDimmer.value\n};\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 200,
+        "name": "Manual Lamp OFF",
+        "props": [
+            {
+                "p": "payload.on",
+                "v": "false",
+                "vt": "bool"
+            },
+            {
+                "p": "payload.brightness",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 130,
+        "y": 660,
+        "wires": [
+            [
+                "6b2b5babc8813314"
+            ]
+        ]
+    },
+    {
+        "id": "ffcfc919413e0f08",
+        "type": "comment",
+        "z": "03f230443c464b5e",
+        "name": "Simulate external control of the lamp",
+        "info": "",
+        "x": 140,
         "y": 700,
-        "wires": [
-            [
-                "bc637f7410c849d5"
-            ]
-        ]
-    },
-    {
-        "id": "91ca047551d8ae8a",
-        "type": "function",
-        "z": "03f230443c464b5e",
-        "name": "Random Form Id",
-        "func": "msg.formReference = \"form\"+Date.now();\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 270,
-        "y": 340,
-        "wires": [
-            [
-                "a56f9ae41e78f648"
-            ]
-        ]
-    },
-    {
-        "id": "e7a8a880c6b45291",
-        "type": "comment",
-        "z": "03f230443c464b5e",
-        "name": "Listen to submission for the saved form, extract values and send to lamp, update and send the form to achieve statefulness",
-        "info": "",
-        "x": 490,
-        "y": 420,
         "wires": []
     },
     {
-        "id": "3a2497f836e72e1e",
-        "type": "sme-filter-formSubmission",
+        "id": "528c6ddbf42a3395",
+        "type": "message",
         "z": "03f230443c464b5e",
-        "reference": "mySavedForm.refName",
-        "referenceType": "flow",
-        "saveLocation": "savedSubmission",
-        "saveLocationType": "msg",
-        "x": 450,
-        "y": 520,
-        "wires": [
-            [
-                "e209e805b09415e8"
-            ]
-        ]
-    },
-    {
-        "id": "0b2bb1bf856bf412",
-        "type": "sme-main-formSaver",
-        "z": "03f230443c464b5e",
-        "location": "mySavedForm",
-        "locationType": "flow",
+        "name": "",
+        "message": "form",
+        "text": "This is a text message.",
+        "textType": "str",
+        "html": "<b>This is an html message</b>",
+        "htmlType": "str",
+        "fileIds": "",
+        "fileIdsType": "str",
+        "contactIds": "",
+        "contactIdsType": "str",
+        "locationName": "myLocation",
+        "locationNameType": "str",
+        "latitude": "",
+        "latitudeType": "str",
+        "longitude": "",
+        "longitudeType": "str",
+        "url": "",
+        "urlType": "str",
+        "enableFullScreenView": "1",
+        "viewSize": "1:2",
+        "channelId": "",
+        "channelIdType": "str",
+        "tunnelId": "",
+        "tunnelIdType": "str",
+        "formLocation": "#:(file)::savedForm",
+        "formLocationType": "flow",
         "x": 870,
-        "y": 320,
-        "wires": [
-            [
-                "6cc5dfcca8f2f468"
-            ]
-        ]
-    },
-    {
-        "id": "3bf47a245e003ea3",
-        "type": "sme-main-formLoader",
-        "z": "03f230443c464b5e",
-        "location": "mySavedForm",
-        "locationType": "flow",
-        "x": 1050,
         "y": 560,
         "wires": [
             [
-                "98ad87a92732964b"
+                "cb4e117529aeb0be"
             ]
         ]
     },
     {
-        "id": "bc637f7410c849d5",
-        "type": "delay",
+        "id": "cb4e117529aeb0be",
+        "type": "sender",
         "z": "03f230443c464b5e",
-        "g": "c96f4fe387066a5d",
-        "name": "Simulate hw delay",
-        "pauseType": "delay",
-        "timeout": "1",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 430,
-        "y": 700,
-        "wires": [
-            [
-                "936084037c176bf7"
-            ]
-        ]
-    },
-    {
-        "id": "b29fe19a8f16fa99",
-        "type": "comment",
-        "z": "03f230443c464b5e",
-        "name": "In this example, a dimmer set to 0 will bring the lamp switch to off",
-        "info": "",
-        "x": 310,
-        "y": 460,
-        "wires": []
-    },
-    {
-        "id": "936084037c176bf7",
-        "type": "function",
-        "z": "03f230443c464b5e",
-        "g": "c96f4fe387066a5d",
-        "name": "Lamp logic",
-        "func": "//Dimmer is 0, force switch to 0 (off)\nif (msg.payload.lampSwitch.value == 1 &&\n    msg.payload.lampDimmer.value == 0) {\n    msg.payload.lampSwitch.value = 0;\n}\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 630,
-        "y": 700,
-        "wires": [
-            [
-                "396030b411e16a98"
-            ]
-        ]
-    },
-    {
-        "id": "396030b411e16a98",
-        "type": "sme-main-formUpdater",
-        "z": "03f230443c464b5e",
-        "name": "Update Switch Value",
-        "location": "mySavedForm",
-        "locationType": "flow",
-        "compRefName": "payload.lampSwitch.refName",
-        "compRefNameType": "msg",
-        "compValue": "payload.lampSwitch.value",
-        "compValueType": "msg",
-        "x": 820,
-        "y": 520,
-        "wires": [
-            [
-                "a33b65627d65a086"
-            ]
-        ]
-    },
-    {
-        "id": "a33b65627d65a086",
-        "type": "sme-main-formUpdater",
-        "z": "03f230443c464b5e",
-        "name": "Update Dimmer Value",
-        "location": "mySavedForm",
-        "locationType": "flow",
-        "compRefName": "payload.lampDimmer.refName",
-        "compRefNameType": "msg",
-        "compValue": "payload.lampDimmer.value",
-        "compValueType": "msg",
-        "x": 840,
-        "y": 580,
-        "wires": [
-            [
-                "3bf47a245e003ea3"
-            ]
-        ]
-    },
-    {
-        "id": "98ad87a92732964b",
-        "type": "sme-main-intent",
-        "z": "03f230443c464b5e",
+        "connector": "",
+        "async": "0",
+        "name": "",
         "actionName": "channel_message_update",
+        "actionText": "Channel - Update Message",
         "recipientId": "",
         "recipientIdType": "str",
-        "messageId": "savedSubmission.submission.replyTo.messageId",
-        "messageIdType": "msg",
+        "messageId": "#:(file)::savedMessageId",
+        "messageIdType": "flow",
         "limit": 0,
         "limitType": "num",
         "recipientIds": "",
         "recipientIdsType": "str",
         "groupChatId": "",
         "groupChatIdType": "str",
-        "channelId": "52cd6010-4d7d-46f3-9d7c-4286b5cf1600",
-        "channelIdType": "str",
-        "x": 1180,
-        "y": 620,
+        "channelId": "#:(file)::savedChannelId",
+        "channelIdType": "flow",
+        "title": "",
+        "titleType": "str",
+        "saveLocation": "#:(file)::savedMessageId",
+        "saveLocationType": "flow",
+        "logToConsole": false,
+        "x": 1060,
+        "y": 560,
         "wires": [
-            [
-                "1c1da4e77b720db5"
-            ]
+            []
         ]
     },
     {
-        "id": "1c1da4e77b720db5",
-        "type": "sme-main-sender",
+        "id": "13a515ff602a4e29",
+        "type": "listener",
         "z": "03f230443c464b5e",
         "connector": "",
-        "async": "0",
-        "x": 1270,
-        "y": 680,
+        "x": 150,
+        "y": 420,
         "wires": [
             [
-                "7e4b042ba957e9ab"
+                "bbaca621aa7988a2"
             ]
         ]
-    },
-    {
-        "id": "7e4b042ba957e9ab",
-        "type": "debug",
-        "z": "03f230443c464b5e",
-        "name": "debug 51",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1360,
-        "y": 740,
-        "wires": []
-    },
-    {
-        "id": "92d232876967a4d7",
-        "type": "comment",
-        "z": "03f230443c464b5e",
-        "name": "Read this",
-        "info": "The filter submission node saves:\n\n1. The messageId of the original form message.\nThis is useful to update a message with updated form values\n\n2. The refName of the form to identify which form has been filtered\n\n3. the formComponents of the submitted form, containing the actual settings and values of each component.\nThis is then extracted for local processing.\nLocal values can be reentered in an existing form and sent back to semilimes, using the original messageId",
-        "x": 420,
-        "y": 560,
-        "wires": []
     }
 ]

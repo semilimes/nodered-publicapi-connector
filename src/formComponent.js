@@ -159,9 +159,7 @@ module.exports = function(RED) {
                     break;
                 case 'switch':
                     var titleFieldValue = smeHelper.getNodeConfigValue(node, msg, node.titleType, node.title);
-                    console.log('switch value is: '+node.switchValue);
                     var switchFieldValue = smeHelper.getNodeConfigValue(node, msg, node.switchValueType, node.switchValue);
-                    console.log('switch field value is: '+switchFieldValue);
                     location.formComponents.push({
                         refName: referenceFieldValue || "",
                         formComponentType: node.component,

@@ -11,10 +11,10 @@
         "id": "499e3b0ca68626c7",
         "type": "comment",
         "z": "60aa84f35b43b2ca",
-        "name": "Step 2: Configure 'Connector' property of the 'Intent' and 'send to semilimes' nodes to setup connection to semilimes",
+        "name": "Step 2: Configure 'Connector' property of the 'sender' nodes to setup connection to semilimes",
         "info": "",
-        "x": 470,
-        "y": 200,
+        "x": 400,
+        "y": 260,
         "wires": []
     },
     {
@@ -28,17 +28,23 @@
         "wires": []
     },
     {
-        "id": "d4de6f11dccae0bc",
+        "id": "ef89bf5a8213f87a",
+        "type": "comment",
+        "z": "60aa84f35b43b2ca",
+        "name": "Step 1: Get an API key on semilimes.com",
+        "info": "",
+        "x": 240,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "bc415d83127f39d3",
         "type": "inject",
         "z": "60aa84f35b43b2ca",
-        "name": "Inject2",
+        "name": "START",
         "props": [
             {
                 "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
             }
         ],
         "repeat": "",
@@ -49,37 +55,32 @@
         "payload": "",
         "payloadType": "date",
         "x": 130,
-        "y": 440,
+        "y": 320,
         "wires": [
             [
-                "3e039ea227cd7a5c"
+                "dc1f7a971bb4acd8"
             ]
         ]
     },
     {
-        "id": "3e039ea227cd7a5c",
-        "type": "sme-comp-text",
+        "id": "cde509588ef91d55",
+        "type": "comment",
         "z": "60aa84f35b43b2ca",
-        "name": "",
-        "text": "First message sent by NodeRED example flow!",
-        "textType": "str",
-        "x": 290,
-        "y": 440,
-        "wires": [
-            [
-                "205a9aa0495ba053"
-            ]
-        ]
+        "name": "Step 3: In your semilimes app, login with your subaccount and check the new channel and its message",
+        "info": "",
+        "x": 430,
+        "y": 480,
+        "wires": []
     },
     {
-        "id": "205a9aa0495ba053",
-        "type": "sme-main-intent",
+        "id": "dc1f7a971bb4acd8",
+        "type": "sender",
         "z": "60aa84f35b43b2ca",
-        "name": "",
-        "autoName": "",
         "connector": "",
-        "actionName": "channel_message_send",
-        "actionText": "Channel - Send Message",
+        "async": "0",
+        "name": "",
+        "actionName": "channel_create",
+        "actionText": "Channel - Create",
         "recipientId": "",
         "recipientIdType": "str",
         "messageId": "",
@@ -92,157 +93,87 @@
         "groupChatIdType": "str",
         "channelId": "",
         "channelIdType": "str",
-        "title": "",
+        "title": "newChannel",
         "titleType": "str",
-        "x": 640,
-        "y": 440,
-        "wires": [
-            [
-                "028f3c55a5df0dfe"
-            ]
-        ]
-    },
-    {
-        "id": "028f3c55a5df0dfe",
-        "type": "sme-main-sender",
-        "z": "60aa84f35b43b2ca",
-        "connector": "",
-        "async": "0",
-        "x": 990,
-        "y": 440,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "ef89bf5a8213f87a",
-        "type": "comment",
-        "z": "60aa84f35b43b2ca",
-        "name": "Step 1: Get an API key on semilimes.com",
-        "info": "",
-        "x": 240,
-        "y": 160,
-        "wires": []
-    },
-    {
-        "id": "3098c1296a8f2791",
-        "type": "comment",
-        "z": "60aa84f35b43b2ca",
-        "name": "Step 3: Select a channel title in the 'intent' node and trigger this flow to create a new channel to start sending messages from this client",
-        "info": "",
-        "x": 530,
-        "y": 260,
-        "wires": []
-    },
-    {
-        "id": "056b11cb8540c85c",
-        "type": "comment",
-        "z": "60aa84f35b43b2ca",
-        "name": "Step 4: Configure the intent node and search for the new created channel in the list. Trigger it to send a message",
-        "info": "",
-        "x": 460,
-        "y": 400,
-        "wires": []
-    },
-    {
-        "id": "bc415d83127f39d3",
-        "type": "inject",
-        "z": "60aa84f35b43b2ca",
-        "name": "Inject1",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 130,
+        "saveLocation": "savedChannelId",
+        "saveLocationType": "msg",
+        "logToConsole": false,
+        "x": 370,
         "y": 320,
         "wires": [
             [
-                "e2ac93d75c372525"
+                "141e68d68b41be19"
             ]
         ]
     },
     {
-        "id": "e2ac93d75c372525",
-        "type": "sme-main-intent",
+        "id": "141e68d68b41be19",
+        "type": "message",
         "z": "60aa84f35b43b2ca",
         "name": "",
-        "autoName": "",
+        "message": "text",
+        "text": "My first message from node-RED!",
+        "textType": "str",
+        "html": "<b>This is an html message</b>",
+        "htmlType": "str",
+        "fileIds": "",
+        "fileIdsType": "str",
+        "contactIds": "",
+        "contactIdsType": "str",
+        "locationName": "myLocation",
+        "locationNameType": "str",
+        "latitude": "",
+        "latitudeType": "str",
+        "longitude": "",
+        "longitudeType": "str",
+        "url": "",
+        "urlType": "str",
+        "enableFullScreenView": "1",
+        "viewSize": "1:2",
+        "channelId": "",
+        "channelIdType": "str",
+        "tunnelId": "",
+        "tunnelIdType": "str",
+        "formLocation": "savedForm",
+        "formLocationType": "flow",
+        "x": 130,
+        "y": 400,
+        "wires": [
+            [
+                "e4ac8b169e893b7a"
+            ]
+        ]
+    },
+    {
+        "id": "e4ac8b169e893b7a",
+        "type": "sender",
+        "z": "60aa84f35b43b2ca",
         "connector": "",
-        "actionName": "channel_create",
-        "actionText": "Channel - Create",
+        "async": "0",
+        "name": "",
+        "actionName": "channel_message_send",
+        "actionText": "Channel - Send Message",
         "recipientId": "",
         "recipientIdType": "str",
         "messageId": "",
         "messageIdType": "str",
         "limit": 0,
         "limitType": "num",
-        "recipientIds": "f9e9d4f3-380c-49dd-b2fe-8ac2ef5c9d61",
+        "recipientIds": "",
         "recipientIdsType": "str",
         "groupChatId": "",
         "groupChatIdType": "str",
-        "channelId": "",
-        "channelIdType": "str",
-        "title": "myNewChannel",
+        "channelId": "savedChannelId",
+        "channelIdType": "msg",
+        "title": "",
         "titleType": "str",
+        "saveLocation": "savedMessageId",
+        "saveLocationType": "msg",
+        "logToConsole": false,
         "x": 350,
-        "y": 320,
+        "y": 400,
         "wires": [
-            [
-                "c59b28f83f5b6b80"
-            ]
+            []
         ]
-    },
-    {
-        "id": "c59b28f83f5b6b80",
-        "type": "sme-main-sender",
-        "z": "60aa84f35b43b2ca",
-        "connector": "",
-        "async": "0",
-        "x": 630,
-        "y": 320,
-        "wires": [
-            [
-                "43527716046f05d4"
-            ]
-        ]
-    },
-    {
-        "id": "43527716046f05d4",
-        "type": "debug",
-        "z": "60aa84f35b43b2ca",
-        "name": "Get Created Channel",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "_sme.responseMsgs[0].data",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 880,
-        "y": 320,
-        "wires": []
-    },
-    {
-        "id": "cde509588ef91d55",
-        "type": "comment",
-        "z": "60aa84f35b43b2ca",
-        "name": "Step 5: In your semilimes app, login with your subaccount and check the new message in the channel",
-        "info": "",
-        "x": 420,
-        "y": 520,
-        "wires": []
     }
 ]

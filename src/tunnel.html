@@ -1,7 +1,7 @@
 <script type="text/javascript">
-    RED.nodes.registerType('sme-main-sshTunnel', {
-        category: 'semilimesAPI_deprecated',
-        color: '#E2D96E',
+    RED.nodes.registerType('tunnel', {
+        category: 'semilimesAPI',
+        color: '#47C0E8',
         defaults: {
             connector: { type: 'sme-main-connector', required: true },
             name: { value: 'localhost', required: true },
@@ -14,14 +14,14 @@
         inputs: 1,
         outputs: 1,
         align: 'left',
-        icon: "font-awesome/fa-comment-o",
-        paletteLabel: 'SSH Tunnel',
+        icon: "font-awesome/fa-exchange",
+        paletteLabel: 'Tunnel',
         label: function () {
             if (this.host) {
                 return `Tunnel "${this.name}" [${this.host}:${this.port}]`;
             }
 
-            return 'SSH Tunnel';
+            return 'Tunnel';
         },
         labelStyle: function () {
             return this.connector ? "node_label_italic" : "";
@@ -45,7 +45,7 @@
     }
 </script>
 
-<script type="text/html" data-template-name="sme-main-sshTunnel">
+<script type="text/html" data-template-name="tunnel">
     <div style="max-width:500px;">SSH tunneling can be used to expose local web services within semilimes.</div>
     <div style="max-width:500px;">Send "CREATE", "OPEN", "CLOSE", or "DELETE" in <code>msg.Command</code> to control SSH tunnel.</div>
     <br />
@@ -90,7 +90,7 @@
     <br />
 </script>
 
-<script type="text/html" data-help-name="sme-main-sshTunnel">
+<script type="text/html" data-help-name="tunnel">
     <p>Create a SSH tunnel to semilimes.</p>
 
     <h3>Inputs</h3>

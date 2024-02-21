@@ -25,10 +25,6 @@ module.exports = function (RED) {
             var compRefNameValue = smeHelper.getNodeConfigValue(node, msg, node.compRefNameType, node.compRefName);
             var compValueValue = smeHelper.getNodeConfigValue(node, msg, node.compValueType, node.compValue);
 
-            node.log(`formMsg: ${formMsg}`);
-            node.log(`formMsg.dataComponentType: ${formMsg.dataComponentType}`);
-            node.log(`compRefNameValue: ${compRefNameValue}`);
-            node.log(`compValueValue: ${compValueValue}`);
             //Checking if there is a form saved and ui input validity
             if (formMsg && 
                 formMsg.dataComponentType == "form" &&
@@ -37,10 +33,8 @@ module.exports = function (RED) {
                     //Checking if the saved form has the component to update
                     if (formMsg.formComponents) {
                         var component = formMsg.formComponents.find(comp => comp.refName == compRefNameValue);
-                        node.log(`component: ${component}`);
                         if (component) {
                             //Updating the value
-                            node.log(`Updating ${component.refName} form component value from ${component.value} to ${compValueValue}`);
                             component.value = compValueValue;
                         }
                     } 

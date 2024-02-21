@@ -10,11 +10,15 @@
   "node-red": {
     "version": ">=2.0.0",
     "nodes": {
-      "sender": "src/sender.js",
+      "message": "src/message.js",
       "formSetup": "src/formSetup.js",
       "formComponent": "src/formComponent.js",
       "formUpdater": "src/formUpdater.js",
-      "message": "src/message.js",
+      "sender": "src/sender.js",
+      "listener": "src/listener.js",
+      "uploader": "src/uploader.js",
+      "filterSubmission": "src/filters/filterSubmission.js",
+      "tunnel": "src/tunnel.js",
       "sme-main-core": "src/sme-main-core.js",
       "sme-main-connector": "src/sme-main-connector.js",
       "sme-main-intent": "src/sme-main-intent.js",

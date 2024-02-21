@@ -8,25 +8,6 @@
         "env": []
     },
     {
-        "id": "0524510749435a86",
-        "type": "sme-main-sshTunnel",
-        "z": "9c78f3e70aecce9f",
-        "connector": "",
-        "name": "myNewTunnel",
-        "host": "localhost",
-        "port": "1880",
-        "path": "/",
-        "retryInterval": 10,
-        "retryTimeout": "1",
-        "x": 400,
-        "y": 180,
-        "wires": [
-            [
-                "2aea3326917ec6cb"
-            ]
-        ]
-    },
-    {
         "id": "a885d8cb39f347e8",
         "type": "inject",
         "z": "9c78f3e70aecce9f",
@@ -52,7 +33,7 @@
         "y": 180,
         "wires": [
             [
-                "0524510749435a86"
+                "5500db432a6c7fd2"
             ]
         ]
     },
@@ -76,10 +57,10 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 110,
-        "y": 400,
+        "payload": "{}",
+        "payloadType": "json",
+        "x": 90,
+        "y": 300,
         "wires": [
             [
                 "8eb3b73956d04d6c"
@@ -106,13 +87,13 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 120,
-        "y": 480,
+        "payload": "{}",
+        "payloadType": "json",
+        "x": 100,
+        "y": 380,
         "wires": [
             [
-                "8eb3b73956d04d6c"
+                "6266c0f735293094"
             ]
         ]
     },
@@ -136,10 +117,10 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 110,
-        "y": 440,
+        "payload": "{}",
+        "payloadType": "json",
+        "x": 90,
+        "y": 340,
         "wires": [
             [
                 "8eb3b73956d04d6c"
@@ -150,8 +131,8 @@
         "id": "2aea3326917ec6cb",
         "type": "debug",
         "z": "9c78f3e70aecce9f",
-        "name": "Check Tunnel Id",
-        "active": true,
+        "name": "Check Tunnel Info",
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -159,7 +140,7 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 820,
+        "x": 1050,
         "y": 180,
         "wires": []
     },
@@ -179,7 +160,7 @@
         "z": "9c78f3e70aecce9f",
         "name": "1. Configure the tunnel properties and Create the tunnel",
         "info": "",
-        "x": 340,
+        "x": 400,
         "y": 140,
         "wires": []
     },
@@ -187,14 +168,15 @@
         "id": "8eb3b73956d04d6c",
         "type": "change",
         "z": "9c78f3e70aecce9f",
-        "name": "",
+        "name": "Load Tunnel Info",
         "rules": [
             {
                 "t": "set",
                 "p": "TunnelId",
                 "pt": "msg",
-                "to": "",
-                "tot": "str"
+                "to": "#:(file)::myTunnel.id",
+                "tot": "flow",
+                "dc": true
             }
         ],
         "action": "",
@@ -202,42 +184,139 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 390,
-        "y": 280,
+        "x": 330,
+        "y": 320,
         "wires": [
             [
-                "0524510749435a86"
+                "5500db432a6c7fd2"
             ]
         ]
-    },
-    {
-        "id": "9803fb758cb28abb",
-        "type": "comment",
-        "z": "9c78f3e70aecce9f",
-        "name": "2. Copy the TunnelId generated in the response",
-        "info": "",
-        "x": 840,
-        "y": 140,
-        "wires": []
-    },
-    {
-        "id": "cdbb1ecff8288482",
-        "type": "comment",
-        "z": "9c78f3e70aecce9f",
-        "name": "3. Paste the TunnelId here for persistency",
-        "info": "",
-        "x": 420,
-        "y": 240,
-        "wires": []
     },
     {
         "id": "2cb9309145681335",
         "type": "comment",
         "z": "9c78f3e70aecce9f",
-        "name": "4. Control the Tunnel with the configured Id",
+        "name": "2. Control the Tunnel with the saved tunnel info",
         "info": "",
         "x": 200,
-        "y": 360,
+        "y": 260,
         "wires": []
+    },
+    {
+        "id": "381cdfd071b0e4bb",
+        "type": "change",
+        "z": "9c78f3e70aecce9f",
+        "name": "Save Tunnel info",
+        "rules": [
+            {
+                "t": "set",
+                "p": "#:(file)::myTunnel",
+                "pt": "flow",
+                "to": "{}",
+                "tot": "json"
+            },
+            {
+                "t": "set",
+                "p": "#:(file)::myTunnel.id",
+                "pt": "flow",
+                "to": "TunnelId",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "#:(file)::myTunnel.name",
+                "pt": "flow",
+                "to": "TunnelName",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 850,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d553f6071fac06e8",
+        "type": "switch",
+        "z": "9c78f3e70aecce9f",
+        "name": "Success?",
+        "property": "TunnelStatus",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "created",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 680,
+        "y": 200,
+        "wires": [
+            [
+                "381cdfd071b0e4bb"
+            ]
+        ]
+    },
+    {
+        "id": "5500db432a6c7fd2",
+        "type": "tunnel",
+        "z": "9c78f3e70aecce9f",
+        "connector": "",
+        "name": "myNewTunnel",
+        "host": "localhost",
+        "port": "1880",
+        "path": "/",
+        "retryInterval": 10,
+        "retryTimeout": 0,
+        "x": 420,
+        "y": 180,
+        "wires": [
+            [
+                "d553f6071fac06e8",
+                "2aea3326917ec6cb"
+            ]
+        ]
+    },
+    {
+        "id": "6266c0f735293094",
+        "type": "change",
+        "z": "9c78f3e70aecce9f",
+        "name": "Load and Delete Tunnel Info",
+        "rules": [
+            {
+                "t": "set",
+                "p": "TunnelId",
+                "pt": "msg",
+                "to": "#:(file)::myTunnel.id",
+                "tot": "flow",
+                "dc": true
+            },
+            {
+                "t": "delete",
+                "p": "#:(file)::myTunnel",
+                "pt": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 360,
+        "y": 380,
+        "wires": [
+            [
+                "5500db432a6c7fd2"
+            ]
+        ]
     }
 ]

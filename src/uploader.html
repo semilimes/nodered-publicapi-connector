@@ -1,6 +1,6 @@
 <script type="text/javascript">
-    RED.nodes.registerType('sme-main-uploader', {
-        category: 'semilimesAPI_deprecated',
+    RED.nodes.registerType('uploader', {
+        category: 'semilimesAPI',
         color: "#D7D7A0",
         defaults: {
             connector: { type: 'sme-main-connector', required: true },
@@ -10,10 +10,10 @@
         inputs: 1,
         outputs: 1,
         align: 'right',
-        icon: "font-awesome/fa-rss",
-        paletteLabel: 'File Uploader',
+        icon: "font-awesome/fa-cloud-upload",
+        paletteLabel: 'Uploader',
         label: function () {
-            return 'upload to semilimes';
+            return 'Upload to semilimes';
         },
         oneditprepare: function () {
             $("#node-input-filePath").typedInput({
@@ -25,7 +25,7 @@
     });
 </script>
 
-<script type="text/html" data-template-name="sme-main-uploader">
+<script type="text/html" data-template-name="uploader">
     <div style="max-width:500px;">This node is to upload files/photos to semilimes and returns an ID of the uploaded file which is used for sending file/photo messages.</div>
     <br />
     <div class="form-row">
@@ -45,6 +45,6 @@
     <p><code>msg.payload</code> contains the uploaded file information object with the <code>fileID</code> and <code>title</code> which can be used for creating file/photo messages.</p>
 </script>
 
-<script type="text/html" data-help-name="sme-main-uploader">
+<script type="text/html" data-help-name="uploader">
     <p>Upload a file to semilimes and get back an Id for messaging.</p>
 </script>
