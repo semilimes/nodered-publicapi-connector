@@ -382,5 +382,59 @@
 </script>
 
 <script type="text/html" data-help-name="formComponent">
-    <p>Creates a form component based to its format selection</p>
+    <p>Adds a form component to an initialized form structure. Make sure you use a <code>Form Setup</code> node to configure the initial structure before adding any of these nodes.</p>
+    <h3>Component Properties</h3>
+    <p>
+        <b>Label:</b> creates a simple non-interactive label
+    </p>
+    <p>
+        <b>TextBox:</b> creates a text field to compile, with an initial <code>Title</code> and a <code>Text</code> as its content. 
+        The <code>Required</code> field, if set, will produce an error in the submission if this field has not been compiled by the user.
+    </p>
+    <p>
+        <b>Button List:</b> creates an array of buttons for the user to interact with. The <code>Vertical</code> property will make the semilimes app place them vertically.
+    </p>
+    <p>
+        <b>Single Choice:</b> creates a list of choices with only one possible selection.
+    </p>
+    <p>
+        <b>Multi Choice:</b> creates a list of choices with more than one possible selections.
+    </p>
+    <p>
+        <b>Switch:</b> creates a switch in the form 
+    </p>
+    <p>
+        <b>Slider:</b> creates a configurable slider object, with its <code>Min</code> and <code>Max</code> properties, and the <code>Step</code> one to determine the minimum variation of the slider value
+    </p>
+    <p>
+        <b>Date Picker:</b> creates a date picker in the app, whose value will come back in the <code>value</code> property of the same object contained in the form submission
+    </p>
+    <p>
+        <b>Time Picker:</b> creates a time picker in the app, whose value will come back in the <code>value</code> property of the same object contained in the form submission
+    </p>
+    <p>
+        <b>Location Picker:</b> creates a time picker in the app, whose value will come back in the <code>value</code> property of the same object contained in the form submission
+    </p>
+    <p>
+        <b>Photo Picker:</b> creates a single/multiple (<code>MultiSelect</code> property) image picker in the app, whose value (fileId) will come back in the <code>value</code> property of the same object contained in the form submission
+    </p>
+    <p>
+        <b>File Picker:</b> creates a single/multiple (<code>MultiSelect</code> property) file picker in the app, whose value (fileId) will come back in the <code>value</code> property of the same object contained in the form submission
+    </p>
+    <p>
+        <b>Contact Picker:</b> creates a single/multiple (<code>MultiSelect</code> property) contact picker in the app, whose value (accountId) will come back in the <code>value</code> property of the same object contained in the form submission
+    </p>
+    <p>
+        <b>Bucket Picker:</b> creates a single/multiple (<code>MultiSelect</code> property) bucket picker in the app, whose value (bucketId) will come back in the <code>value</code> property of the same object contained in the form submission.
+        The type of bucket to let the user search for can be set with the <code>Bucket type</code> property.
+    </p>
+    <p>
+        <b>Hidden Value:</b> sends a non-visible value in the form. This will be returned in the form submission unchanged.
+    </p>
+    <p>
+        <b>QRCode Scanner:</b> creates an action button that triggers a QR Code scanning feature of the device running the semilimes app. The scanned value will be returned in the submission.
+    </p>
+    <p>
+        <b>NFC Reader:</b> creates an action button that triggers an NFC scan feature of the device running the semilimes app. The scanned value will be returned in the submission.
+    </p>
 </script>

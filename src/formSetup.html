@@ -413,11 +413,14 @@
 
 <script type="text/html" data-help-name="formSetup">
     <p>
-        This node creates a form message skeleton. 
-        When you want to send a form message, you have to setup this node first, 
-        and then add other form components blocks (labels, switches, ...) to compose the final form before sending.
+        This node initiates a form component by setting its general properties.
+        All other <code>Form Component</code> nodes must come after this node, so they can find the necessary data to compose the final form component.
     </p>
     <h3>Properties</h3>
+    <p>
+        <b>Save Location:</b> the destination value where the form will be saved. It is encouraged to enable Node-RED file context and set this to a "file" flow variable,
+        so that you can easily build stateful forms that survive Node-RED restarts.
+    </p>
     <p>
         <b>Form Reference Name:</b> this assigns a name to the form when being sent.
         The semilimes server will send back this name whenever this form is submitted, hence this name is necessary
@@ -445,8 +448,8 @@
         If you specify a receiver, you can choose who is going to receive the submission among Contacts, Group Chats, and Channels.
     </p>
     <h3>Details</h3>
-    <p>If you debug the output of this node (complete msg object), you will find a new message in the sending array (<code>msg._sme.sendingMsgs[]</code>), like the schema below.
-        The schema is not yet complete for sending, because it requires actual data fields (<code>"formComponents"</code>) to be added after this node.
+    <p>If you debug the output of this node (msg or context variable), you will find an incomplete form structure in the variable specified in the <code>Save Location</code> property.
+        This structure requires actual data fields (<code>"formComponents"</code>) to be added inside.
         <pre>
 {
     "dataComponent": {

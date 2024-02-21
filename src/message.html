@@ -281,5 +281,43 @@
 </script>
 
 <script type="text/html" data-help-name="message">
-    <p>This node creates a message component based on the selected option</p>
+    <p>This node creates a message component based on the selected <code>Message</code> property</p>
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt><code>msg._sme.sendingMsgs[]</code> <span class="property-type">array</span></dt>
+        <dd>Contains a server-compliant semilimes payload ready to be fed to the <code>Sender</code> node. It contains the data component generated with this node's properties.
+            If more than one messages have been placed in the same flow, each message will be added to this array, and the <code>Sender</code> will process each of them.
+        </dd>
+    </dl>
+    <h3>Properties</h3>
+    <p>
+        <b>Text:</b> creates a simple text component
+    </p>
+    <p>
+        <b>Html:</b> creates a html-compliant text component
+    </p>
+    <p>
+        <b>File:</b> creates a message referencing a file already existing or uploaded on the semilimes server. (see the <code>Uploader</code> node for more).
+        The <code>File ID</code> must be a guid. The semilimes app will determine the file content of this message and either display an image or provide a file to the specified destination (channels, group chats, p2p chats...).
+    </p>
+    <p>
+        <b>Contact:</b> creates a contact reference message using a <code>Contact ID</code> (= account Id, guid type). The semilimes app will render this as an id card widget.
+    </p>
+    <p>
+        <b>Location:</b> creates a location reference message using a <code>Location Name</code> (string), a <code>Latitude</code> (float), and a <code>Longitude</code> (float).
+        The semilimes app will create a map widget of the specified location.
+    </p>
+    <p>
+        <b>WebView:</b> creates a webview message that in the app produces an iframe displaying an external webpage. You can configure the <code>Url</code>, whether to be displayed in <code>Full Screen</code>, or the size proportions with <code>View Size</code>. 
+    </p>
+    <p>
+        <b>Channel:</b> creates a channel reference message by specifying a <code>Channel Id</code> (guid). The app will create a channel widget for the other users to see/open.
+    </p>
+    <p>
+        <b>Tunnel:</b> creates a tunnel reference message by specifying a <code>Tunnel Id</code> (guid). The app will create a tunnel widget for the other users to see/open.
+    </p>
+    <p>
+        <b>Form:</b> creates a form message by specifying a <code>Form Location</code> where to load the form object. This form has to be created with the <code>Form Setup</code> and <code>Form Component</code> nodes. See their docs for more.
+        The app will render a web form based on the form structure, for other users to interact with.
+    </p>
 </script>
