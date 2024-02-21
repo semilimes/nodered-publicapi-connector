@@ -8,7 +8,6 @@
             async: { value: "0", required: true },
 
             name: { value: "" },
-            autoName: { value: "" },
             actionName: { value: "" },
             actionText: { value: "" },
 
@@ -44,13 +43,21 @@
         icon: "font-awesome/fa-rss",
         paletteLabel: 'sender',
         label: function() {
-            return this.name || `${this.actionText ?? "?"}${this.actionText && this.autoName ? " | " + this.autoName : ""}` || "Send...";
+            var displayText = "";
+            switch(this.actionName) {
+                case 'groupchat_create':
+                case 'channel_create':
+                    displayText = `${this.actionText} | ${this.titleType === "str" ? "" : this.titleType+"."}${this.title}`;
+                    break;
+                default:
+                    displayText = `${this.actionText}`;
+            }
+            return this.name || displayText || "Send...";
         },
         labelStyle: function () {
             return this.actionName ? "node_label_italic" : "";
         },
         oneditsave: function() {
-            this.autoName = $('#node-input-autoName').val();
             this.logToConsole = $('#node-input-logToConsole').prop("checked") == true;
             
             $("#node-input-recipientId")
@@ -322,10 +329,10 @@
 
     function updateSenderUI() {
         var actionName = $('#node-input-actionName').val();
+
         $('#node-input-actionText').val(
             $('#node-input-actionName option:selected').text()
         );
-        this.actionText = $('#node-input-actionText').val();
 
         var defaultSaveLocations = [
             "",
@@ -466,7 +473,6 @@
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-cog"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="" />
-        <input type="hidden" id="node-input-autoName">
     </div>
     <div class="form-row">
         <label for="node-input-connector"><i class="fa fa-cog"></i> Connector</label>

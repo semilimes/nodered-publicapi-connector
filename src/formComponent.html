@@ -67,7 +67,7 @@
         icon: "font-awesome/fa-th-large",
         paletteLabel: 'Form Component',
         label: function () {
-            return this.name || (this.component ? `${this.component}: ${this.reference}` : null)  || "Form Component";
+            return this.name || (this.component ? `${this.component}: ${this.referenceType === "str" ? "" : this.referenceType+"."}${this.reference}` : null)  || "Form Component";
         },
         oneditprepare: function () {
             $("#node-input-reference").typedInput({
@@ -213,7 +213,6 @@
             for(var idx = 0; idx < buttonList.length; idx++) {
                 this.buttons.push({id: `btn${idx+1}`, value: buttonList[idx].find(".button").val()});  
             }
-            //console.log("Saved Button list: ", this.buttons);
 
             var choiceList = $("#choices-list").editableList('items');
             console.log("choiceList: ", choiceList);
@@ -221,10 +220,7 @@
             for(var idx = 0; idx < choiceList.length; idx++) {
                 this.choices.push({id: `btn${idx+1}`, value: choiceList[idx].find(".choice").val()});  
             }
-            //console.log("Saved Choice list: ", this.choices);
 
-        },
-        oneditcancel: function () {
         }
     });
 

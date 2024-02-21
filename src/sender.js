@@ -9,7 +9,7 @@ module.exports = function (RED) {
         this.async = config.async != "0";
 
         this.name = config.name;
-        this.autoName = config.autoName;
+
         this.actionName = config.actionName;
         this.actionText = config.actionText;
 
