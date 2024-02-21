@@ -43,28 +43,24 @@ You can install the nodes by either
 
 ## Connect to semilimes
 
-1. Add a new `Text` node and configure it with your preferred message
+1. Add a standard `inject` node
 
-2. Add an `Intent` node and config its `Connector` property to create a `connector` configuration. Configure the node by selecting the `Channel - Create` intent and entering a title for the new channel.
+2. Add and connect a `Sender` node, select `Channel - Create` and give it a title. This will be your new channel name. Make sure you give a value to the `Save ChannelId` property, you will reuse this later.
+
+3. In the same node, configure its `Connector` property to create a connection configuration, and enter your API key.
 ![Config connector node](resources/images/connector_node_properties.jpg)
 
-1. Add a `sender` node then config its `Connector` property by selecting the previously created connector.
-2. ![Property editor of sender node](resources/images/sender_node_properties.jpg)
+4. Add and connect a `Message` node and select the `Text` message option, then enter a message in the Text field.
 
+5. Add and connect another `Sender` node, this time for actually sending the message. Select `Channel - Send` and configure its `ChannelId` property with the one you previously saved in step 2.
 
-3. Run the flow to create the new channel.
+6. Make sure you select the previously created `Connector` in this node as well.
+![Property editor of sender node](resources/images/sender_node_properties.jpg)
 
-4. In another flow, add a `Text` node with a message
+7. Run the flow and access your semilimes app with the subaccount corresponding to your API key. You will find a new channel containing your first message!
 
-5. Add an `Intent` node and select `Channel - Send Message` and configure the channel
-
-6. Add a `sender` node and run.
-
-The flow should look like this [example](https://github.com/semilimes/nodered-publicapi-connector/blob/main/examples/Connect%20To%20semilimes%20flow.json)
-
-![connect to semilimes flow example](resources/images/connecttosemilimesflow.png)
-
-You have sent your first message!
+For reference, your completed flow should look like this
+![example](/resources/images/connecttosemilimesflow.png)
 
 
 # Examples
