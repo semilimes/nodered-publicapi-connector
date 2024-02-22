@@ -3,6 +3,9 @@
 
 This Node-RED package lets you extend your semilimes experience with automation and IoT capabilities, such as the implementation of auto replies, booking flows, control dashboards or message-based interfaces, all exposed through your semilimes app.
 
+> **Important Note**: the current version (0.10.1) contains a new set of nodes (semilimesAPI section), while leaving the old nodes for backwards compatibility (semilimesAPI_deprecated section), to let current users transition their existing flows to the new node set. 
+> The next release (1.0.0) will permanently remove all the deprecated nodes, so make sure you have completed the transition before further update this package.
+
 [Github project](https://github.com/semilimes/nodered-publicapi-connector)
 
 [Official semilimes API Documentation](https://www.semilimes.com/developers/)
@@ -19,6 +22,21 @@ You can install the nodes by either
     npm install @semilimes/node-red-semilimes --save
     ```
 
+## Setup Node-RED persistent context
+Some of the use cases of this node work more reliably when saving the necessary variables in a persistent storage.
+To ease this behaviour without adding complexity to the built flows, it is recommended to enable multiple context stores in your NodeRED configuration, so that you can use in-memory flow/global variables (deleted upon restart), or file variables, surviving a restart.
+
+To enable the default implementation of multiple context store, add this configuration chunk in node-red's settings.js file.
+
+![multicontextstore](resources/images/nodered_multicontextstore.png)
+
+To use the multiple-context in your flow, you can select the storage whenever you are dealing with a flow or global variable, like the example below:
+
+![multicontextvars](resources/images/nodered_usemulticontextvars.png)
+
+> **Note**: The default implementation of the file context in NodeRED makes sure that values are cached in memory and flushed to disk every 30 seconds, to preserve SD cards health in systems that make use of them (e.g. RaspberryPI). You can tweak this value to your liking by setting the appropriate variable in the configuration itself.
+
+Learn more on the [multiple context stores](https://nodered.org/docs/user-guide/context#using-multiple-context-stores) section in NodeRED documentation.
 
 ## Setup your developer environment
 
