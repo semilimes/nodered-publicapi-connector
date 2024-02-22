@@ -1,6 +1,7 @@
 "use strict";
 
 const Core = require('./sme-main-core.js');
+const crypto = require('crypto');
 
 module.exports = function (RED) {
 
