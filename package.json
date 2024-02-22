@@ -1,6 +1,6 @@
 {
   "name": "@semilimes/node-red-semilimes",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "description": "The new semilimes connector which integrates with the public API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
