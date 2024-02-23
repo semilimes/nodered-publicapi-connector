@@ -428,7 +428,7 @@ module.exports = function (RED) {
                         rejectUnauthorized: false,
                         headers: {
                             'Content-Type': 'application/json; charset=UTF-8',
-                            'Content-Length': (body && body.length) || 0,
+                            'Content-Length': Buffer.byteLength(body, 'utf-8') || 0
                         },
                         timeout: 5000
                     };
