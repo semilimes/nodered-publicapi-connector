@@ -6,8 +6,6 @@
             name: { value: "" },
             reference: { value: "", required: true},
             referenceType: { value: "str" },
-            //saveLocation: { value: "myFormStructure", required: true},
-            //saveLocationType: { value: "flow" },
 
             component: { value: "", required: true },
 
@@ -129,26 +127,28 @@
 
             $("#buttons-list").editableList({
                 removable: true,
-                header: $("<div>").append($.parseHTML("<div style='width:100%; display: inline-grid'>Buttons</div>")),
+                header: $("<div>").append($.parseHTML("<div style='width:35%; display: inline-grid'>Button Id</div><div style='display: inline-grid'>Button Name</div>")),
                 addItem: function(row, index, data) {
                     //console.log("Added buttons are: ", data);
-                    $(row).html(`<label for="button${index+1}">Button ${index+1}</label><input type="text" id="button${index+1}" class="button" value="${JSON.stringify(data) === "{}" ? "" : data}" placeholder="Button ${index+1} title">`);
+                    $(row).html(`<div style="display:flex; align-items: baseline"><input type="text" style="flex: 1 1 0;margin-right:10px;" id="button${index+1}Value" class="buttonValue" placeholder="Button ${index+1} Id" value="${JSON.stringify(data) === "{}" ? "" : data.value}" ><input type="text" style="flex: 2 1 0;" id="button${index+1}Name" class="buttonName" value="${JSON.stringify(data) === "{}" ? "" : data.name}" placeholder="Button ${index+1} Name"></div>`);
                 }
             });
-            //console.log("Loaded buttons: ", this.buttons.map(obj => obj.value));
-            $("#buttons-list").editableList('addItems', this.buttons.map(obj => obj.value));
+            //console.log("Loaded buttons: ", this.buttons);
+            $("#buttons-list").editableList('addItems', this.buttons);
 
             /* Single and Multi choices */
             $("#choices-list").editableList({
                 removable: true,
-                header: $("<div>").append($.parseHTML("<div style='width:100%; display: inline-grid'>Choices</div>")),
+                header: $("<div>").append($.parseHTML("<div style='width:35%; display: inline-grid'>Choice Id</div><div style='display: inline-grid'>Choice Name</div>")),
                 addItem: function(row, index, data) {
-                    //console.log("Added choices are: ", data);
-                    $(row).html(`<label for="choice${index+1}">Choice ${index+1}</label><input type="text" id="choice${index+1}" class="choice" value="${JSON.stringify(data) === "{}" ? "" : data}" placeholder="Choice ${index+1} text">`);
+                    console.log("Added choices are: ", data);
+                    //$(row).html(`<label for="choice${index+1}">Choice ${index+1}</label><input type="text" id="choice${index+1}" class="choice" value="${JSON.stringify(data) === "{}" ? "" : data}" placeholder="Choice ${index+1} text">`);
+                    $(row).html(`<div style="display:flex; align-items: baseline"><input type="text" style="flex: 1 1 0;margin-right:10px;" id="choice${index+1}Value" class="choiceValue" placeholder="Choice ${index+1} Id" value="${JSON.stringify(data) === "{}" ? "" : data.value}" ><input type="text" style="flex: 2 1 0;" id="choice${index+1}Name" class="choiceName" value="${JSON.stringify(data) === "{}" ? "" : data.name}" placeholder="Choice ${index+1} Name"></div>`);
                 }
             });
-            //console.log("Loaded buttons: ", this.buttons.map(obj => obj.value));
-            $("#choices-list").editableList('addItems', this.choices.map(obj => obj.value));
+            console.log("Loaded choices: ", this.choices);
+            //$("#choices-list").editableList('addItems', this.choices.map(obj => obj.value));
+            $("#choices-list").editableList('addItems', this.choices);
 
             /* Switch */
             $("#node-input-switchValue").typedInput({
@@ -211,14 +211,22 @@
             console.log("buttonList: ", buttonList);
             this.buttons = [];
             for(var idx = 0; idx < buttonList.length; idx++) {
-                this.buttons.push({id: `btn${idx+1}`, value: buttonList[idx].find(".button").val()});  
+                var btnName = buttonList[idx].find(".buttonName").val();
+                var btnValue = buttonList[idx].find(".buttonValue").val();
+                if (btnName && btnValue) {
+                    this.buttons.push({name: btnName, value: btnValue});  
+                }
             }
 
             var choiceList = $("#choices-list").editableList('items');
             console.log("choiceList: ", choiceList);
             this.choices = [];
             for(var idx = 0; idx < choiceList.length; idx++) {
-                this.choices.push({id: `btn${idx+1}`, value: choiceList[idx].find(".choice").val()});  
+                var chcName = choiceList[idx].find(".choiceName").val();
+                var chcValue = choiceList[idx].find(".choiceValue").val();
+                if (chcName && chcValue) {
+                    this.choices.push({name: chcName, value: chcValue});
+                }     
             }
 
         }
@@ -334,11 +342,27 @@
         <input type="text" id="node-input-verticalList">
         <input type="hidden" id="node-input-verticalListType">
     </div>
-    <div class="form-row componentField" id="buttonsPanel">
-        <ol id="buttons-list" ></ol>
+    <div class="componentField" id="buttonsPanel">
+        <div class="form-row" style="margin-bottom:0;">
+            <label>
+                <i class="fa fa-list"></i>
+                <span>Buttons</span>
+            </label>
+        </div>
+        <div class="form-row">
+            <ol id="buttons-list" ></ol>
+        </div>
     </div>
-    <div class="form-row componentField" id="choicesPanel">
-        <ol id="choices-list" ></ol>
+    <div class="componentField" id="choicesPanel">
+        <div class="form-row" style="margin-bottom:0;">
+            <label>
+                <i class="fa fa-list"></i>
+                <span>Choices</span>
+            </label>
+        </div>
+        <div class="form-row">
+            <ol id="choices-list" ></ol>
+        </div>
     </div>
     <div class="form-row componentField" id="switchValuePanel">
         <label for="node-input-switchValue"><i class="fa fa-tag"></i> Value</label>

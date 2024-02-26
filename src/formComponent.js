@@ -124,8 +124,8 @@ module.exports = function(RED) {
                     var optionsFieldValue = [];
                     node.buttons.forEach(button => {
                         optionsFieldValue.push({
-                            name: button.value,
-                            value: button.id
+                            name: button.name,
+                            value: button.value
                         });                        
                     });
                     location.formComponents.push({
@@ -145,8 +145,8 @@ module.exports = function(RED) {
                     var optionsFieldValue = [];
                     node.choices.forEach(choice => {
                         optionsFieldValue.push({
-                            name: choice.value,
-                            value: choice.id
+                            name: choice.name,
+                            value: choice.value
                         });                        
                     });
                     location.formComponents.push({
