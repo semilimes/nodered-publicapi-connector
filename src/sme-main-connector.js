@@ -119,11 +119,11 @@ module.exports = function (RED) {
                         res.json(value);
                     },
                     error => {
-                        res.sendStatus(500).send(error);
+                        res.status(500).send(error);
                     }
                 )
                 .catch(error => {
-                    res.sendStatus(500).send(error);
+                    res.status(500).send(error);
                 })
         });
 
@@ -141,11 +141,11 @@ module.exports = function (RED) {
                         res.json(value);
                     },
                     error => {
-                        res.sendStatus(500).send(error);
+                        res.status(500).send(error);
                     }
                 )
                 .catch(error => {
-                    res.sendStatus(500).send(error);
+                    res.status(500).send(error);
                 })
         });
 
@@ -161,17 +161,18 @@ module.exports = function (RED) {
                 }
             };
 
-            callApi(endpoint, httpMethod, data)
+            callApi(endpoint, httpMethod, data, true)
                 .then(
                     value => {
                         res.json(value);
                     },
                     error => {
-                        res.sendStatus(500).send(error);
+                        console.log(error);
+                        res.status(500).send(error);
                     }
                 )
                 .catch(error => {
-                    res.sendStatus(500).send(error);
+                    res.status(500).send(error);
                 })
         });
 
