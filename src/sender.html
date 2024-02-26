@@ -35,7 +35,10 @@
             saveLocation: { value: "savedEntityId" },
             saveLocationType: { value: "msg" },
 
-            logToConsole: { value: true }
+            saveRequestIdLocation: { value: "savedRequestId" },
+            saveRequestIdLocationType: { value: "flow" },
+
+            logToConsole: { value: false }
         },
         inputs: 1,
         outputs: 1,
@@ -124,6 +127,12 @@
                 type: "msg",
                 types: ["msg", "flow", "global"],
                 typeField: "#node-input-saveLocationType"
+            });
+
+            $("#node-input-saveRequestIdLocation").typedInput({
+                type: "flow",
+                types: ["msg", "flow", "global"],
+                typeField: "#node-input-saveRequestIdLocationType"
             });
 
             updateSenderUI();
@@ -328,6 +337,7 @@
     });
 
     function updateSenderUI() {
+        var async = $('#node-input-async').val();
         var actionName = $('#node-input-actionName').val();
 
         $('#node-input-actionText').val(
@@ -351,6 +361,18 @@
         $('#node-input-groupChatIdPanel').hide();
         $('#node-input-channelIdPanel').hide();
         $('#node-input-saveLocationPanel').hide();
+
+        switch(async) {
+            case '0':
+                $('#node-input-saveRequestIdLocationPanel').hide();
+                break;
+            case '1':
+                $('#node-input-saveRequestIdLocationPanel').show();
+                break;
+            default:
+                $('#node-input-saveRequestIdLocationPanel').hide();
+                break;
+        }
 
         switch (actionName) {
             case 'account_contacts': {
@@ -571,6 +593,11 @@
         <label for="node-input-saveLocation"> Save </label>
         <input type="text" id="node-input-saveLocation" placeholder="">
         <input type="hidden" id="node-input-saveLocationType">
+    </div>
+    <div class="form-row" id="node-input-saveRequestIdLocationPanel">
+        <label for="node-input-saveRequestIdLocation"> Save RequestId</label>
+        <input type="text" id="node-input-saveRequestIdLocation" placeholder="">
+        <input type="hidden" id="node-input-saveRequestIdLocationType">
     </div>
     <div class="form-row">
         <label for="node-input-logToConsole"> Log to Console</label>

@@ -161,7 +161,7 @@ module.exports = function (RED) {
                 }
             };
 
-            callApi(endpoint, httpMethod, data, true)
+            callApi(endpoint, httpMethod, data)
                 .then(
                     value => {
                         res.json(value);

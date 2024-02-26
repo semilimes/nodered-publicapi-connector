@@ -41,6 +41,9 @@ module.exports = function (RED) {
         this.saveLocation = config.saveLocation;
         this.saveLocationType = config.saveLocationType;
 
+        this.saveRequestIdLocation = config.saveRequestIdLocation;
+        this.saveRequestIdLocationType = config.saveRequestIdLocationType;
+
         this.logToConsole = config.logToConsole;
 
         var smeConnector = config.connector && RED.nodes.getNode(config.connector);
@@ -323,12 +326,50 @@ module.exports = function (RED) {
                         },
                         node.logToConsole)
                     });
+
+                    //Extract request id(s)
+                    var requestIdToSave = undefined
+                    if (smeSendingBox.length === 1) {
+                        requestIdToSave = smeSendingBox[0].requestId;
+                    } else if (smeSendingBox.length > 1) {
+                        requestIdToSave = [];
+                        smeSendingBox.forEach(smeMsg => {
+                            requestIdToSave.push(smeMsg.requestId);
+                        });
+                    }
+
+                    //Save request id in saved location
+                    if (requestIdToSave !== undefined && node.saveRequestIdLocation) {
+                        switch (node.saveRequestIdLocationType) {
+                            case 'msg':
+                                msg[node.saveRequestIdLocation] = requestIdToSave;
+                                break;
+                            case 'flow':
+                                node.context().flow.set(node.saveRequestIdLocation, requestIdToSave);
+                                break;
+                            case 'global':
+                                node.context().global.set(node.saveRequestIdLocation, requestIdToSave);
+                                break;
+                            default:
+                                break;
+                        }
+                    } else {
+                        node.warn('Save requestId location value is invalid!');
+                    }
+
                     smeHelper.clearSendingBox(msg);
                     send(msg, false);
                     done && done();
                 }
                 else {
                     //  Send message via HTTP REST
+                    var entityToSave = undefined;
+                    if (smeSendingBox.length === 1) {
+                        entityToSave = "";
+                    } else if (smeSendingBox.length > 1) {
+                        entityToSave = [];
+                    }
+
                     smeSendingBox.forEach((smeMsg, index) => {
                         var promise = smeConnector.sendMessage(smeMsg, node.logToConsole);
                         promise.then(
@@ -340,31 +381,43 @@ module.exports = function (RED) {
 
                                 //Save entity id (message, groupchat, channel) in saved location
                                 if (saveMode) {
-                                    if (node.saveLocation) {
-                                        var valueToSave = undefined;
-                                        switch (saveMode) {
-                                            case 'messageId':
-                                                valueToSave = value.data?.sentMessage?.messageId;
-                                                break;
-                                            case 'groupChatId':
-                                                valueToSave = value.data?.createdGroupChat?.groupChatId;
-                                                break;
-                                            case 'channelId':
-                                                valueToSave = value.data?.createdChannel?.channelId;
-                                                break;
-                                            default:
-                                                break;
+                                    var tempValueToSave = undefined;
+                                    switch (saveMode) {
+                                        case 'messageId':
+                                            tempValueToSave = value.data?.sentMessage?.messageId;
+                                            break;
+                                        case 'groupChatId':
+                                            tempValueToSave = value.data?.createdGroupChat?.groupChatId;
+                                            break;
+                                        case 'channelId':
+                                            tempValueToSave = value.data?.createdChannel?.channelId;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    //Add tempValue to entityToSave
+                                    if(tempValueToSave) {
+                                        if (Array.isArray(entityToSave)) {
+                                            entityToSave.push(tempValueToSave);
+                                        } else {
+                                            entityToSave = tempValueToSave;
                                         }
-                                        if (valueToSave) {
+                                    }
+                                }
+
+                                if (saveMode) {
+                                    if (node.saveLocation) {
+                                        //Finally save entity to location
+                                        if (entityToSave) {
                                             switch (node.saveLocationType) {
                                                 case 'msg':
-                                                    msg[node.saveLocation] = valueToSave;
+                                                    msg[node.saveLocation] = entityToSave;
                                                     break;
                                                 case 'flow':
-                                                    node.context().flow.set(node.saveLocation, valueToSave);
+                                                    node.context().flow.set(node.saveLocation, entityToSave);
                                                     break;
                                                 case 'global':
-                                                    node.context().global.set(node.saveLocation, valueToSave);
+                                                    node.context().global.set(node.saveLocation, entityToSave);
                                                     break;
                                                 default:
                                                     break;
