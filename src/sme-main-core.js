@@ -7,6 +7,7 @@ const { debug } = require('util');
 const fs = require('fs');
 const FormData = require('form-data');
 const axios = require('axios');
+const mime = require('mime-types');
 
 module.exports = function (RED) {
     const https = require('https');
@@ -373,6 +374,7 @@ module.exports = function (RED) {
     function SmeApiClient(serverApiURL, apiKey, xAccount) {
 
         function callApi(endpoint, method, data, logEnabled = false) {
+            //Upload file
             if (endpoint == "/service/file/upload") {
 
                 return new Promise((resolve, reject) => {
@@ -401,8 +403,61 @@ module.exports = function (RED) {
                             reject(error);
                         })
                 });
+            //Download file
+            } else if (endpoint == "/service/file/download") {
 
-            } else {
+                return new Promise((resolve, reject) => {
+                    if (!data || !data.filePath || !data.fileId) {
+                        reject("Data is empty!");
+                    }
+                    
+                    //const writer = fs.createWriteStream(data.filePath);
+
+                    var localData = data && JSON.parse(JSON.stringify(data));
+                    delete localData.filePath;
+
+                    let config = {
+                        method: method,
+                        url: `${serverApiURL}${endpoint}`,
+                        responseType: 'stream',
+                        headers: {
+                            'Authorization': `Bearer ${apiKey}`,
+                        },
+                        data : localData
+                    };
+
+                    axios.request(config)
+                        .then((response) => {
+                            const contentType = response.headers['content-type'];
+                            const mimeExtension = mime.extension(contentType);
+                            const fileExtension = mimeExtension ? "."+mimeExtension : "";
+                            //const fileExtension = ".jpeg";
+                            const writer = fs.createWriteStream(`${data.filePath}${fileExtension}`);
+                            response.data.pipe(writer);
+                            let error = null;
+                            
+                            writer.on('error', err => {
+                                error = err;
+                                writer.close();
+                                console.error('Error when writing downloaded file: ', error);
+                                reject(err);
+                            });
+                            
+                            writer.on('close', () => {
+                                if (!error) {
+                                    //console.log('Successfully downloaded file in: ', data.filePath+fileExtension);
+                                    resolve(true);
+                                }
+                            });
+                        })
+                        .catch((error) => {
+                            console.error('Error when calling downloader API: ', error);
+                            reject(error);
+                        })
+                });
+
+            } 
+            else {
                 //Message endpoints
                 return new Promise((resolve, reject) => {
                     var body = data.body && JSON.stringify(data.body);

@@ -66,6 +66,22 @@ module.exports = function (RED) {
             var saveMode = "";
 
             switch (node.actionName) {
+                case 'account_my': {
+                    smeHelper.clearSendingBox(msg);
+                    var request = {
+                        requestId: getNewRequestId(),
+                        endpoint: "/account/my",
+                        httpMethod: "GET",
+                        parameters: {
+                            main: true,
+                            sub: true,
+                            shared: true,
+                            details: true
+                        }
+                    };
+                    smeHelper.addSendingMsg(msg, request);
+                    break;
+                }
                 case 'account_contacts': {
                     smeHelper.clearSendingBox(msg);
                     var request = {
@@ -163,7 +179,8 @@ module.exports = function (RED) {
                         endpoint: "/communication/groupchat/create",
                         httpMethod: "POST",
                         body: {
-                            title: smeHelper.getNodeConfigValue(node, msg, node.titleType, node.title)
+                            title: smeHelper.getNodeConfigValue(node, msg, node.titleType, node.title),
+                            recipientIds: []
                         }
                     };
                     var recipientIdsValue = smeHelper.getNodeConfigValue(node, msg, node.recipientIdsType, node.recipientIds);

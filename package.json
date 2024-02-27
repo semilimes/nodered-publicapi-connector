@@ -17,6 +17,7 @@
       "sender": "src/sender.js",
       "listener": "src/listener.js",
       "uploader": "src/uploader.js",
+      "downloader": "src/downloader.js",
       "filterSubmission": "src/filters/filterSubmission.js",
       "tunnel": "src/tunnel.js",
       "sme-main-core": "src/sme-main-core.js",
@@ -63,6 +64,7 @@
   "dependencies": {
     "axios": "^1.6.5",
     "form-data": "^4.0.0",
+    "mime-types": "^2.1.35",
     "node-forge": "^1.3.1",
     "ssh2": "^1.11.0",
     "ws": "^8.2.3"

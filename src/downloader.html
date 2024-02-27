@@ -1,0 +1,75 @@
+<script type="text/javascript">
+    RED.nodes.registerType('downloader', {
+        category: 'semilimesAPI',
+        color: "#D7D7A0",
+        defaults: {
+            connector: { type: 'sme-main-connector', required: true },
+            fileId: { value: "", required: true },
+            fileIdType: { value: "str" },
+            maxWidth: { value: 0 },
+            maxWidthType: { value: "num" },
+            saveFilePath: { value: "", required: true },
+            saveFilePathType: { value: "str" }
+        },
+        inputs: 1,
+        outputs: 1,
+        align: 'right',
+        icon: "font-awesome/fa-cloud-download",
+        paletteLabel: 'Downloader',
+        label: function () {
+            return 'Download from semilimes';
+        },
+        oneditprepare: function () {
+            $("#node-input-fileId").typedInput({
+                type: "msg",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-fileIdType"
+            });
+            $("#node-input-maxWidth").typedInput({
+                type: "num",
+                types: ["num", "msg", "flow", "global"],
+                typeField: "#node-input-maxWidthType"
+            });
+            $("#node-input-saveFilePath").typedInput({
+                type: "msg",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-saveFilePathType"
+            });
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="downloader">
+    <div style="max-width:500px;">Provide a file Id and download a file from semilimes.</div>
+    <br />
+    <div class="form-row">
+        <label for="node-input-connector"><i class="fa fa-cog"></i> Connector</label>
+        <input type="text" id="node-input-connector" placeholder="semilimes connector" />
+    </div>
+    <br />
+    <div class="form-row">
+        <label for="node-input-fileId"><i class="fa fa-tag"></i> File ID</label>
+        <input type="text" id="node-input-fileId" placeholder="semilimes file Id">
+        <input type="hidden" id="node-input-fileIdType">
+    </div>
+    <div class="form-row">
+        <label for="node-input-maxWidth"><i class="fa fa-tag"></i> Resize width (px)</label>
+        <input type="text" id="node-input-maxWidth" placeholder="Resize width">
+        <input type="hidden" id="node-input-maxWidthType">
+    </div>
+    <div class="form-row">
+        <label for="node-input-saveFilePath"><i class="fa fa-tag"></i> Save File Path</label>
+        <input type="text" id="node-input-saveFilePath" placeholder="Local file path">
+        <input type="hidden" id="node-input-saveFilePathType">
+    </div>
+    <div style="font-size: smaller;max-width:500px;">Use filename <b>without</b> extension. The extension will be automatically determined by the downloaded content.</div>
+    
+</script>
+
+<script type="text/html" data-help-name="downloader">
+    <p>Download a file from semilimes given a fileId, and save it on a specified local path.</p>
+    <h4>Properties</h4>
+    <p><b>Save File Path:</b> the absolute or relative path on disk where to save the downloaded file.</p>
+    <p><b>File Id:</b> the file Id to download from semilimes.</p>
+    <p><b>Resize width:</b> if the file is an image, downsize it to a specified width in px (maintaining proportions) before downloading, to reduce traffic.</p>
+</script>

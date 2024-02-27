@@ -375,6 +375,10 @@
         }
 
         switch (actionName) {
+            case 'account_my': {
+                //No parameters
+                break;
+            }
             case 'account_contacts': {
                 break;
             }
@@ -398,7 +402,6 @@
                 if($('#node-input-async').val() === "0") {
                     $('#node-input-saveLocationPanel').show();
                 }
-                
                 break;
             }
             case 'p2p_message_update': {
@@ -513,6 +516,7 @@
     <div class="form-row">
         <label for="node-input-actionName"><i class="fa fa-cog"></i> <span> Intent</span></label>
         <select id="node-input-actionName" onchange="updateSenderUI()">
+            <option value="account_my">Account - My Accounts</option>
             <option value="account_contacts">Account - Get Contacts</option>
             <option value="p2p">P2P - Get Chats</option>
             <option value="p2p_message">P2P - Get Messages</option>
