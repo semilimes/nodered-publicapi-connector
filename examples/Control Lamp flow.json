@@ -340,31 +340,13 @@
         "titleType": "str",
         "saveLocation": "#:(file)::savedMessageId",
         "saveLocationType": "flow",
+        "saveRequestIdLocation": "",
+        "saveRequestIdLocationType": "msg",
         "logToConsole": false,
         "x": 910,
         "y": 280,
         "wires": [
             []
-        ]
-    },
-    {
-        "id": "bbaca621aa7988a2",
-        "type": "filterSubmission",
-        "z": "03f230443c464b5e",
-        "name": "",
-        "reference": "myLampForm",
-        "referenceType": "str",
-        "messageId": "#:(file)::savedMessageId",
-        "messageIdType": "flow",
-        "saveLocation": "savedSubmission",
-        "saveLocationType": "msg",
-        "extractValues": true,
-        "x": 400,
-        "y": 420,
-        "wires": [
-            [
-                "8ae9ea17937ebc91"
-            ]
         ]
     },
     {
@@ -645,7 +627,38 @@
         "y": 420,
         "wires": [
             [
-                "bbaca621aa7988a2"
+                "f9182d6dea0f8988"
+            ]
+        ]
+    },
+    {
+        "id": "f9182d6dea0f8988",
+        "type": "filter",
+        "z": "03f230443c464b5e",
+        "connector": "",
+        "name": "",
+        "filter": "submission",
+        "reference": "myLampForm",
+        "referenceType": "str",
+        "messageId": "#:(file)::savedMessageId",
+        "messageIdType": "flow",
+        "extractValues": true,
+        "chat": "p2p",
+        "senderId": "",
+        "senderIdType": "str",
+        "groupChatId": "",
+        "groupChatIdType": "str",
+        "channelId": "",
+        "channelIdType": "str",
+        "requestId": "",
+        "requestIdType": "str",
+        "saveLocation": "savedSubmission",
+        "saveLocationType": "msg",
+        "x": 420,
+        "y": 420,
+        "wires": [
+            [
+                "8ae9ea17937ebc91"
             ]
         ]
     }

@@ -32,8 +32,8 @@
             msg._sme.receivedMsg <span class="property-type">object</span>
         </dt>
         <dd>
-            This data structure contains the received data from the server, via a default WebSocket created by the connector.
-            Currently it can only contain received messages in any chat (P2P, GroupChat, Channel).
+            This data structure contains the received event from the server, via a default WebSocket created by the connector.
+            It may contain received messages in any chat (eventType: "MessageReceived", featureType: "P2P" | "GroupChat" | "Channel"), including form submissions.
             The message content may be of any supported form (text messages, form messages, ...).
             The general data format is the following:
             <pre>
@@ -48,8 +48,11 @@
     }
 }
             </pre>
+            Alternatively, the received event may contain server responses (eventType: "Response"), as a result of a request call made via websocket. 
+            The matching between the request and response is done by saving the requestId in the Sender node, and filtering by the same requestId in the Listener node.
         </dd>
     </dl>
+
     <h3>References</h3>
     <ul>
         <li><a href="https://www.semilimes.com/developers/#inbound-events" target="_blank">Inbound messages</a> - full description of the received message formats and their properties.</li>

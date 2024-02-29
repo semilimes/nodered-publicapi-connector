@@ -431,7 +431,6 @@ module.exports = function (RED) {
                             const contentType = response.headers['content-type'];
                             const mimeExtension = mime.extension(contentType);
                             const fileExtension = mimeExtension ? "."+mimeExtension : "";
-                            //const fileExtension = ".jpeg";
                             const writer = fs.createWriteStream(`${data.filePath}${fileExtension}`);
                             response.data.pipe(writer);
                             let error = null;
@@ -446,7 +445,7 @@ module.exports = function (RED) {
                             writer.on('close', () => {
                                 if (!error) {
                                     //console.log('Successfully downloaded file in: ', data.filePath+fileExtension);
-                                    resolve(true);
+                                    resolve(data.filePath+fileExtension);
                                 }
                             });
                         })

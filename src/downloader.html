@@ -68,8 +68,13 @@
 
 <script type="text/html" data-help-name="downloader">
     <p>Download a file from semilimes given a fileId, and save it on a specified local path.</p>
-    <h4>Properties</h4>
-    <p><b>Save File Path:</b> the absolute or relative path on disk where to save the downloaded file.</p>
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt><code>msg.payload</code> <span class="property-type">string</span></dt>
+        <dd>If the call is successful, it contains the full path of the uploaded file, complete with its extension.</dd>
+    </dl>
+    <h3>Properties</h3>
+    <p><b>Save File Path:</b> the absolute or relative path on disk where to save the downloaded file. <b>NOTE: </b> do NOT include file extension in the path. The extension will be added automatically based on the downloaded content.</p>
     <p><b>File Id:</b> the file Id to download from semilimes.</p>
     <p><b>Resize width:</b> if the file is an image, downsize it to a specified width in px (maintaining proportions) before downloading, to reduce traffic.</p>
 </script>

@@ -38,13 +38,17 @@
         <input type="text" id="node-input-filePath" placeholder="Local file path">
         <input type="hidden" id="node-input-filePathType">
     </div>
-    
-    <br />
-    <br />
-    <h4>Outputs</h4>
-    <p><code>msg.payload</code> contains the uploaded file information object with the <code>fileID</code> and <code>title</code> which can be used for creating file/photo messages.</p>
 </script>
 
 <script type="text/html" data-help-name="uploader">
-    <p>Upload a file to semilimes and get back an Id for messaging.</p>
+    <p>Uploads a file to semilimes and gets back the uploaded file(s) complete with its FileId assigned by the server.</p>
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt><code>msg.payload.uploadedFiles</code> <span class="property-type">array</span></dt>
+        <dd>Array of uploaded files. Read and save each object's file Id to reference them in a "File" message or download them by specifying the same FileId in the <code>Downloader</code> node.</dd>
+    </dl>
+    <h3>Properties</h3>
+    <p>
+        <b>File Path:</b> the absolute or relative disk path to load the file from. Make sure you include file name and its extension in the path.
+    </p>
 </script>

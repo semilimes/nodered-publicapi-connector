@@ -308,6 +308,8 @@
 </script>
 
 <script type="text/html" data-template-name="formComponent">
+    <div style="max-width:500px;">Add a new form component to a form that has already been declared using the <code>Form Setup</code> node.</div>
+    <br />
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -407,6 +409,10 @@
 
 <script type="text/html" data-help-name="formComponent">
     <p>Adds a form component to an initialized form structure. Make sure you use a <code>Form Setup</code> node to configure the initial structure before adding any of these nodes.</p>
+    <h3>Properties</h3>
+    <p>
+        <b>Reference:</b> gives a reference name to the declared component. This is necessary to identify this component when receiving a submission with new values and you want to update this specific form component with the <code>form updater</code> node.
+    </p>
     <h3>Component Properties</h3>
     <p>
         <b>Label:</b> creates a simple non-interactive label
