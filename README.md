@@ -3,9 +3,6 @@
 
 This Node-RED package lets you extend your semilimes experience with automation and IoT capabilities, such as the implementation of auto replies, booking flows, control dashboards or message-based interfaces, all exposed through your semilimes app.
 
-> **Important Note**: the current version (0.10.*) contains a new set of nodes (semilimesAPI section), while leaving the old nodes for backwards compatibility (semilimesAPI_deprecated section), to let current users transition their existing flows to the new node set. 
-> The next release (1.0.0) will permanently remove all the deprecated nodes, so make sure you have completed the transition before further update this package.
-
 [Github project](https://github.com/semilimes/nodered-publicapi-connector)
 
 [Official semilimes API Documentation](https://www.semilimes.com/developers/)
