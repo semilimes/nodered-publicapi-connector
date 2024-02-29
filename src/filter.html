@@ -1,0 +1,525 @@
+<script type="text/javascript">
+    RED.nodes.registerType('filter', {
+        category: 'semilimesAPI',
+        color: '#E2D96E',
+        defaults: {
+            connector: { type: 'sme-main-connector', required: true },
+            name: { value: "" },
+            filter: { value: "", required: true },
+            
+            //Form Submission
+            reference: { value: "" },
+            referenceType: { value: "str" },
+            messageId: { value: "" },
+            messageIdType: { value: "str" },
+            extractValues: { value: true },
+
+            //Message Received
+            chat: { value: "p2p" },
+
+            senderId: { value: "" },
+            senderIdType: { value: "str" },
+
+            groupChatId: { value: "" },
+            groupChatIdType: { value: "str" },
+
+            channelId: { value: "" },
+            channelIdType: { value: "str" },
+
+            //Response
+            requestId: { value: "" },
+            requestIdType: { value: "str" },
+
+            //Common
+            saveLocation: { value: "filteredEvent" },
+            saveLocationType: { value: "msg"},
+        },
+        inputs: 1,
+        outputs: 1,
+        align: 'left',
+        icon: "font-awesome/fa-filter",
+        paletteLabel: 'Filter',
+        label: function () {
+            var details = "Filter";
+            switch (this.filter) {
+                case 'submission':
+                    var refType = this.referenceType === "str" ? "" : this.referenceType + ".";
+                    details = (this.reference ? `Filter - Submission | ${refType}${this.reference}`: null) || 
+                'Filter - All Submissions';
+                    break;
+                case 'message':
+                    details = "Filter - Message"
+                    break;
+                case 'response':
+                    details = "Filter - Response"
+                    break;
+                default:
+                    break;
+            }
+            return this.name || details;
+        },
+        labelStyle: function () {
+            return this.reference ? "node_label_italic" : "";
+        },
+        oneditsave: function () {
+            this.extractValues = $('#node-input-extractValues').prop("checked") == true;
+
+            $("#node-input-senderId")
+            .typedInput({typeField: "#node-input-senderIdType"})
+            .typedInput('types',["str", "msg", "flow", "global"])
+            this.senderId = $("#node-input-senderId").typedInput('value');
+            this.senderIdType = $("#node-input-senderId").typedInput('type');
+
+            $("#node-input-groupChatId")
+            .typedInput({typeField: "#node-input-groupChatIdType"})
+            .typedInput('types',["str", "msg", "flow", "global"])
+            this.groupChatId = $("#node-input-groupChatId").typedInput('value');
+            this.groupChatIdType = $("#node-input-groupChatId").typedInput('type');
+
+            $("#node-input-channelId")
+            .typedInput({typeField: "#node-input-channelIdType"})
+            .typedInput('types',["str", "msg", "flow", "global"])
+            this.channelId = $("#node-input-channelId").typedInput('value');
+            this.channelIdType = $("#node-input-channelId").typedInput('type');
+
+        },
+        oneditprepare: function () {
+            $("#node-input-filter").typedInput({
+                type: "filters",
+                types: [{ value: "filters", options: [
+                    {value: "submission", label: "Submission"},
+                    {value: "message", label: "Message"},
+                    {value: "response", label: "Response"},
+                ]}]
+            });
+            $("#node-input-filter").on('change', function (_, _, _) { updateFilterUI() });
+
+            $('#node-input-extractValues').prop("checked", this.extractValues);
+
+            $("#node-input-reference").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-referenceType"
+            });
+            $("#node-input-messageId").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-messageIdType"
+            });
+
+            $("#node-input-chat").typedInput({
+                type: "chats",
+                types: [{ value: "chats", options: [
+                    {value: "", label: " - "},
+                    {value: "p2p", label: "P2P"},
+                    {value: "groupchat", label: "Group Chat"},
+                    {value: "channel", label: "Channel"},
+                ]}]
+            });
+            $("#node-input-chat").on('change', function (_, _, _) { updateFilterUI() });
+
+            $("#node-input-senderId")
+            .typedInput({typeField: "#node-input-senderIdType"})
+            .typedInput('types',["str", "msg", "flow", "global"])
+            .typedInput('type',this.senderIdType);
+
+            $("#node-input-groupChatId")
+            .typedInput({typeField: "#node-input-groupChatIdType"})
+            .typedInput('types',["str", "msg", "flow", "global"])
+            .typedInput('type',this.groupChatIdType);
+            
+            $("#node-input-channelId")
+            .typedInput({typeField: "#node-input-channelIdType"})
+            .typedInput('types',["str", "msg", "flow", "global"])
+            .typedInput('type',this.channelIdType);
+
+            $("#node-input-requestId").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-requestIdType"
+            });
+
+            $("#node-input-saveLocation").typedInput({
+                type: "msg",
+                types: ["msg", "flow", "global"],
+                typeField: "#node-input-saveLocationType"
+            });
+
+            //Preparing the search recipients button
+            $('#node-config-input-scan-senders').click(function()
+                {
+                    if (["str", "msg", "flow", "global"].includes($('#node-input-senderId').typedInput('type')))
+                    { 
+                        searchSenders();
+                    }
+                    else if ($('#node-input-senderId').typedInput('type') === "sendersList") {
+                        //Bring field back to text
+                        $("#node-input-senderId")
+                            .typedInput('types', ["str", "msg", "flow", "global"])
+                            .typedInput('type', "str");
+
+                        //Edit -> Search icon
+                        $('#node-config-input-scan-senders').html('<i class="fa fa-search"></i>');
+
+                    }
+                }
+            );
+
+            function searchSenders(connId)
+            {   
+                var connId = $('#node-input-connector').val();
+                var currValue = $('#node-input-senderId').typedInput('value');
+
+                if (connId === undefined || connId === "_ADD_") {
+                    RED.notify("Select a connector first!.", "error");
+                    return;
+                }
+
+                $.getJSON(`${connId}/sme/recipients`)
+                .done(function(apiResponse) {
+                    var recipients = apiResponse.data ?? [];
+
+                    if (recipients.length == 0) {
+                        RED.notify("No senders found.", "error");
+                        return;
+                    }
+                    var rOptions = [];
+                    
+                    recipients.forEach(function(recipient, idx) {
+                        rOptions.push({value: recipient.accountId.toString(), label: recipient.accountName});
+                    });
+
+                    $('#node-input-senderId')
+                    .typedInput('types', [{ value: "sendersList", options: rOptions }])
+                    .typedInput('type', "sendersList");
+
+                    //Set selected option if the channel was previously set, otherwise select first channel
+                    var optionToSet = rOptions.find((opt) => opt.value === currValue) ?? rOptions[0];
+                    
+                    //Update selected option
+                    $('#node-input-senderId').typedInput('value', optionToSet.value);
+
+                    //Search -> Edit icon
+                    $('#node-config-input-scan-senders').html('<i class="fa fa-pencil"></i>');
+
+                    updateFilterUI();
+                })
+                .fail(function()
+                {
+                    RED.notify("Something went wrong. Please retry.", "error");
+                });
+            }
+
+            //Preparing the search groupChats button
+            $('#node-config-input-scan-groupChats').click(function()
+                {
+                    if (["str", "msg", "flow", "global"].includes($('#node-input-groupChatId').typedInput('type')))
+                    { 
+                        searchGroupChats();
+                    }
+                    else if ($('#node-input-groupChatId').typedInput('type') === "groupChatsList") {
+                        //Bring field back to text
+                        $("#node-input-groupChatId")
+                            .typedInput('types', ["str", "msg", "flow", "global"])
+                            .typedInput('type', "str");
+
+                        //Edit -> Search icon
+                        $('#node-config-input-scan-groupChats').html('<i class="fa fa-search"></i>');
+                    }
+                }
+            );
+
+            function searchGroupChats(connId)
+            {   
+                var connId = $('#node-input-connector').val();
+                var currValue = $('#node-input-groupChatId').typedInput('value');
+
+                if (connId === undefined || connId === "_ADD_") {
+                    RED.notify("Select a connector first!.", "error");
+                    return;
+                }
+
+                $.getJSON(`${connId}/sme/groupChats`)
+                .done(function(apiResponse) {
+                    var groupChats = apiResponse.data ?? [];
+
+                    if (groupChats.length == 0) {
+                        RED.notify("No group chats found.", "error");
+                        return;
+                    }
+                    var gcOptions = [];
+                    
+                    groupChats.forEach(function(groupChat, idx) {
+                        gcOptions.push({value: groupChat.groupChatId.toString(), label: groupChat.title});
+                    });
+
+                    $('#node-input-groupChatId')
+                    .typedInput('types', [{ value: "groupChatsList", options: gcOptions }])
+                    .typedInput('type', "groupChatsList");
+
+                    //Set selected option if the channel was previously set, otherwise select first channel
+                    var optionToSet = gcOptions.find((opt) => opt.value === currValue) ?? gcOptions[0];
+                    
+                    //Update selected option
+                    $('#node-input-groupChatId').typedInput('value', optionToSet.value);
+
+                    //Search -> Edit icon
+                    $('#node-config-input-scan-groupChats').html('<i class="fa fa-pencil"></i>');
+
+                    updateFilterUI();
+                })
+                .fail(function()
+                {
+                    RED.notify("Something went wrong. Please retry.", "error");
+                });
+            }
+
+            //Preparing the search channels button
+            $('#node-config-input-scan-channels').click(function()
+                {
+                    if (["str", "msg", "flow", "global"].includes($('#node-input-channelId').typedInput('type')))
+                    { 
+                        searchChannels();
+                    }
+                    else if ($('#node-input-channelId').typedInput('type') === "channelsList") {
+                        //Bring field back to text
+                        $("#node-input-channelId")
+                            .typedInput({typeField: "#node-input-channelIdType"})
+                            .typedInput('types', ["str", "msg", "flow", "global"])
+                            .typedInput('type', "str");
+
+                        //Edit -> Search icon
+                        $('#node-config-input-scan-channels').html('<i class="fa fa-search"></i>');
+
+                    }
+                }
+            );
+
+
+            function searchChannels()
+            {   
+                var connId = $('#node-input-connector').val();
+                var currValue = $('#node-input-channelId').typedInput('value');
+
+                if (connId === undefined || connId === "_ADD_") {
+                    RED.notify("Select a connector first!.", "error");
+                    return;
+                }
+
+                $.getJSON(`${connId}/sme/channels`)
+                .done(function(apiResponse) {
+                    var channels = apiResponse.data ?? [];
+
+                    if (channels.length == 0) {
+                        RED.notify("No channels found.", "error");
+                        return;
+                    }
+                    var chOptions = [];
+                    
+                    channels.forEach(function(channel, idx) {
+                        chOptions.push({value: channel.channelId.toString(), label: channel.title});
+                    });
+
+                    $('#node-input-channelId')
+                    .typedInput({typeField: "#node-input-channelIdType"})
+                    .typedInput('types', [{ value: "channelsList", options: chOptions }])
+                    .typedInput('type', "channelsList");
+
+                    //Set selected option if the channel was previously set, otherwise select first channel
+                    var optionToSet = chOptions.find((opt) => opt.value === currValue) ?? chOptions[0];
+                    
+                    //Update selected option
+                    $('#node-input-channelId').typedInput('value', optionToSet.value);
+
+                    //Search -> Edit icon
+                    $('#node-config-input-scan-channels').html('<i class="fa fa-pencil"></i>');
+
+                    updateFilterUI();
+                })
+                .fail(function()
+                {
+                    RED.notify("Something went wrong. Please retry.", "error");
+                });
+            }
+        }
+    });
+
+    function updateFilterUI() {
+        var chosenFilter = $("#node-input-filter").typedInput('value');
+
+        $('.filterOption').hide();
+
+        switch(chosenFilter) {
+            case 'submission':
+                $('#node-input-referencePanel').show();
+                $('#node-input-messageIdPanel').show();
+                $('#node-input-senderIdPanel').show();
+                $('#node-input-saveLocationPanel').show();
+                $('#node-input-extractValuesPanel').show();
+                break;
+            case 'message':
+                $('#node-input-chatPanel').show();
+                var chosenChat = $('#node-input-chat').typedInput('value');
+                switch(chosenChat) {
+                    case 'p2p':
+                        break;
+                    case 'groupchat':
+                        $('#node-input-groupChatIdPanel').show();
+                        break;
+                    case 'channel':
+                        $('#node-input-channelIdPanel').show();
+                        break;
+                    default:
+                        break;
+                }
+                $('#node-input-senderIdPanel').show();
+                $('#node-input-saveLocationPanel').show();
+                break;
+            case 'response':
+                $('#node-input-requestIdPanel').show();
+                $('#node-input-saveLocationPanel').show();
+                break;
+            default:
+                break;
+        }
+    }
+</script>
+
+<script type="text/html" data-template-name="filter">
+    <div style="max-width:500px;">Filter different types of events notified by the server, like form submissions, received messages, asynchronous responses (if using <code>sender</code> node in websocket mode).</div>
+    <br />
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-connector"><i class="fa fa-cog"></i> Connector</label>
+        <input type="text" id="node-input-connector" placeholder="semilimes connector" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-filter"><i class="fa fa-tag"></i> Filter</label>
+        <input type="text" id="node-input-filter">
+    </div>
+    <div class="form-row filterOption" id="node-input-referencePanel">
+        <label for="node-input-reference"><i class="fa fa-tag"></i> Form Reference</label>
+        <input type="text" id="node-input-reference" placeholder="Ref name of the original form">
+        <input type="hidden" id="node-input-referenceType">
+        <div style="font-size: smaller;max-width:500px;">Filter submissions of a specific form, via its reference name</div>
+    </div>
+    <div class="form-row filterOption" id="node-input-messageIdPanel">
+        <label for="node-input-messageId"><i class="fa fa-tag"></i> Message Id</label>
+        <input type="text" id="node-input-messageId" placeholder="Original message of the published form">
+        <input type="hidden" id="node-input-messageIdType">
+        <div style="font-size: smaller;max-width:500px;">Filter submissions of a form sent in a specific message, via its message Id</div>
+    </div>
+    <div class="form-row filterOption" id="node-input-chatPanel">
+        <label for="node-input-chat"><i class="fa fa-tag"></i> On Chat</label>
+        <input type="text" id="node-input-chat">
+    </div>
+    <div class="form-row filterOption" id="node-input-senderIdPanel">
+        <label for="node-input-senderId"> Sender Id</label>
+        <div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-input-senderId" placeholder="Sender Id" style="width: 100%">
+                <input type="hidden" id="node-input-senderIdType">
+            </div>
+            <a id="node-config-input-scan-senders" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+    </div>
+    <div class="form-row filterOption" id="node-input-groupChatIdPanel">
+        <label for="node-input-groupChatId"> Group Chat Id</label>
+        <div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-input-groupChatId" placeholder="Group Chat Id" style="width: 100%"/>
+                <input type="hidden" id="node-input-groupChatIdType">
+            </div>
+            <a id="node-config-input-scan-groupChats" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+    </div>
+    <div class="form-row filterOption" id="node-input-channelIdPanel">
+        <label for="node-input-channelId">Channel Id</label>
+        <div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-input-channelId" placeholder="Channel Id" style="width: 100%"/>
+                <input type="hidden" id="node-input-channelIdType">
+            </div>
+            <a id="node-config-input-scan-channels" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+    </div>
+    <div class="form-row filterOption" id="node-input-requestIdPanel">
+        <label for="node-input-requestId"><i class="fa fa-tag"></i> Request Id</label>
+        <input type="text" id="node-input-requestId" placeholder="">
+        <input type="hidden" id="node-input-requestIdType">
+        <div style="font-size: smaller;max-width:500px;">Set this value to the request Id generated by a websocket-type request made with a <code>Sender</code> node.</div>
+    </div> 
+    <div class="form-row filterOption" id="node-input-saveLocationPanel">
+        <label for="node-input-saveLocation"><i class="fa fa-tag"></i> Save Location</label>
+        <input type="text" id="node-input-saveLocation" placeholder="">
+        <input type="hidden" id="node-input-saveLocationType">
+        <div style="font-size: smaller;max-width:500px;">Set this value to extract the filtered event</div>
+    </div> 
+    <div class="form-row filterOption" id="node-input-extractValuesPanel">
+        <label for="node-input-extractValues"> Extract Values</label>
+        <input type="checkbox" id="node-input-extractValues" name="extractValues" value="1">
+        <div style="font-size: smaller;max-width:500px;">Check this to explicitly set each submission value in a <code>msg</code> property. Only works if <code>Save Location</code> property is set.</div>
+    </div>
+    
+</script>
+
+<script type="text/html" data-help-name="filter">
+    <p>Filter submissions of a specific form via its reference name, and optionally extract submitted values for further processing</p>
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt><code>msg.[Save Location]</code> <span class="property-type">array</span></dt>
+        <dd>Returns an object containing the details of the original form reference and message Id ("replyTo" property), and all the form components ("formComponents" property)
+            containing their properties and updated values ("value property"). Example object:
+            <pre>
+{
+    "replyTo": {
+        "messageId": "...",
+        "refName": "myFormReference" 
+    },
+    "formComponents": [
+        {
+            "formComponentType": "label",
+            "refName": "myLampLabel",
+            "title": "Lamp control panel"
+        },
+        { 
+            "formComponentType": "switch",
+            "refName": "myLampSwitch",
+            "title":"Switch", 
+            "value":0, 
+            "requiredSelection": false 
+        },
+        {
+            "formComponentType": "slider",
+            "refName": "myLampDimmer",
+            "title": "Dimmer",
+            "value": 8, 
+            "requiredSelection": false,
+            "min": 0,
+            "max": 10,
+            "step": 1
+        }
+    ]
+}                
+            </pre>
+    </dl>
+    <h3>Properties</h3>
+    <p>
+        <b>Form Reference:</b> Only catch submissions that reference this form name (Note: there can be multiple forms with the same reference name and different message Ids)
+    </p>
+    <p>
+        <b>Message Id:</b> Only catch submissions that reference a specific messageId. The combination of this parameter and the Form Reference ensures that the data comes from a single point of truth (e.g. a specific message in a specific channel).
+    </p>
+    <p>
+        <b>Save Location:</b> The destination variable where to send the output of the filtering.
+    </p>
+</script>
