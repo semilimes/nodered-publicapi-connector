@@ -74,7 +74,7 @@
     },
     {
         "id": "dc1f7a971bb4acd8",
-        "type": "sender",
+        "type": "smeSender",
         "z": "60aa84f35b43b2ca",
         "connector": "",
         "async": "0",
@@ -108,7 +108,7 @@
     },
     {
         "id": "141e68d68b41be19",
-        "type": "message",
+        "type": "smeMessage",
         "z": "60aa84f35b43b2ca",
         "name": "",
         "message": "text",
@@ -146,7 +146,7 @@
     },
     {
         "id": "e4ac8b169e893b7a",
-        "type": "sender",
+        "type": "smeSender",
         "z": "60aa84f35b43b2ca",
         "connector": "",
         "async": "0",

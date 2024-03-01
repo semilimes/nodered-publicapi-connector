@@ -106,5 +106,5 @@ module.exports = function (RED) {
             done && done();
         });
     }
-    RED.nodes.registerType("formSetup", CompFormNode);
+    RED.nodes.registerType("smeFormSetup", CompFormNode);
 }

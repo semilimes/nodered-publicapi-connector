@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('listener', {
+    RED.nodes.registerType('smeListener', {
         category: 'semilimesAPI',
         color: "#D7D7A0",
         defaults: {
@@ -14,7 +14,7 @@
     });
 </script>
 
-<script type="text/html" data-template-name="listener">
+<script type="text/html" data-template-name="smeListener">
     <div style="max-width:500px">Listen to incoming events from semilimes. You can create many instances, but one is enough.</div>
     <br />
     <div class="form-row">
@@ -24,7 +24,7 @@
     <div style="font-size: smaller;max-width:500px;">Connector could be sharely used for other nodes.</div>
 </script>
 
-<script type="text/html" data-help-name="listener">
+<script type="text/html" data-help-name="smeListener">
     <p>Listen to inbound events from semilimes server using a semilimes connector.</p>
     <h3>Outputs</h3>
     <dl class="message-properties">

@@ -177,5 +177,5 @@ module.exports = function (RED) {
         });
     };
 
-    RED.nodes.registerType("filter", SmeFilterNode);
+    RED.nodes.registerType("smeFilter", SmeFilterNode);
 };

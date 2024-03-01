@@ -470,5 +470,5 @@ module.exports = function (RED) {
         });
     };
 
-    RED.nodes.registerType("sender", SmeSenderNode);
+    RED.nodes.registerType("smeSender", SmeSenderNode);
 };

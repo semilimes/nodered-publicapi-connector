@@ -29,5 +29,5 @@ module.exports = function (RED) {
         });
     };
 
-    RED.nodes.registerType("listener", SmeNode);
+    RED.nodes.registerType("smeListener", SmeNode);
 };

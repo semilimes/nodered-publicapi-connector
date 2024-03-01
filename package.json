@@ -1,6 +1,6 @@
 {
   "name": "@semilimes/node-red-semilimes",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "The new semilimes connector which integrates with the public API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,16 +10,16 @@
   "node-red": {
     "version": ">=2.0.0",
     "nodes": {
-      "message": "src/message.js",
-      "formSetup": "src/formSetup.js",
-      "formComponent": "src/formComponent.js",
-      "formUpdater": "src/formUpdater.js",
-      "sender": "src/sender.js",
-      "listener": "src/listener.js",
-      "filter": "src/filter.js",
-      "uploader": "src/uploader.js",
-      "downloader": "src/downloader.js",
-      "tunnel": "src/tunnel.js",
+      "smeMessage": "src/message.js",
+      "smeFormSetup": "src/formSetup.js",
+      "smeFormComponent": "src/formComponent.js",
+      "smeFormUpdater": "src/formUpdater.js",
+      "smeSender": "src/sender.js",
+      "smeListener": "src/listener.js",
+      "smeFilter": "src/filter.js",
+      "smeUploader": "src/uploader.js",
+      "smeDownloader": "src/downloader.js",
+      "smeTunnel": "src/tunnel.js",
       "sme-main-core": "src/sme-main-core.js",
       "sme-main-connector": "src/sme-main-connector.js"
     }

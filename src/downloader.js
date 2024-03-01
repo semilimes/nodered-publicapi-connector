@@ -63,5 +63,5 @@ module.exports = function (RED) {
         });
     }
 
-    RED.nodes.registerType("downloader", SmeDownloaderNode);
+    RED.nodes.registerType("smeDownloader", SmeDownloaderNode);
 };

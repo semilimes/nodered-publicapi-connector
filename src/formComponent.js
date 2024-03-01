@@ -291,5 +291,5 @@ module.exports = function(RED) {
             done && done();
         });
     }
-    RED.nodes.registerType("formComponent", FormComponentNode);
+    RED.nodes.registerType("smeFormComponent", FormComponentNode);
 }

@@ -192,5 +192,5 @@ module.exports = function(RED) {
             done && done();
         });
     }
-    RED.nodes.registerType("message", CompMessageNode);
+    RED.nodes.registerType("smeMessage", CompMessageNode);
 }

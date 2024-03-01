@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('sender', {
+    RED.nodes.registerType('smeSender', {
         category: 'semilimesAPI',
         color: "#D7D7A0",
         defaults: {
@@ -492,7 +492,7 @@
     }
 </script>
 
-<script type="text/html" data-template-name="sender">
+<script type="text/html" data-template-name="smeSender">
     <div style="max-width:500px;">Execute actions in semilimes server via HTTP endpoints or WebSocket messages.</div>
     <br />
     <div class="form-row">
@@ -609,7 +609,7 @@
     </div>
 </script>
 
-<script type="text/html" data-help-name="sender">
+<script type="text/html" data-help-name="smeSender">
     <p>Send an intent to the semilimes server via <i>HTTP REST</i> or <i>WebSocket</i>.</p>
 
     <h3>Inputs</h3>

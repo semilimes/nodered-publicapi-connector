@@ -268,7 +268,7 @@
     },
     {
         "id": "5500db432a6c7fd2",
-        "type": "tunnel",
+        "type": "smeTunnel",
         "z": "9c78f3e70aecce9f",
         "connector": "",
         "name": "myNewTunnel",

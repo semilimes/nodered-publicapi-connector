@@ -103,7 +103,7 @@
     },
     {
         "id": "43ba545769c6ceca",
-        "type": "sender",
+        "type": "smeSender",
         "z": "4f55a344bb541810",
         "connector": "",
         "async": "0",
@@ -137,7 +137,7 @@
     },
     {
         "id": "62d9071598d16562",
-        "type": "message",
+        "type": "smeMessage",
         "z": "4f55a344bb541810",
         "name": "Text Message",
         "message": "text",
@@ -175,7 +175,7 @@
     },
     {
         "id": "2abd7828d5866352",
-        "type": "sender",
+        "type": "smeSender",
         "z": "4f55a344bb541810",
         "connector": "",
         "async": "0",
@@ -236,7 +236,7 @@
     },
     {
         "id": "7c1a323d6a5eaac5",
-        "type": "sender",
+        "type": "smeSender",
         "z": "4f55a344bb541810",
         "connector": "",
         "async": "0",

@@ -53,5 +53,5 @@ module.exports = function (RED) {
         });
     }
 
-    RED.nodes.registerType("uploader", SmeUploaderNode);
+    RED.nodes.registerType("smeUploader", SmeUploaderNode);
 };

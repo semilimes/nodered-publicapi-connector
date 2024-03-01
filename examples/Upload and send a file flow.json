@@ -19,7 +19,7 @@
     },
     {
         "id": "a1a9b3f8f6090685",
-        "type": "uploader",
+        "type": "smeUploader",
         "z": "3e3db0cb9714db14",
         "connector": "",
         "filePath": "myFilePath",
@@ -90,7 +90,7 @@
     },
     {
         "id": "e41400b39835f5b6",
-        "type": "message",
+        "type": "smeMessage",
         "z": "3e3db0cb9714db14",
         "name": "",
         "message": "file",
@@ -138,7 +138,7 @@
     },
     {
         "id": "6bd4f2eabf37f0d3",
-        "type": "sender",
+        "type": "smeSender",
         "z": "3e3db0cb9714db14",
         "connector": "",
         "async": "0",

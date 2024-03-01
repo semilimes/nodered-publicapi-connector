@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('tunnel', {
+    RED.nodes.registerType('smeTunnel', {
         category: 'semilimesAPI',
         color: '#47C0E8',
         defaults: {
@@ -45,7 +45,7 @@
     }
 </script>
 
-<script type="text/html" data-template-name="tunnel">
+<script type="text/html" data-template-name="smeTunnel">
     <div style="max-width:500px;">SSH tunneling can be used to expose local web services within semilimes.</div>
     <div style="max-width:500px;">Send "CREATE", "OPEN", "CLOSE", or "DELETE" in <code>msg.Command</code> to control SSH tunnel.</div>
     <br />
@@ -90,7 +90,7 @@
     <br />
 </script>
 
-<script type="text/html" data-help-name="tunnel">
+<script type="text/html" data-help-name="smeTunnel">
     <p>Create a SSH tunnel to semilimes.</p>
 
     <h3>Inputs</h3>

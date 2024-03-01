@@ -46,5 +46,5 @@ module.exports = function (RED) {
         });
     };
 
-    RED.nodes.registerType("formUpdater", SmeFormUpdaterNode);
+    RED.nodes.registerType("smeFormUpdater", SmeFormUpdaterNode);
 };

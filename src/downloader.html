@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('downloader', {
+    RED.nodes.registerType('smeDownloader', {
         category: 'semilimesAPI',
         color: "#D7D7A0",
         defaults: {
@@ -39,7 +39,7 @@
     });
 </script>
 
-<script type="text/html" data-template-name="downloader">
+<script type="text/html" data-template-name="smeDownloader">
     <div style="max-width:500px;">Provide a file Id and download a file from semilimes.</div>
     <br />
     <div class="form-row">
@@ -66,7 +66,7 @@
     
 </script>
 
-<script type="text/html" data-help-name="downloader">
+<script type="text/html" data-help-name="smeDownloader">
     <p>Download a file from semilimes given a fileId, and save it on a specified local path.</p>
     <h3>Outputs</h3>
     <dl class="message-properties">

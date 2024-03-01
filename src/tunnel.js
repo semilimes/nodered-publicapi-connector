@@ -362,5 +362,5 @@ module.exports = function (RED) {
         });
     };
 
-    RED.nodes.registerType("tunnel", SmeNode);
+    RED.nodes.registerType("smeTunnel", SmeNode);
 };

@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('formSetup', {
+    RED.nodes.registerType('smeFormSetup', {
         category: 'semilimesAPI',
         color: '#E6E0F8',
         defaults: {
@@ -316,7 +316,7 @@
 
 </script>
 
-<script type="text/html" data-template-name="formSetup">
+<script type="text/html" data-template-name="smeFormSetup">
     <div style="max-width:500px;">Declare and setup a new form to be subsequently enriched with form components, by using <code>Form Component</code> nodes.</div>
     <br />
     <div class="form-row">
@@ -413,7 +413,7 @@
 
 
 
-<script type="text/html" data-help-name="formSetup">
+<script type="text/html" data-help-name="smeFormSetup">
     <p>
         This node initiates a form component by setting its general properties.
         All other <code>Form Component</code> nodes must come after this node, so they can find the necessary data to compose the final form component.

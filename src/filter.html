@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('filter', {
+    RED.nodes.registerType('smeFilter', {
         category: 'semilimesAPI',
         color: '#E2D96E',
         defaults: {
@@ -385,7 +385,7 @@
     }
 </script>
 
-<script type="text/html" data-template-name="filter">
+<script type="text/html" data-template-name="smeFilter">
     <div style="max-width:500px;">Filter different types of events notified by the server, like form submissions, received messages, asynchronous responses (if using <code>sender</code> node in websocket mode).</div>
     <br />
     <div class="form-row">
@@ -475,7 +475,7 @@
     
 </script>
 
-<script type="text/html" data-help-name="filter">
+<script type="text/html" data-help-name="smeFilter">
     <p>Filter different types of received events from a <code>Listener</code> node.</p>
 
     <h3>Outputs</h3>
