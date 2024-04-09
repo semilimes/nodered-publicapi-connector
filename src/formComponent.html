@@ -29,6 +29,7 @@
 
             // Single/Multi Choice
             choices: { value: [] },
+            choiceSelectionMode: { value: "" },
 
             //Switch
             switchValue: { value: false },
@@ -98,6 +99,13 @@
             });
             $("#node-input-component").on('change', function (_, _, _) { updateFormComponentUI() });
 
+            $("#node-input-choiceSelectionMode").typedInput({
+                type: "selectionModes",
+                types: [{value: "selectionModes", options: [
+                    {value: "list", label: "List"},
+                    {value: "dropdown", label: "Dropdown"}
+                ]}]
+            });
 
             $("#node-input-title").typedInput({
                 type: "str",
@@ -253,6 +261,7 @@
                 $("#buttonsPanel").show();
                 break;
             case 'singlechoice':
+                $('#choiceSelectionModePanel').show();
             case 'multichoice':
                 $('#titlePanel').show();
                 $('#requiredPanel').show();
@@ -293,7 +302,6 @@
                 $('#bucketFilterPanel').show();
                 break;
             case 'hiddenvalue':
-                $('#titlePanel').show();
                 $('#textPanel').show();
                 break;
             case 'qrcodescanner':
@@ -324,6 +332,10 @@
     <div class="form-row">
         <label for="node-input-component"><i class="fa fa-tag"></i> Component</label>
         <input type="text" id="node-input-component">
+    </div>
+    <div class="form-row componentField" id="choiceSelectionModePanel">
+        <label for="node-input-choiceSelectionMode"><i class="fa fa-tag"></i> Mode</label>
+        <input type="text" id="node-input-choiceSelectionMode">
     </div>
     <br />
     <div class="form-row componentField" id="titlePanel">

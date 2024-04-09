@@ -11,6 +11,8 @@ module.exports = function(RED) {
 
         this.component = config.component;
 
+        this.choiceSelectionMode = config.choiceSelectionMode;
+
         this.title = config.title;
         this.titleType = config.titleType;
 
@@ -138,7 +140,27 @@ module.exports = function(RED) {
                     });
                     break;
                 case 'singlechoice':
-                    // => multichoice
+                    var titleFieldValue = smeHelper.getNodeConfigValue(node, msg, node.titleType, node.title);
+                    var requiredFieldValue = smeHelper.getNodeConfigValue(node, msg, node.requiredType, node.required);
+                    var optionsFieldValue = [];
+                    node.choices.forEach(choice => {
+                        optionsFieldValue.push({
+                            name: choice.name,
+                            value: choice.value
+                        });                        
+                    });
+                    var fc = {
+                        refName: referenceFieldValue || "",
+                        formComponentType: node.component,
+                        title: titleFieldValue ?? "",
+                        requiredSelection: requiredFieldValue,
+                        options: optionsFieldValue
+                    };
+                    if (node.choiceSelectionMode) {
+                        fc.mode = node.choiceSelectionMode;
+                    }
+                    location.formComponents.push(fc);
+                    break;
                 case 'multichoice':
                     var titleFieldValue = smeHelper.getNodeConfigValue(node, msg, node.titleType, node.title);
                     var requiredFieldValue = smeHelper.getNodeConfigValue(node, msg, node.requiredType, node.required);
@@ -246,7 +268,6 @@ module.exports = function(RED) {
                     });
                     break;
                 case 'hiddenvalue':
-                    var titleFieldValue = smeHelper.getNodeConfigValue(node, msg, node.titleType, node.title);
                     var textFieldValue = smeHelper.getNodeConfigValue(node, msg, node.textType, node.text);
                     location.formComponents.push({
                         refName: referenceFieldValue || "",
