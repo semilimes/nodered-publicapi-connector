@@ -239,31 +239,32 @@
         $(".componentField").hide();
         switch(chosenComponent) {
             case 'label':
-                $("#titlePanel").show();
+                $('#titlePanel').show();
                 break;
             case 'textbox':
-                $("#titlePanel").show();
-                $("#requiredPanel").show();
+                $('#titlePanel').show();
+                $('#requiredPanel').show();
                 $("#textPanel").show();
                 break;
             case 'buttonlist':
-                $("#titlePanel").show();
-                $("#requiredPanel").show();
+                $('#titlePanel').show();
+                $('#requiredPanel').show();
                 $("#verticalListPanel").show();
                 $("#buttonsPanel").show();
                 break;
             case 'singlechoice':
             case 'multichoice':
-                $("#titlePanel").show();
-                $("#requiredPanel").show();
+                $('#titlePanel').show();
+                $('#requiredPanel').show();
                 $("#choicesPanel").show();
                 break;
             case 'switch':
-                $("#titlePanel").show();
+                $('#titlePanel').show();
                 $("#switchValuePanel").show();
                 break;
             case 'slider':
-                $("#titlePanel").show();
+                $('#titlePanel').show();
+                $('#requiredPanel').show();
                 $("#sliderValuePanel").show();
                 $("#sliderMinPanel").show();
                 $("#sliderMaxPanel").show();
@@ -272,32 +273,33 @@
             case 'datepicker':
             case 'timepicker':
             case 'locationpicker':
-                $('titlePanel').show();
-                $("#requiredPanel").show();
+                $('#titlePanel').show();
+                $('#requiredPanel').show();
                 $('#actionButtonTitlePanel').show();
                 break;
             case 'photopicker':
             case 'filepicker':
             case 'contactpicker':
-                $('titlePanel').show();
-                $("#requiredPanel").show();
+                $('#titlePanel').show();
+                $('#requiredPanel').show();
                 $('#actionButtonTitlePanel').show();
                 $('#multiSelectionPanel').show();
                 break;
             case 'bucketpicker':
-                $('titlePanel').show();
-                $("#requiredPanel").show();
+                $('#titlePanel').show();
+                $('#requiredPanel').show();
                 $('#actionButtonTitlePanel').show();
                 $('#multiSelectionPanel').show();
                 $('#bucketFilterPanel').show();
                 break;
             case 'hiddenvalue':
-                $("#textPanel").show();
+                $('#titlePanel').show();
+                $('#textPanel').show();
                 break;
             case 'qrcodescanner':
             case 'nfcreader':
                 $('titlePanel').show();
-                $("#requiredPanel").show();
+                $('#requiredPanel').show();
                 $('#actionButtonTitle').typedInput('value', )
                 $('#actionButtonTitlePanel').show();
                 break;

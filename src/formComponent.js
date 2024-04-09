@@ -246,6 +246,7 @@ module.exports = function(RED) {
                     });
                     break;
                 case 'hiddenvalue':
+                    var titleFieldValue = smeHelper.getNodeConfigValue(node, msg, node.titleType, node.title);
                     var textFieldValue = smeHelper.getNodeConfigValue(node, msg, node.textType, node.text);
                     location.formComponents.push({
                         refName: referenceFieldValue || "",
