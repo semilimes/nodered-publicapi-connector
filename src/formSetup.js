@@ -12,15 +12,26 @@ module.exports = function (RED) {
         this.saveLocation = config.saveLocation;
         this.saveLocationType = config.saveLocationType;
 
-        this.submitText = config.submitText;
-        this.submitTextType = config.submitTextType;
-        this.submitEnabled = config.submitEnabled;
-        this.retainStatus = config.retainStatus;
-        this.recipientId = config.recipientId;
-        this.recipientIdType = config.recipientIdType;
-        this.receiverType = config.receiverType;
         this.refName = config.refName;
         this.refNameType = config.refNameType;
+
+        this.submitText = config.submitText;
+        this.submitTextType = config.submitTextType;
+
+        this.submitEnabled = config.submitEnabled;
+
+        this.retainStatus = config.retainStatus;
+
+        this.receiverType = config.receiverType;
+
+        this.recipientId = config.recipientId;
+        this.recipientIdType = config.recipientIdType;
+
+        this.groupChatId = config.groupChatId;
+        this.groupChatIdType = config.groupChatIdType;
+
+        this.channelId = config.channelId;
+        this.channelIdType = config.channelIdType;
 
         var node = this;
 
