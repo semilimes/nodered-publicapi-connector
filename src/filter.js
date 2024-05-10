@@ -39,10 +39,11 @@ module.exports = function (RED) {
             var result = recMsg &&
                     recMsg.eventType === "MessageReceived" &&
                     recMsg.eventBody &&
-                    ((options && options.senderId) ? recMsg.eventBody.senderId === options.senderId : true) &&
+                    //((options && options.senderId) ? recMsg.eventBody.senderId === options.senderId : true) &&
                     recMsg.eventBody.dataComponent &&
                     recMsg.eventBody.dataComponent.dataComponentType === "formsubmission" &&
                     recMsg.eventBody.dataComponent.replyTo &&
+                    ((options && options.senderId) ? recMsg.eventBody.dataComponent.submitterId === options.senderId : true) &&
                     ((options && options.reference) ? recMsg.eventBody.dataComponent.replyTo.refName === options.reference : true) &&
                     ((options && options.messageId) ? recMsg.eventBody.dataComponent.replyTo.messageId === options.messageId : true);
             return result;
