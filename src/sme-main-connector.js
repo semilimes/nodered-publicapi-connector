@@ -26,8 +26,11 @@ module.exports = function (RED) {
     function SmeConnectorNode(config) {		
         RED.nodes.createNode(this, config);
 
+        this.apiKeyType = config.apiKeyType;
+
         var server = (this.credentials && this.credentials.server) || "api.semilimes.net";
-        var apiKey = this.credentials.apiKey;
+        var apiKey = RED.util.evaluateNodeProperty(this.credentials.apiKey, this.apiKeyType, this);
+        
         var xAccount = this.credentials.xAccount;
         var connectorId = this.id;
 

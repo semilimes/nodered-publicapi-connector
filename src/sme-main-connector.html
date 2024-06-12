@@ -2,7 +2,8 @@
     RED.nodes.registerType('sme-main-connector', {
         category: 'config',
         defaults: {
-            name: { value: "" }
+            name: { value: "" },
+            apiKeyType: { value: "str" }
         },
         credentials: {
             server: { type: "text" },
@@ -26,12 +27,17 @@
         },
         paletteLabel: 'connector',
         oneditprepare: function () {
-            if(this.credentials)
-            {
-                $('#node-config-input-server').val(this.credentials.server);
-                $('#node-config-input-apiKey').val(this.credentials.apiKey);
-                $('#node-config-input-xAccount').val(this.credentials.xAccount);
-            }
+            // if(this.credentials)
+            // {
+            //     $('#node-config-input-server').val(this.credentials.server);
+            //     $('#node-config-input-apiKey').val(this.credentials.apiKey);
+            //     $('#node-config-input-xAccount').val(this.credentials.xAccount);
+            // }
+            $("#node-config-input-apiKey").typedInput({
+                type: "msg",
+                types: ["str", "env"],
+                typeField: "#node-config-input-apiKeyType"
+            });
         },
         oneditsave: function () {
             if(this.credentials) {
@@ -75,6 +81,7 @@
     <div class="form-row">
         <label for="node-config-input-apiKey"><i class="fa fa-tag"></i> Api Key</label>
         <input type="text" id="node-config-input-apiKey" />
+        <input type="hidden" id="node-config-input-apiKeyType" />
     </div>
     <div style="font-size: smaller;max-width:500px;">Use an existing developer api key</div>
     <br />
