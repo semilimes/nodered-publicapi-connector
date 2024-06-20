@@ -138,7 +138,7 @@ module.exports = function(RED) {
                     if (urlValue) {
                         smeMsg = {
                             dataComponent: {
-                                dataComponentType: "webView",
+                                dataComponentType: "webview",
                                 url: urlValue,
                                 enableFullScreenView: node.enableFullScreenView == "1",
                                 viewSize: node.viewSize
