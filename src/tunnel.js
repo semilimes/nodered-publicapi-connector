@@ -266,10 +266,9 @@ module.exports = function (RED) {
                     case 'OPEN':
                         if((msg.TunnelId || node.tunnelId) && !node.serving) {
                             //Tunnel has been created or specified, open it
-                            node.log(`Opening tunnel: ${node.tunnelId}`);
-
                             //if specified, use this, otherwise, look into the saved id
                             var tunnelIdToOpen = msg.TunnelId ?? node.TunnelId;
+                            node.log(`Opening tunnel: ${tunnelIdToOpen}`);
 
                             var promise = smeConnector.sendMessage({
                                 endpoint: "/service/tunnel/open",

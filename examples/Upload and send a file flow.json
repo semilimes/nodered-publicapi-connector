@@ -161,6 +161,8 @@
         "titleType": "str",
         "saveLocation": "savedMessageId",
         "saveLocationType": "msg",
+        "saveRequestIdLocation": "savedRequestId",
+        "saveRequestIdLocationType": "msg",
         "logToConsole": false,
         "x": 670,
         "y": 280,

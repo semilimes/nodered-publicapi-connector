@@ -14,6 +14,16 @@ module.exports = function (RED) {
     const EventEmitter = require('events');
     const ws = require('ws');
 
+    function getTimestamp() {
+        return new Intl.DateTimeFormat('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        }).format(new Date()).replace(',',''); 
+    }
+
     //--------------------SmeHelper-----------------------------------
     function SmeHelper() {
         const SME_BAG_NAME = '_sme';
@@ -275,7 +285,8 @@ module.exports = function (RED) {
                 options.agent = proxyAgent;
             }
 
-            console.log(`Connecting to "${serverWsURL}"... `);
+            console.log(`${getTimestamp()} - Connecting to ${serverWsURL}... `);
+            
             
             
             webSocket = new ws.WebSocket(serverWsURL, options);
@@ -301,7 +312,7 @@ module.exports = function (RED) {
 
         function handleConnection(socket) {
             socket.on('open', function () {
-                console.log('ws opened!');
+                console.log(`${getTimestamp()} - ws opened!`);
                 messageDeliver.emit('status', 'connected');
 
                 if (buffer.length > 0) {
@@ -312,7 +323,7 @@ module.exports = function (RED) {
             });
 
             socket.on('close', function () {
-                console.log('ws closed!');
+                console.log(`${getTimestamp()} - ws closed!`);
                 messageDeliver.emit('status', 'disconnected');
                 reconnect();
             });
@@ -329,7 +340,7 @@ module.exports = function (RED) {
             });
 
             socket.on('error', function (err) {
-                console.error('ws error!' + err);
+                console.error(`${getTimestamp()} - ws error! ${err}`);
                 reconnect();
             });
         }
@@ -343,7 +354,7 @@ module.exports = function (RED) {
                     webSocket.send(msg);
                 else {
                     buffer.push(msg);
-                    if (logEnabled) console.log('buffered: ', msg);
+                    if (logEnabled) console.log(`${getTimestamp()} - buffered: `, msg);
                 }
             }
         }
@@ -395,11 +406,11 @@ module.exports = function (RED) {
 
                     axios.request(config)
                         .then((response) => {
-                            if(logEnabled) console.log(JSON.stringify(response.data));
+                            if(logEnabled) console.log(`${getTimestamp()} - ${JSON.stringify(response.data)}`);
                             resolve(response.data);
                         })
                         .catch((error) => {
-                            console.error('Error when calling uploader API: ', error);
+                            console.error(`${getTimestamp()} - Error when calling uploader API: `, error);
                             reject(error);
                         })
                 });
@@ -504,12 +515,12 @@ module.exports = function (RED) {
                         var lastChunk = authText.substring(authText.length - 5, authText.length);
                         var authMasked = `${firstChunk}*****${lastChunk}`;
                         optionsMasked.headers.Authorization = authMasked;
-                        console.log('Attempt to send call to:', optionsMasked);
+                        console.log(`${getTimestamp()} - Attempt to send call to:`, optionsMasked);
                         console.log('With data: ', body);
                     }                  
     
                     var req = https.request(options, (res) => {
-                        if(logEnabled) console.log("Status Code: ", res.statusCode);
+                        if(logEnabled) console.log(`${getTimestamp()} - Status Code: `, res.statusCode);
                         let totalBuffer = "";
                         res.on('data', (buffer) => {
                             totalBuffer += buffer.toString("utf8");
@@ -520,30 +531,30 @@ module.exports = function (RED) {
                                 try {
                                     var jsonData = JSON.parse(totalBuffer);
                                     if (jsonData) {
-                                        if(logEnabled) console.log('Call API resolved a JSON: ', jsonData);
+                                        if(logEnabled) console.log(`${getTimestamp()} - Call API resolved a JSON: `, jsonData);
                                         resolve(jsonData);
                                         return;
                                     } else {
-                                        if(logEnabled) console.log('Response raw data: ', totalBuffer);
+                                        if(logEnabled) console.log(`${getTimestamp()} - Response raw data: `, totalBuffer);
                                     }
                                 }
                                 catch (ex) {
-                                    console.error('Error parsing API JSON result: ', ex);
+                                    console.error(`${getTimestamp()} - Error parsing API JSON result: `, ex);
                                 }
                             }
-                            if(logEnabled) console.log('Call API resolved: ', totalBuffer);
+                            if(logEnabled) console.log(`${getTimestamp()} - Call API resolved: `, totalBuffer);
                             resolve(totalBuffer);
                         });
                     });
     
                     // use its "timeout" event to abort the request
                     req.on('timeout', () => {
-                        console.error('API call timeout. Call aborted.')
+                        console.error(`${getTimestamp()} - API call timeout. Call aborted.`)
                         req.destroy();
                     });
     
                     req.on('error', (e) => {
-                        console.error('Call API rejected: ', e);
+                        console.error(`${getTimestamp()} - Call API rejected: `, e);
                         reject(e);
                     });
     
