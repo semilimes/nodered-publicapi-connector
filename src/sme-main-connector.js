@@ -41,6 +41,7 @@ module.exports = function (RED) {
 
         var apiClient = new core.SmeApiClient(serverApiURL, apiKey, xAccount);
         var webSocket = new core.SmeWebSocket(serverWsURL, apiKey, xAccount);
+        var apiRemoteClient = new core.SmeRemoteClient();
 
         var pjson = require('../package.json');
 
@@ -88,6 +89,14 @@ module.exports = function (RED) {
             return apiClient.callApi(endpoint, method, data, logEnabled);
         }
 
+        function remoteAppCallApi(endpoint, method, data, logEnabled = false) {
+            return apiRemoteClient.callApi(endpoint, method, data, logEnabled);
+        }
+
+        function remoteAppInitiateCall(recipientId, groupChatId, cameraIds) {
+            return apiRemoteClient.cameraInitiateCall(recipientId, groupChatId, cameraIds);
+        }
+
         function addMessageListener(listener) {
             webSocket.addMessageListener(listener);
         }
@@ -107,6 +116,7 @@ module.exports = function (RED) {
         this.addMessageListener = addMessageListener;
         this.removeMessageListener = removeMessageListener;
         this.addStatusListener = addStatusListener;
+        this.remoteAppInitiateCall = remoteAppInitiateCall;
 
         //Get my P2P Chats (Contacts)
         RED.httpAdmin.get(`/${connectorId}/sme/recipients`, function (req, res, next) {
@@ -179,6 +189,52 @@ module.exports = function (RED) {
                 })
         });
 
+        //Get cameras list
+        RED.httpAdmin.get(`/${connectorId}/sme-remote/cameras`, function (req, res, next) {
+            var endpoint = "/api/cameras";
+            var httpMethod = "GET";
+            
+            remoteAppCallApi(endpoint, httpMethod, null)
+                .then(
+                    value => {
+                        res.json(value);
+                    },
+                    error => {
+                        console.log(error);
+                        res.status(500).send(error);
+                    }
+                )
+                .catch(error => {
+                    res.status(500).send(error);
+                })
+        });
+
+        //Initiate camera call
+        RED.httpAdmin.post(`/${connectorId}/sme-remote/cameras/initiatecall`, function (req, res, next) {
+            var body = req.body;
+
+            var endpoint = `/api/cameras/${body.cameraId}/initiatecall`;
+            var httpMethod = "POST";
+
+            var data = {
+                "groupChatId": body.groupChatId,
+                "cameraIds": body.cameraIds
+            };
+            
+            remoteAppCallApi(endpoint, httpMethod, null)
+                .then(
+                    value => {
+                        res.json(value);
+                    },
+                    error => {
+                        console.log(error);
+                        res.status(500).send(error);
+                    }
+                )
+                .catch(error => {
+                    res.status(500).send(error);
+                })
+        });
     };
 	
     RED.nodes.registerType("sme-main-connector", SmeConnectorNode, {

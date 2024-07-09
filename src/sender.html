@@ -38,6 +38,9 @@
             saveRequestIdLocation: { value: "savedRequestId" },
             saveRequestIdLocationType: { value: "flow" },
 
+            cameraOptions: {value: []},
+            cameraList: {value: []},
+
             logToConsole: { value: false }
         },
         inputs: 1,
@@ -80,8 +83,18 @@
             .typedInput('types',["str", "msg", "flow", "global"])
             this.channelId = $("#node-input-channelId").typedInput('value');
             this.channelIdType = $("#node-input-channelId").typedInput('type');
+
+            var node = this;
+            node.cameraList = [];
+            var cameraListValues = $("#node-input-cameras-container").editableList('items');
+
+            cameraListValues.each(function(i) {
+                var cameraId = $(this).find("select").val();
+                node.cameraList.push(cameraId);
+            });
         },
         oneditprepare: function () {
+            var node = this;
             $('#node-input-logToConsole').prop("checked", this.logToConsole);
 
             $("#node-input-recipientId")
@@ -133,6 +146,53 @@
                 type: "flow",
                 types: ["msg", "flow", "global"],
                 typeField: "#node-input-saveRequestIdLocationType"
+            });
+
+            const fetchCamerasList = () => {
+                return new Promise((resolve, reject) => {
+                    var connId = $('#node-input-connector').val();
+                    $.getJSON(`${connId}/sme-remote/cameras`)
+                    .done(function(apiResponse) {
+                        node.cameraOptions = apiResponse.data;
+                        resolve();
+                    })
+                    .fail(function(error) {
+                        reject(error);
+                    });
+                });
+            };
+
+            
+            fetchCamerasList()
+            .then(() => {
+                $("#node-input-cameras-container").css('min-height','200px').editableList({
+                    removable: true,
+                    addButton: "Add Camera",
+                    addItem: function(row, index, cameraId) {
+                        let fragment = document.createDocumentFragment();
+                        
+                        var selectField = $('<select/>',{class:"node-input-rule-type",style:"width:450px;"}).appendTo(fragment);
+    
+    
+                        node.cameraOptions.map(camera => {
+                            selectField.append($("<option></option>").val(camera.id).text(camera.name));
+                        });
+    
+                        if (cameraId !== null) {
+                            selectField.val(cameraId);
+                        }
+    
+                        row[0].appendChild(fragment);
+                    }
+                });  
+                node.cameraList.forEach(function(cameraId) {
+                    if (node.cameraOptions.some(camera => camera.id === cameraId)) {
+                        $("#node-input-cameras-container").editableList("addItem", cameraId);    
+                    }
+                });  
+            })
+            .catch(error => {
+                RED.notify("Failed to fetch cameras: " + error, "error");
             });
 
             updateSenderUI();
@@ -339,6 +399,7 @@
     function updateSenderUI() {
         var async = $('#node-input-async').val();
         var actionName = $('#node-input-actionName').val();
+        var connId = $('#node-input-connector').val();
 
         $('#node-input-actionText').val(
             $('#node-input-actionName option:selected').text()
@@ -361,6 +422,7 @@
         $('#node-input-groupChatIdPanel').hide();
         $('#node-input-channelIdPanel').hide();
         $('#node-input-saveLocationPanel').hide();
+        $('#node-input-cameras-container-row').hide();
 
         switch(async) {
             case '0':
@@ -485,6 +547,11 @@
                 $('#node-input-messageIdPanel').show();
                 break;
             }
+            case 'camera_call': {
+                $('#node-input-recipientIdPanel').show();
+                $('#node-input-groupChatIdPanel').show();
+                $('#node-input-cameras-container-row').show();
+            }
             default: {
                 break;
             }
@@ -532,6 +599,7 @@
             <option value="channel_message">Channel - Get Messages</option>
             <option value="channel_message_send">Channel - Send Message</option>
             <option value="channel_message_update">Channel - Update Message</option>
+            <option value="camera_call">Camera - Call</option>
         </select>
         <input type="hidden" id="node-input-actionText">
     </div>
@@ -603,6 +671,11 @@
         <input type="text" id="node-input-saveRequestIdLocation" placeholder="">
         <input type="hidden" id="node-input-saveRequestIdLocationType">
     </div>
+
+    <div class="form-row" id="node-input-cameras-container-row">
+        <ol id="node-input-cameras-container"></ol>
+    </div>
+
     <div class="form-row">
         <label for="node-input-logToConsole"> Log to Console</label>
         <input type="checkbox" id="node-input-logToConsole" name="logToConsole" value="1">

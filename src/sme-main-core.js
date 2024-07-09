@@ -12,7 +12,7 @@ const mime = require('mime-types');
 module.exports = function (RED) {
     const https = require('https');
     const EventEmitter = require('events');
-    const ws = require('ws');
+    const WebSocket = require('ws');
 
     function getTimestamp() {
         return new Intl.DateTimeFormat('en-GB', {
@@ -289,7 +289,7 @@ module.exports = function (RED) {
             
             
             
-            webSocket = new ws.WebSocket(serverWsURL, options);
+            webSocket = new WebSocket(serverWsURL, options);
             webSocket.setMaxListeners(0);
             messageDeliver.emit('status', 'connecting...');
             handleConnection(webSocket);
@@ -572,9 +572,51 @@ module.exports = function (RED) {
         this.callApi = callApi;
     };
 
+    function SmeRemoteClient() {
+        function callApi(endpoint, method, data, logEnabled = false) {
+            return new Promise((resolve, reject) => {
+                let reqConfig = {
+                    method,
+                    url: `${process.env.SME_REMOTE_URL}${endpoint}`,
+                    headers: {
+                        'Authorization': `Bearer ${process.env.SME_REMOTE_API_KEY}`,
+                    },
+                    data
+                }
+
+                console.log("Trying to make sme remote request: ", reqConfig)
+
+                axios.request(reqConfig)
+                .then((response) => {
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    reject(error)
+                });
+            })
+        }
+            
+        function cameraInitiateCall(recipientId, groupChatId, cameraIds) {
+            var endpoint = `/api/cameras/initiatecall`;
+            var httpMethod = "POST";
+
+            var data = {
+                "recipientId": recipientId,
+                "groupChatId": groupChatId,
+                "cameraIds": cameraIds
+            };
+            
+            this.callApi(endpoint, httpMethod, data);
+        }
+
+        this.callApi = callApi;
+        this.cameraInitiateCall = cameraInitiateCall;
+    }
+
     return {
         SmeHelper: SmeHelper,
         SmeApiClient: SmeApiClient,
-        SmeWebSocket: SmeWebSocket
+        SmeWebSocket: SmeWebSocket,
+        SmeRemoteClient: SmeRemoteClient
     };
 }
