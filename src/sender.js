@@ -46,6 +46,8 @@ module.exports = function (RED) {
 
         this.logToConsole = config.logToConsole;
 
+        this.cameraList = config.cameraList;
+
         var smeConnector = config.connector && RED.nodes.getNode(config.connector);
         if (!smeConnector)
             return;
@@ -322,6 +324,9 @@ module.exports = function (RED) {
                         });
                     }
                     break;
+                }
+                case 'camera_call': {
+                    smeConnector.remoteAppInitiateCall(this.recipientId, this.groupChatId, this.cameraList);
                 }
                 default:
                     break;
