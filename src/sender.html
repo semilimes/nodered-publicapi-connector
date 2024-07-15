@@ -254,6 +254,12 @@
                     //Search -> Edit icon
                     $('#node-config-input-scan-recipients').html('<i class="fa fa-pencil"></i>');
 
+                    $("#node-input-groupChatId")
+                            .typedInput('types', ["str", "msg", "flow", "global"])
+                            .typedInput('type', "str");
+                    $('#node-config-input-scan-groupChats').html('<i class="fa fa-search"></i>');
+                    $('#node-input-groupChatId').typedInput("value", "");
+
                     updateSenderUI();
                 })
                 .fail(function()
@@ -317,6 +323,12 @@
 
                     //Search -> Edit icon
                     $('#node-config-input-scan-groupChats').html('<i class="fa fa-pencil"></i>');
+
+                    $("#node-input-recipientId")
+                        .typedInput('types', ["str", "msg", "flow", "global"])
+                        .typedInput('type', "str");
+                    $('#node-config-input-scan-recipients').html('<i class="fa fa-search"></i>');
+                    $('#node-input-recipientId').typedInput("value", "");
 
                     updateSenderUI();
                 })
