@@ -95,6 +95,7 @@
         },
         oneditprepare: function () {
             var node = this;
+            var cameraOptionsRetrieveStatus = "empty";
             $('#node-input-logToConsole').prop("checked", this.logToConsole);
 
             $("#node-input-recipientId")
@@ -148,54 +149,83 @@
                 typeField: "#node-input-saveRequestIdLocationType"
             });
 
-            const fetchCamerasList = () => {
-                return new Promise((resolve, reject) => {
-                    var connId = $('#node-input-connector').val();
-                    $.getJSON(`${connId}/sme-remote/cameras`)
-                    .done(function(apiResponse) {
-                        node.cameraOptions = apiResponse.data;
-                        resolve();
-                    })
-                    .fail(function(error) {
-                        reject(error);
-                    });
-                });
-            };
 
-            
-            fetchCamerasList()
-            .then(() => {
-                $("#node-input-cameras-container").css('min-height','200px').editableList({
-                    removable: true,
-                    addButton: "Add Camera",
-                    addItem: function(row, index, cameraId) {
-                        let fragment = document.createDocumentFragment();
-                        
-                        var selectField = $('<select/>',{class:"node-input-rule-type",style:"width:450px;"}).appendTo(fragment);
-    
-    
-                        node.cameraOptions.map(camera => {
-                            selectField.append($("<option></option>").val(camera.id).text(camera.name));
+            function updateCameraList(callBack) {
+                var connId = $('#node-input-connector').val();
+                const fetchCamerasList = () => {
+
+                    return new Promise((resolve, reject) => {
+                        cameraOptionsRetrieveStatus = "retrieving";
+                        $.getJSON(`${connId}/sme-remote/cameras`)
+                        .done(function(apiResponse) {
+                            node.cameraOptions = apiResponse.data;
+                            cameraOptionsRetrieveStatus = "retrieved";
+                            resolve();
+                        })
+                        .fail(function(error) {
+                            cameraOptionsRetrieveStatus = "empty";
+                            reject(error);
                         });
-    
-                        if (cameraId !== null) {
-                            selectField.val(cameraId);
-                        }
-    
-                        row[0].appendChild(fragment);
-                    }
-                });  
-                node.cameraList.forEach(function(cameraId) {
-                    if (node.cameraOptions.some(camera => camera.id === cameraId)) {
-                        $("#node-input-cameras-container").editableList("addItem", cameraId);    
-                    }
-                });  
-            })
-            .catch(error => {
-                RED.notify("Failed to fetch cameras: " + error, "error");
-            });
+                    });
+                };
 
-            updateSenderUI();
+                if (cameraOptionsRetrieveStatus === "empty") {
+                    if (connId !== "_ADD_") {
+                        fetchCamerasList()
+                        .then(() => {
+                            $("#node-input-cameras-container").css('min-height','200px').editableList({
+                                removable: true,
+                                addButton: "Add Camera",
+                                addItem: function(row, index, cameraId) {
+                                    let fragment = document.createDocumentFragment();
+                                    
+                                    var selectField = $('<select/>',{class:"node-input-rule-type",style:"width:450px;"}).appendTo(fragment);
+                
+                
+                                    node.cameraOptions.map(camera => {
+                                        selectField.append($("<option></option>").val(camera.id).text(camera.name));
+                                    });
+                
+                                    if (cameraId !== null) {
+                                        selectField.val(cameraId);
+                                    }
+                
+                                    row[0].appendChild(fragment);
+                                }
+                            });  
+                            node.cameraList.forEach(function(cameraId) {
+                                if (node.cameraOptions.some(camera => camera.id === cameraId)) {
+                                    $("#node-input-cameras-container").editableList("addItem", cameraId);    
+                                }
+                            });  
+                        })
+                        .catch(error => {
+                            RED.notify("Failed to fetch cameras: " + error, "error");
+                        });
+                    } else {
+                        RED.notify("Select a connector first!.", "error");
+                    }
+                }
+        
+                if (callBack) {
+                    callBack();
+                }
+        
+            }
+
+            function updateUIOnChange() {
+                var intent = $("#node-input-actionName").val();
+                if (intent === "camera_call") {
+                    updateCameraList(updateSenderUI);
+                } else {
+                    updateSenderUI();
+                }
+            }
+
+            $("#node-input-actionName").on("change", updateUIOnChange);
+            $("#node-input-connector").on("change", updateUIOnChange);
+
+            updateUIOnChange();
 
             //Preparing the search recipients button
             $('#node-config-input-scan-recipients').click(function()
@@ -580,7 +610,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-connector"><i class="fa fa-cog"></i> Connector</label>
-        <input type="text" id="node-input-connector" placeholder="semilimes connector" />
+        <input type="text" id="node-input-connector" placeholder="semilimes connector"/>
     </div>
     <div style="font-size: smaller;max-width:500px;">Connector can be shared with other nodes.</div>
     <br />
@@ -594,7 +624,7 @@
     <br />
     <div class="form-row">
         <label for="node-input-actionName"><i class="fa fa-cog"></i> <span> Intent</span></label>
-        <select id="node-input-actionName" onchange="updateSenderUI()">
+        <select id="node-input-actionName">
             <option value="account_my">Account - My Accounts</option>
             <option value="account_contacts">Account - Get Contacts</option>
             <option value="p2p">P2P - Get Chats</option>
