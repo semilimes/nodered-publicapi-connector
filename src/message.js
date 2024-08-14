@@ -144,14 +144,6 @@ module.exports = function(RED) {
                     var latitudeValue = smeHelper.getNodeConfigValue(node, msg, node.latitudeType, node.latitude);
                     var longitudeValue = smeHelper.getNodeConfigValue(node, msg, node.longitudeType, node.longitude);
 
-                    console.log(titleValue);
-                    console.log(descriptionValue);
-                    console.log(startValue);
-                    console.log(endValue);
-                    console.log(allDayValue);
-                    console.log(latitudeValue);
-                    console.log(longitudeValue);
-
                     if (titleValue &&
                         typeof titleValue === "string" && 
                         typeof startValue === "number" && 
