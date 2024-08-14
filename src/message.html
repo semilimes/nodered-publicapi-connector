@@ -22,6 +22,22 @@
             contactIds: { value: "" },
             contactIdsType: { value: "str"},
 
+            //Appointment
+            title: { value: "MyTitle" },
+            titleType: {value: "str"},
+
+            description: { value: "" },
+            descriptionType: {value: "str"},
+
+            start: { value: 0 },
+            startType: { value: "num" },
+
+            end: { value: 0 },
+            endType: { value: "num" },
+
+            allDay: { value: false },
+            allDayType: { value: "bool" },
+
             //Location
             locationName: { value: "myLocation" },
             locationNameType: { value: "str"},
@@ -67,6 +83,7 @@
                     {value: "html", label: "Html"},
                     {value: "file", label: "File"},
                     {value: "contact", label: "Contact"},
+                    {value: "appointment", label: "Appointment"},
                     {value: "location", label: "Location"},
                     {value: "webview", label: "WebView"},
                     {value: "channel", label: "Channel"},
@@ -102,6 +119,37 @@
                 type: "str",
                 types: ["str", "msg", "flow", "global"],
                 typeField: "#node-input-contactIdsType"
+            });
+
+            //Appointment
+            $("#node-input-title").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-titleType"
+            });
+
+            $("#node-input-description").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-descriptionType"
+            });
+
+            $("#node-input-start").typedInput({
+                type: "num",
+                types: ["num", "msg", "flow", "global"],
+                typeField: "#node-input-startType"
+            });
+
+            $("#node-input-end").typedInput({
+                type: "num",
+                types: ["num", "msg", "flow", "global"],
+                typeField: "#node-input-endType"
+            });
+
+            $("#node-input-allDay").typedInput({
+                type: "bool",
+                types: ["bool", "msg", "flow", "global"],
+                typeField: "#node-input-allDayType"
             });
 
             //Location
@@ -170,6 +218,15 @@
             case 'contact':
                 $('#contactPanel').show();
                 break;
+            case 'appointment':
+                $('#titlePanel').show();
+                $('#descriptionPanel').show();
+                $('#startPanel').show();
+                $('#endPanel').show();
+                $('#allDayPanel').show();
+                $('#locationLatitudePanel').show();
+                $('#locationLongitudePanel').show();
+                break;
             case 'location':
                 $('#locationNamePanel').show();
                 $('#locationLatitudePanel').show();
@@ -213,7 +270,7 @@
         <input type="hidden" id="node-input-textType">
     </div>
     <div class="form-row messageField" id="htmlPanel">
-        <label for="node-input-html"><i class="fa fa-tag"></i> Text</label>
+        <label for="node-input-html"><i class="fa fa-tag"></i> Html</label>
         <input type="text" id="node-input-html" placeholder="The html message to send">
         <input type="hidden" id="node-input-htmlType">
     </div>
@@ -228,6 +285,31 @@
         <input type="text" id="node-input-contactIds" placeholder="The contact Ids to reference">
         <input type="hidden" id="node-input-contactIdsType">
         <div style="font-size: smaller;max-width:500px;">Enter comma-separated fileIds to reference multiple contacts</div>
+    </div>
+    <div class="form-row messageField" id="titlePanel">
+        <label for="node-input-title"><i class="fa fa-tag"></i> Title</label>
+        <input type="text" id="node-input-title" placeholder="Title">
+        <input type="hidden" id="node-input-titleType">
+    </div>
+    <div class="form-row messageField" id="descriptionPanel">
+        <label for="node-input-description"><i class="fa fa-tag"></i> Description</label>
+        <input type="text" id="node-input-description" placeholder="Title">
+        <input type="hidden" id="node-input-descriptionType">
+    </div>
+    <div class="form-row messageField" id="startPanel">
+        <label for="node-input-start"><i class="fa fa-tag"></i> Start (UTC)</label>
+        <input type="text" id="node-input-start" placeholder="Start">
+        <input type="hidden" id="node-input-startType">
+    </div>
+    <div class="form-row messageField" id="endPanel">
+        <label for="node-input-end"><i class="fa fa-tag"></i> End (UTC)</label>
+        <input type="text" id="node-input-end" placeholder="End">
+        <input type="hidden" id="node-input-endType">
+    </div>
+    <div class="form-row messageField" id="allDayPanel">
+        <label for="node-input-allDay"><i class="fa fa-tag"></i> All day</label>
+        <input type="text" id="node-input-allDay" placeholder="All day">
+        <input type="hidden" id="node-input-allDayType">
     </div>
     <div class="form-row messageField" id="locationNamePanel">
         <label for="node-input-locationName"><i class="fa fa-tag"></i> Location Name</label>
@@ -304,6 +386,10 @@
     </p>
     <p>
         <b>Contact:</b> creates a contact reference message using a <code>Contact ID</code> (= account Id, guid type). The semilimes app will render this as an id card widget.
+    </p>
+    <p>
+        <b>Appointment:</b> creates an appointment message downloadable to the user's personal calendar, using a <code>Title</code>, a <code>Description</code>, <code>Start</code> and <code>End</code> times in epoch milliseconds (UTC timezone), an <code>All Day</code> option to expand the appointment to the whole selected day specified in Start end End, and finally a <code>Latitude</code> (float) and a <code>Longitude</code> (float) if you want to specify a specific location of the appointment.
+        The semilimes app will create an appointment widget using the specified parameters.
     </p>
     <p>
         <b>Location:</b> creates a location reference message using a <code>Location Name</code> (string), a <code>Latitude</code> (float), and a <code>Longitude</code> (float).

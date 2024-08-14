@@ -34,6 +34,24 @@ module.exports = function(RED) {
         this.longitude = config.longitude;
         this.longitudeType = config.longitudeType;
 
+        //Appointment
+        this.title = config.title;
+        this.titleType = config.titleType;
+
+        this.description = config.description;
+        this.descriptionType = config.descriptionType;
+
+        this.start = config.start;
+        this.startType = config.startType;
+
+        this.end = config.end;
+        this.endType = config.endType;
+
+        this.allDay = config.allDay;
+        this.allDayType = config.allDayType;
+
+        //location langitude and longitude reused from location object
+
         //WebView
         this.url = config.url;
         this.urlType = config.urlType;
@@ -116,6 +134,50 @@ module.exports = function(RED) {
                             smeMsg.dataComponent.contactIds.push(contactId.trim());
                         });
                     }                   
+                    break;
+                case 'appointment':
+                    var titleValue = smeHelper.getNodeConfigValue(node, msg, node.titleType, node.title);
+                    var descriptionValue = smeHelper.getNodeConfigValue(node, msg, node.descriptionType, node.description);
+                    var startValue = smeHelper.getNodeConfigValue(node, msg, node.startType, node.start);
+                    var endValue = smeHelper.getNodeConfigValue(node, msg, node.endType, node.end);
+                    var allDayValue = smeHelper.getNodeConfigValue(node, msg, node.allDayType, node.allDay);
+                    var latitudeValue = smeHelper.getNodeConfigValue(node, msg, node.latitudeType, node.latitude);
+                    var longitudeValue = smeHelper.getNodeConfigValue(node, msg, node.longitudeType, node.longitude);
+
+                    console.log(titleValue);
+                    console.log(descriptionValue);
+                    console.log(startValue);
+                    console.log(endValue);
+                    console.log(allDayValue);
+                    console.log(latitudeValue);
+                    console.log(longitudeValue);
+
+                    if (titleValue &&
+                        typeof titleValue === "string" && 
+                        typeof startValue === "number" && 
+                        typeof endValue === "number" )
+                        {
+                            smeMsg = {
+                                dataComponent: {
+                                    dataComponentType: "appointment",
+                                    title: titleValue,
+                                    description: descriptionValue || "",
+                                    start: startValue,
+                                    end: endValue,
+                                    allDay: allDayValue === true || false,
+                                }
+                            };
+                            if (latitudeValue && 
+                                longitudeValue &&
+                                parseFloat(latitudeValue) > 0 && 
+                                parseFloat(longitudeValue) > 0) 
+                                {
+                                    smeMsg.dataComponent.location = {
+                                        latitude: parseFloat(latitudeValue) || 0.0,
+                                        longitude: parseFloat(longitudeValue) || 0.0
+                                }
+                            }
+                        }
                     break;
                 case 'location':
                     var locationNameValue = smeHelper.getNodeConfigValue(node, msg, node.locationNameType, node.locationName);
