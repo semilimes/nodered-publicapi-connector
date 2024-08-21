@@ -32,17 +32,20 @@
             $("#node-input-recipientId")
             .typedInput({typeField: "#node-input-recipientIdType"})
             .typedInput('types',["str", "msg", "flow", "global"])
-            .typedInput('type',"str");
+            this.recipientId = $("#node-input-recipientId").typedInput('value');
+            this.recipientIdType = $("#node-input-recipientId").typedInput('type');
 
             $("#node-input-groupChatId")
             .typedInput({typeField: "#node-input-groupChatIdType"})
             .typedInput('types',["str", "msg", "flow", "global"])
-            .typedInput('type',"str");
+            this.groupChatId = $("#node-input-channelId").typedInput('value');
+            this.groupChatIdType = $("#node-input-channelId").typedInput('type');
 
             $("#node-input-channelId")
             .typedInput({typeField: "#node-input-channelIdType"})
             .typedInput('types',["str", "msg", "flow", "global"])
-            .typedInput('type',"str");
+            this.channelId = $("#node-input-channelId").typedInput('value');
+            this.channelIdType = $("#node-input-channelId").typedInput('type');
         },
         oneditprepare: function () {
             $("#node-input-submitText").typedInput({
@@ -54,17 +57,17 @@
             $("#node-input-recipientId")
             .typedInput({typeField: "#node-input-recipientIdType"})
             .typedInput('types',["str", "msg", "flow", "global"])
-            .typedInput('type',"str");
+            .typedInput('type',this.recipientIdType);
 
             $("#node-input-groupChatId")
             .typedInput({typeField: "#node-input-groupChatIdType"})
             .typedInput('types',["str", "msg", "flow", "global"])
-            .typedInput('type',"str");
+            .typedInput('type',this.groupChatIdType);
             
             $("#node-input-channelId")
             .typedInput({typeField: "#node-input-channelIdType"})
             .typedInput('types',["str", "msg", "flow", "global"])
-            .typedInput('type',"str");
+            .typedInput('type',this.channelIdType);
 
             $("#node-input-refName").typedInput({
                 type: "str",
