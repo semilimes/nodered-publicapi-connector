@@ -29,6 +29,9 @@
             channelId: { value: "" },
             channelIdType: { value: "str" },
 
+            silent: { value: false },
+            slientType: { value: "bool" },
+
             title: { value: ""},
             titleType: {value: "str"},
 
@@ -130,6 +133,12 @@
             .typedInput({typeField: "#node-input-channelIdType"})
             .typedInput('types',["str", "msg", "flow", "global"])
             .typedInput('type',this.channelIdType);
+
+            $("#node-input-silent").typedInput({
+                type: "bool",
+                types: ["bool", "msg", "flow", "global"],
+                typeField: "#node-input-silentType"
+            });
 
             $("#node-input-title").typedInput({
                 type: "str",
@@ -463,6 +472,7 @@
         $('#node-input-recipientIdsPanel').hide();
         $('#node-input-groupChatIdPanel').hide();
         $('#node-input-channelIdPanel').hide();
+        $('#node-input-silentPanel').hide();
         $('#node-input-saveLocationPanel').hide();
         $('#node-input-cameras-container-row').hide();
 
@@ -499,6 +509,7 @@
             case 'p2p_message_send': {
                 $('#node-input-recipientIdPanel').show();
                 $('#node-input-saveLocationPanel label').html("Save MessageId");
+                $('#node-input-silentPanel').show();
                 if (defaultSaveLocations.includes($('#node-input-saveLocation').typedInput('value')))
                 {
                     $('#node-input-saveLocation').typedInput('value', "savedMessageId")
@@ -510,6 +521,7 @@
             }
             case 'p2p_message_update': {
                 $('#node-input-messageIdPanel').show();
+                $('#node-input-silentPanel').show();
                 break;
             }
             case 'groupchat': {
@@ -538,6 +550,7 @@
             case 'groupchat_message_send': {
                 $('#node-input-groupChatIdPanel').show();
                 $('#node-input-saveLocationPanel label').html("Save MessageId");
+                $('#node-input-silentPanel').show();
                 if (defaultSaveLocations.includes($('#node-input-saveLocation').typedInput('value')))
                 {
                     $('#node-input-saveLocation').typedInput('value', "savedMessageId")
@@ -549,6 +562,7 @@
             }
             case 'groupchat_message_update': {
                 $('#node-input-messageIdPanel').show();
+                $('#node-input-silentPanel').show();
                 break;
             }
             case 'channel_my': {
@@ -576,6 +590,7 @@
             case 'channel_message_send': {
                 $('#node-input-channelIdPanel').show();
                 $('#node-input-saveLocationPanel label').html("Save MessageId");
+                $('#node-input-silentPanel').show();
                 if (defaultSaveLocations.includes($('#node-input-saveLocation').typedInput('value')))
                 {
                     $('#node-input-saveLocation').typedInput('value', "savedMessageId")
@@ -587,6 +602,7 @@
             }
             case 'channel_message_update': {
                 $('#node-input-messageIdPanel').show();
+                $('#node-input-silentPanel').show();
                 break;
             }
             case 'camera_call': {
@@ -697,6 +713,11 @@
         <input type="text" id="node-input-messageId" placeholder="Message Id">
         <input type="hidden" id="node-input-messageIdType">
     </div>
+    <div class="form-row componentField" id="node-input-silentPanel">
+        <label for="node-input-silent"><i class="fa fa-tag"></i> Silent</label>
+        <input type="text" id="node-input-silent">
+        <input type="hidden" id="node-input-silentType">
+    </div>
     <div class="form-row" id="node-input-limitPanel">
         <label for="node-input-limit"> Limit</label>
         <input type="text" id="node-input-limit" placeholder="Limit">
@@ -783,7 +804,10 @@
     <p>
         <b>Message Id:</b> this is the unique Id of a message published in any communication form (p2p, groupchat, channel). This is necessary when selecting an "Update Message" intent, so to identify the original message to update.
         This kind of Id can be either retrieved just after a message is sent, or after using one of the "Get Messages" intents.
-        In both cases, you can read the server response and identify the messageId(s) returned (e.g. attaching a <debug>node</debug> after the sender and reading the <code>responseMsg</code> content).
+        In both cases, you can read the server response and identify the messageId(s) returned (e.g. attaching a <code>debug</code> node after the sender and reading the <code>responseMsg</code> content).
+    </p>
+    <p>
+        <b>Silent: </b> this is a boolean to allow a message to be sent or updated in silent mode, which means that no notifications will be triggered in the semilimes app. Useful when you want a periodic value update without annoying the receiving users.
     </p>
     <p>
         <b>Limit:</b> this integer will limit the number of messages returned in a "Get Messages" intent. If the Limit is set to N, the most N recent messages will be returned by the server.

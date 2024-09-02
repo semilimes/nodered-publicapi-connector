@@ -52,6 +52,11 @@ module.exports = function(RED) {
 
         this.bucketFilter = config.bucketFilter;
 
+        this.eventsDisplayMode = config.eventsDisplayMode;
+
+        this.events = config.events;
+        this.eventsType = config.eventsType;
+
         var node = this;
 
         node.on('input', function(msg, send, done) {
@@ -265,6 +270,50 @@ module.exports = function(RED) {
                         },
                         actionButtonTitle: actionButtonFieldValue,
                         multiSelection: multiSelectionFieldValue
+                    });
+                    break;
+                case 'eventpicker':
+                    var titleFieldValue = smeHelper.getNodeConfigValue(node, msg, node.titleType, node.title);
+                    var requiredFieldValue = smeHelper.getNodeConfigValue(node, msg, node.requiredType, node.required);
+                    var multiSelectionFieldValue = smeHelper.getNodeConfigValue(node, msg, node.multiSelectionType, node.multiSelection);
+                    var eventsFieldValue = smeHelper.getNodeConfigValue(node, msg, node.eventsType, node.events);
+                    var selectedEventsDisplayMode = "";
+                    var eventsToAdd = [];
+                    switch (node.eventsDisplayMode) {
+                        case "list":
+                            selectedEventsDisplayMode = "list";
+                            break;
+                        case "buttons":
+                            selectedEventsDisplayMode = "buttons";
+                            break;
+                        default:
+                            selectedEventsDisplayMode = "list";
+                            break;
+                    }
+
+                    if (typeof eventsFieldValue === 'object' && Array.isArray(eventsFieldValue)) {
+                        eventsFieldValue.forEach((ev, idx) => {
+                            eventsToAdd.push({
+                                id: (typeof ev.id === 'string' && ev.id) ? ev.id : `defaultId${idx}`,
+                                start: typeof ev.start === 'number' ? ev.start : 0,
+                                title: typeof ev.title === 'string' ? ev.title : "",
+                                description: typeof ev.description === 'string' ? ev.description : "",
+                                referenceBucketId: (typeof ev.referenceBucketId === 'string' && ev.referenceBucketId) ? ev.referenceBucketId : "",
+                                additionalInfo: typeof ev.additionalInfo === 'object' ? ev.additionalInfo : {}
+                            });                        
+                        });
+                    } else {
+                        node.error("Events are empty or malformed. The object will be sent without events. Please specify a valid events array!");
+                        eventsToAdd = [];
+                    }
+                    location.formComponents.push({
+                        refName: referenceFieldValue || "",
+                        formComponentType: node.component,
+                        title: titleFieldValue ?? "",
+                        requiredSelection: requiredFieldValue,
+                        multiSelection: multiSelectionFieldValue,
+                        eventsDisplayMode: selectedEventsDisplayMode,
+                        events: eventsToAdd
                     });
                     break;
                 case 'hiddenvalue':

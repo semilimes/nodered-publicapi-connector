@@ -4,7 +4,7 @@
         color: '#E6E0F8',
         defaults: {
             name: { value: "" },
-            reference: { value: "", required: true},
+            reference: { value: "", required: true },
             referenceType: { value: "str" },
 
             component: { value: "", required: true },
@@ -20,12 +20,12 @@
             requiredType: { value: "bool" },
 
             text: { value: "" },
-            textType: { value: "str"},
-            
+            textType: { value: "str" },
+
             //ButtonList
-            verticalList: { value : true},
+            verticalList: { value: true },
             verticalListType: { value: "bool" },
-            buttons: { value : [] },
+            buttons: { value: [] },
 
             // Single/Multi Choice
             choices: { value: [] },
@@ -40,7 +40,7 @@
             sliderMinType: { value: "num" },
 
             sliderMax: { value: 10, required: true },
-            sliderMaxType: { value: "num" }, 
+            sliderMaxType: { value: "num" },
 
             sliderStep: { value: 0, required: true },
             sliderStepType: { value: "num" },
@@ -59,6 +59,12 @@
             // Bucket Picker
             bucketFilter: { value: "all" },
 
+            // Event Picker
+            eventsDisplayMode: { value: "list" },
+
+            events: { value: "[]" },
+            eventsType: { value: "json" }
+
 
         },
         inputs: 1,
@@ -66,7 +72,7 @@
         icon: "font-awesome/fa-th-large",
         paletteLabel: 'Form Component',
         label: function () {
-            return this.name || (this.component ? `${this.component}: ${this.referenceType === "str" ? "" : this.referenceType+"."}${this.reference}` : null)  || "Form Component";
+            return this.name || (this.component ? `${this.component}: ${this.referenceType === "str" ? "" : this.referenceType + "."}${this.reference}` : null) || "Form Component";
         },
         oneditprepare: function () {
             $("#node-input-reference").typedInput({
@@ -77,34 +83,39 @@
 
             $("#node-input-component").typedInput({
                 type: "components",
-                types: [{ value: "components", options: [
-                    {value: "label", label: "Label"},
-                    {value: "textbox", label: "TextBox"},
-                    {value: "buttonlist", label: "Button List"},
-                    {value: "singlechoice", label: "Single Choice"},
-                    {value: "multichoice", label: "Multi Choice"},
-                    {value: "switch", label: "Switch"},
-                    {value: "slider", label: "Slider"},
-                    {value: "datepicker", label: "Date Picker"},
-                    {value: "timepicker", label: "Time Picker"},
-                    {value: "locationpicker", label: "Location Picker"},
-                    {value: "photopicker", label: "Photo Picker"},
-                    {value: "filepicker", label: "File Picker"},
-                    {value: "contactpicker", label: "Contact Picker"},
-                    {value: "bucketpicker", label: "Bucket Picker"},
-                    {value: "hiddenvalue", label: "Hidden Value"},
-                    {value: "qrcodescanner", label: "QRCode Scanner"},
-                    {value: "nfcreader", label: "NFC Reader"}
-                ]}]
+                types: [{
+                    value: "components", options: [
+                        { value: "label", label: "Label" },
+                        { value: "textbox", label: "TextBox" },
+                        { value: "buttonlist", label: "Button List" },
+                        { value: "singlechoice", label: "Single Choice" },
+                        { value: "multichoice", label: "Multi Choice" },
+                        { value: "switch", label: "Switch" },
+                        { value: "slider", label: "Slider" },
+                        { value: "datepicker", label: "Date Picker" },
+                        { value: "timepicker", label: "Time Picker" },
+                        { value: "locationpicker", label: "Location Picker" },
+                        { value: "photopicker", label: "Photo Picker" },
+                        { value: "filepicker", label: "File Picker" },
+                        { value: "contactpicker", label: "Contact Picker" },
+                        { value: "bucketpicker", label: "Bucket Picker" },
+                        { value: "eventpicker", label: "Event Picker" },
+                        { value: "hiddenvalue", label: "Hidden Value" },
+                        { value: "qrcodescanner", label: "QRCode Scanner" },
+                        { value: "nfcreader", label: "NFC Reader" }
+                    ]
+                }]
             });
             $("#node-input-component").on('change', function (_, _, _) { updateFormComponentUI() });
 
             $("#node-input-choiceSelectionMode").typedInput({
                 type: "selectionModes",
-                types: [{value: "selectionModes", options: [
-                    {value: "list", label: "List"},
-                    {value: "dropdown", label: "Dropdown"}
-                ]}]
+                types: [{
+                    value: "selectionModes", options: [
+                        { value: "list", label: "List" },
+                        { value: "dropdown", label: "Dropdown" }
+                    ]
+                }]
             });
 
             $("#node-input-title").typedInput({
@@ -136,26 +147,22 @@
             $("#buttons-list").editableList({
                 removable: true,
                 header: $("<div>").append($.parseHTML("<div style='width:35%; display: inline-grid'>Button Id</div><div style='display: inline-grid'>Button Name</div>")),
-                addItem: function(row, index, data) {
-                    //console.log("Added buttons are: ", data);
-                    $(row).html(`<div style="display:flex; align-items: baseline"><input type="text" style="flex: 1 1 0;margin-right:10px;" id="button${index+1}Value" class="buttonValue" placeholder="Button ${index+1} Id" value="${JSON.stringify(data) === "{}" ? "" : data.value}" ><input type="text" style="flex: 2 1 0;" id="button${index+1}Name" class="buttonName" value="${JSON.stringify(data) === "{}" ? "" : data.name}" placeholder="Button ${index+1} Name"></div>`);
+                addItem: function (row, index, data) {
+                    $(row).html(`<div style="display:flex; align-items: baseline"><input type="text" style="flex: 1 1 0;margin-right:10px;" id="button${index + 1}Value" class="buttonValue" placeholder="Button ${index + 1} Id" value="${JSON.stringify(data) === "{}" ? "" : data.value}" ><input type="text" style="flex: 2 1 0;" id="button${index + 1}Name" class="buttonName" value="${JSON.stringify(data) === "{}" ? "" : data.name}" placeholder="Button ${index + 1} Name"></div>`);
                 }
             });
-            //console.log("Loaded buttons: ", this.buttons);
+
             $("#buttons-list").editableList('addItems', this.buttons);
 
             /* Single and Multi choices */
             $("#choices-list").editableList({
                 removable: true,
                 header: $("<div>").append($.parseHTML("<div style='width:35%; display: inline-grid'>Choice Id</div><div style='display: inline-grid'>Choice Name</div>")),
-                addItem: function(row, index, data) {
-                    console.log("Added choices are: ", data);
-                    //$(row).html(`<label for="choice${index+1}">Choice ${index+1}</label><input type="text" id="choice${index+1}" class="choice" value="${JSON.stringify(data) === "{}" ? "" : data}" placeholder="Choice ${index+1} text">`);
-                    $(row).html(`<div style="display:flex; align-items: baseline"><input type="text" style="flex: 1 1 0;margin-right:10px;" id="choice${index+1}Value" class="choiceValue" placeholder="Choice ${index+1} Id" value="${JSON.stringify(data) === "{}" ? "" : data.value}" ><input type="text" style="flex: 2 1 0;" id="choice${index+1}Name" class="choiceName" value="${JSON.stringify(data) === "{}" ? "" : data.name}" placeholder="Choice ${index+1} Name"></div>`);
+                addItem: function (row, index, data) {
+                    $(row).html(`<div style="display:flex; align-items: baseline"><input type="text" style="flex: 1 1 0;margin-right:10px;" id="choice${index + 1}Value" class="choiceValue" placeholder="Choice ${index + 1} Id" value="${JSON.stringify(data) === "{}" ? "" : data.value}" ><input type="text" style="flex: 2 1 0;" id="choice${index + 1}Name" class="choiceName" value="${JSON.stringify(data) === "{}" ? "" : data.name}" placeholder="Choice ${index + 1} Name"></div>`);
                 }
             });
-            console.log("Loaded choices: ", this.choices);
-            //$("#choices-list").editableList('addItems', this.choices.map(obj => obj.value));
+
             $("#choices-list").editableList('addItems', this.choices);
 
             /* Switch */
@@ -204,13 +211,32 @@
             /* Bucket Picker */
             $("#node-input-bucketFilter").typedInput({
                 type: "bucketFilters",
-                types: [{ value: "bucketFilters", options: [
-                    {value: "all", label: "All"},
-                    {value: "post", label: "Post"},
-                    {value: "profile", label: "Profile"},
-                    {value: "groupchat", label: "Group Chat"},
-                    {value: "channel", label: "Channel"}
-                ]}]
+                types: [{
+                    value: "bucketFilters", options: [
+                        { value: "all", label: "All" },
+                        { value: "post", label: "Post" },
+                        { value: "profile", label: "Profile" },
+                        { value: "groupchat", label: "Group Chat" },
+                        { value: "channel", label: "Channel" }
+                    ]
+                }]
+            });
+
+            /* Event Picker */
+            $("#node-input-eventsDisplayMode").typedInput({
+                type: "eventDisplayModes",
+                types: [{
+                    value: "eventDisplayModes", options: [
+                        { value: "list", label: "List" },
+                        { value: "buttons", label: "Buttons" }
+                    ]
+                }]
+            });
+        
+            $("#node-input-events").typedInput({
+                type: "json",
+                types: ["json", "msg", "flow", "global"],
+                typeField: "#node-input-eventsType"
             });
 
         },
@@ -218,23 +244,23 @@
             var buttonList = $("#buttons-list").editableList('items');
             console.log("buttonList: ", buttonList);
             this.buttons = [];
-            for(var idx = 0; idx < buttonList.length; idx++) {
+            for (var idx = 0; idx < buttonList.length; idx++) {
                 var btnName = buttonList[idx].find(".buttonName").val();
                 var btnValue = buttonList[idx].find(".buttonValue").val();
                 if (btnName && btnValue) {
-                    this.buttons.push({name: btnName, value: btnValue});  
+                    this.buttons.push({ name: btnName, value: btnValue });
                 }
             }
 
             var choiceList = $("#choices-list").editableList('items');
             console.log("choiceList: ", choiceList);
             this.choices = [];
-            for(var idx = 0; idx < choiceList.length; idx++) {
+            for (var idx = 0; idx < choiceList.length; idx++) {
                 var chcName = choiceList[idx].find(".choiceName").val();
                 var chcValue = choiceList[idx].find(".choiceValue").val();
                 if (chcName && chcValue) {
-                    this.choices.push({name: chcName, value: chcValue});
-                }     
+                    this.choices.push({ name: chcName, value: chcValue });
+                }
             }
 
         }
@@ -242,10 +268,10 @@
 
     function updateFormComponentUI() {
         var chosenComponent = $("#node-input-component").typedInput('value');
-        
+
         //Hide all
         $(".componentField").hide();
-        switch(chosenComponent) {
+        switch (chosenComponent) {
             case 'label':
                 $('#titlePanel').show();
                 break;
@@ -301,6 +327,13 @@
                 $('#multiSelectionPanel').show();
                 $('#bucketFilterPanel').show();
                 break;
+            case 'eventpicker':
+                $('#titlePanel').show();
+                $('#requiredPanel').show();
+                $('#multiSelectionPanel').show();
+                $('#eventsDisplayModePanel').show();
+                $('#eventsPanel').show();
+                break;
             case 'hiddenvalue':
                 $('#textPanel').show();
                 break;
@@ -308,7 +341,6 @@
             case 'nfcreader':
                 $('titlePanel').show();
                 $('#requiredPanel').show();
-                $('#actionButtonTitle').typedInput('value', )
                 $('#actionButtonTitlePanel').show();
                 break;
             default:
@@ -409,6 +441,15 @@
         <label for="node-input-bucketFilter"><i class="fa fa-tag"></i> Bucket type</label>
         <input type="text" id="node-input-bucketFilter">
     </div>
+    <div class="form-row componentField" id="eventsDisplayModePanel">
+        <label for="node-input-eventsDisplayMode"><i class="fa fa-tag"></i> Display Mode</label>
+        <input type="text" id="node-input-eventsDisplayMode">
+    </div>
+    <div class="form-row componentField" id="eventsPanel">
+        <label for="node-input-events"><i class="fa fa-tag"></i> Events</label>
+        <input type="text" id="node-input-events" placeholder="Events Array">
+        <input type="hidden" id="node-input-eventsType">
+    </div>
     <div class="form-row componentField" id="actionButtonTitlePanel">
         <label for="node-input-actionButtonTitle"><i class="fa fa-tag"></i> Action Label</label>
         <input type="text" id="node-input-actionButtonTitle" placeholder="Pick/Select button title">
@@ -471,6 +512,24 @@
     <p>
         <b>Bucket Picker:</b> creates a single/multiple (<code>MultiSelect</code> property) bucket picker in the app, whose value (bucketId) will come back in the <code>value</code> property of the same object contained in the form submission.
         The type of bucket to let the user search for can be set with the <code>Bucket type</code> property.
+    </p>
+    <p>
+        <b>Event Picker:</b> creates a single/multiple (<code>MultiSelect</code> property) event picker in the app, displayed in a navigable calendar form, whose values (event objects) will come back in the <code>value</code> property of the same object contained in the form submission.
+        The events array object to set in the event picker in order to populate events in this component has the following format:
+        <pre>
+{
+    "id": "...", // Arbitrary
+    "start": ..., // Epoch milliseconds
+    "title": "...",
+    "description": "...",
+    "referenceBucketId": "..."
+    "additionalInfo": {
+        // Any additional info to retain
+    }
+}                
+        </pre>
+        <code>referenceBucketId</code> is a bucket GUID to enable that specific event to be navigable towards that specific semilimes bucket. The bucket can be anything (Chat, GroupChat, Channel, Profile, Bucket).
+        <code>additionalInfo</code> is used to store hidden properties to be retrieved upon submission.
     </p>
     <p>
         <b>Hidden Value:</b> sends a non-visible value in the form. This will be returned in the form submission unchanged.

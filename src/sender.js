@@ -38,6 +38,9 @@ module.exports = function (RED) {
         this.messageId = config.messageId;
         this.messageIdType = config.messageIdType;
 
+        this.silent = config.silent;
+        this.silentType = config.silentType;
+
         this.saveLocation = config.saveLocation;
         this.saveLocationType = config.saveLocationType;
 
@@ -125,12 +128,16 @@ module.exports = function (RED) {
                     saveMode = "messageId";
                     if (smeSendingBox) {
                         var recipientIdValue = smeHelper.getNodeConfigValue(node, msg, node.recipientIdType, node.recipientId);
+                        var silentValue = smeHelper.getNodeConfigValue(node, msg, node.silentType, node.silent);
                         smeSendingBox.forEach(smeMsg => {
                             smeMsg.requestId = getNewRequestId();
                             smeMsg.endpoint = "/communication/p2p/message/send";
                             smeMsg.httpMethod = "POST";
                             smeMsg.body = {
                                 recipientId: recipientIdValue,
+                                options: {
+                                    silent: typeof silentValue === 'boolean' ? silentValue : false
+                                },
                                 dataComponent: smeMsg.dataComponent
                             };
                             delete smeMsg.dataComponent;
@@ -141,12 +148,16 @@ module.exports = function (RED) {
                 case 'p2p_message_update': {
                     if (smeSendingBox) {
                         var messageIdValue = smeHelper.getNodeConfigValue(node, msg, node.messageIdType, node.messageId);
+                        var silentValue = smeHelper.getNodeConfigValue(node, msg, node.silentType, node.silent);
                         smeSendingBox.forEach(smeMsg => {
                             smeMsg.requestId = getNewRequestId();
                             smeMsg.endpoint = "/communication/p2p/message/update";
                             smeMsg.httpMethod = "POST";
                             smeMsg.body = {
                                 messageId: messageIdValue,
+                                options: {
+                                    silent: typeof silentValue === 'boolean' ? silentValue : false
+                                },
                                 dataComponent: smeMsg.dataComponent
                             };
                             delete smeMsg.dataComponent;
@@ -217,12 +228,16 @@ module.exports = function (RED) {
                     saveMode = "messageId";
                     if (smeSendingBox) {
                         var groupChatIdValue = smeHelper.getNodeConfigValue(node, msg, node.groupChatIdType, node.groupChatId);
+                        var silentValue = smeHelper.getNodeConfigValue(node, msg, node.silentType, node.silent);
                         smeSendingBox.forEach(smeMsg => {
                             smeMsg.requestId = getNewRequestId();
                             smeMsg.endpoint = "/communication/groupchat/message/send";
                             smeMsg.httpMethod = "POST";
                             smeMsg.body = {
                                 groupChatId: groupChatIdValue,
+                                options: {
+                                    silent: typeof silentValue === 'boolean' ? silentValue : false
+                                },
                                 dataComponent: smeMsg.dataComponent
                             };
                             delete smeMsg.dataComponent;
@@ -233,12 +248,16 @@ module.exports = function (RED) {
                 case 'groupchat_message_update': {
                     if (smeSendingBox) {
                         var messageIdValue = smeHelper.getNodeConfigValue(node, msg, node.messageIdType, node.messageId);
+                        var silentValue = smeHelper.getNodeConfigValue(node, msg, node.silentType, node.silent);
                         smeSendingBox.forEach(smeMsg => {
                             smeMsg.requestId = getNewRequestId();
                             smeMsg.endpoint = "/communication/groupchat/message/update";
                             smeMsg.httpMethod = "POST";
                             smeMsg.body = {
                                 messageId: messageIdValue,
+                                options: {
+                                    silent: typeof silentValue === 'boolean' ? silentValue : false
+                                },
                                 dataComponent: smeMsg.dataComponent
                             };
                             delete smeMsg.dataComponent;
@@ -296,12 +315,16 @@ module.exports = function (RED) {
                     saveMode = "messageId";
                     if (smeSendingBox) {
                         var channelIdValue = smeHelper.getNodeConfigValue(node, msg, node.channelIdType, node.channelId);
+                        var silentValue = smeHelper.getNodeConfigValue(node, msg, node.silentType, node.silent);
                         smeSendingBox.forEach(smeMsg => {
                             smeMsg.requestId = getNewRequestId();
                             smeMsg.endpoint = "/communication/channel/message/send";
                             smeMsg.httpMethod = "POST";
                             smeMsg.body = {
                                 channelId: channelIdValue,
+                                options: {
+                                    silent: typeof silentValue === 'boolean' ? silentValue : false
+                                },
                                 dataComponent: smeMsg.dataComponent
                             };
                             delete smeMsg.dataComponent;
@@ -312,12 +335,16 @@ module.exports = function (RED) {
                 case 'channel_message_update': {
                     if (smeSendingBox) {
                         var messageIdValue = smeHelper.getNodeConfigValue(node, msg, node.messageIdType, node.messageId);
+                        var silentValue = smeHelper.getNodeConfigValue(node, msg, node.silentType, node.silent);
                         smeSendingBox.forEach(smeMsg => {
                             smeMsg.requestId = getNewRequestId();
                             smeMsg.endpoint = "/communication/channel/message/update";
                             smeMsg.httpMethod = "POST";
                             smeMsg.body = {
                                 messageId: messageIdValue,
+                                options: {
+                                    silent: typeof silentValue === 'boolean' ? silentValue : false
+                                },
                                 dataComponent: smeMsg.dataComponent
                             };
                             delete smeMsg.dataComponent;
