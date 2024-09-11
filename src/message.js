@@ -56,6 +56,11 @@ module.exports = function(RED) {
         this.url = config.url;
         this.urlType = config.urlType;
 
+        this.displayMode = config.displayMode;
+
+        this.linkDisplayName = config.linkDisplayName;
+        this.linkDisplayNameType = config.linkDisplayNameType;
+
         this.enableFullScreenView = config.enableFullScreenView;
 
         this.viewSize = config.viewSize || "1:2";
@@ -189,11 +194,14 @@ module.exports = function(RED) {
                     break;
                 case 'webview':
                     var urlValue = smeHelper.getNodeConfigValue(node, msg, node.urlType, node.url);
+                    var linkDisplayNameValue = smeHelper.getNodeConfigValue(node, msg, node.linkDisplayNameType, node.linkDisplayName);
                     if (urlValue) {
                         smeMsg = {
                             dataComponent: {
                                 dataComponentType: "webview",
                                 url: urlValue,
+                                displayMode: node.displayMode,
+                                linkDisplayName: linkDisplayNameValue || "",
                                 enableFullScreenView: node.enableFullScreenView == "1",
                                 viewSize: node.viewSize
                             }

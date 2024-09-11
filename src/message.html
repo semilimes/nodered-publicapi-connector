@@ -52,6 +52,11 @@
             url: { value: "" },
             urlType: { value: "str"},
 
+            displayMode: { value: "none" },
+
+            linkDisplayName: { value: "" },
+            linkDisplayNameType: { value: "str" },
+
             enableFullScreenView: { value: "1"},
 
             viewSize: { value: "1:2" },
@@ -178,6 +183,16 @@
                 typeField: "#node-input-urlType"
             });
 
+            $("#node-input-displayMode").typedInput({
+                type: "displayModes",
+                types: [{ value: "displayModes", options: [
+                    {value: "link", label: "Link"},
+                    {value: "thumbnail", label: "Thumbnail"},
+                    {value: "liveweb", label: "Live Web"}
+                ]}]
+            });
+            $("#node-input-displayMode").on('change', function (_, _, _) { updateMessageUI() });
+
             //Channel
             $("#node-input-channelId").typedInput({
                 type: "str",
@@ -203,6 +218,7 @@
 
     function updateMessageUI() {
         var chosenMessage = $("#node-input-message").typedInput('value');
+        var chosenDisplayMode = $("#node-input-displayMode").typedInput('value');
 
         $(".messageField").hide();
         switch(chosenMessage) {
@@ -234,8 +250,29 @@
                 break;
             case 'webview':
                 $('#webviewUrlPanel').show();
-                $('#webviewFullScreenPanel').show();
-                $('#webviewViewSizePanel').show();
+                $('#displayModePanel').show();
+                switch (chosenDisplayMode) {
+                    case 'link':
+                        $('#linkDisplayNamePanel').show();
+                        //$('#webviewFullScreenPanel').hide();
+                        //$('#webviewViewSizePanel').hide();
+                        break;
+                    case 'thumbnail':
+                        //$('#linkDisplayNamePanel').hide();
+                        //$('#webviewFullScreenPanel').hide();
+                        //$('#webviewViewSizePanel').hide();
+                        break;
+                    case 'liveweb':
+                        //$('#linkDisplayNamePanel').hide();
+                        $('#webviewFullScreenPanel').show();
+                        $('#webviewViewSizePanel').show();
+                        break;
+                    default:
+                        //$('#linkDisplayNamePanel').hide();
+                        //$('#webviewFullScreenPanel').hide();
+                        //$('#webviewViewSizePanel').hide();
+                        break;
+                }
                 break;
             case 'channel':
                 $('#channelIdPanel').show();
@@ -331,6 +368,15 @@
         <input type="text" id="node-input-url" placeholder="The webview address">
         <input type="hidden" id="node-input-urlType">
     </div>
+    <div class="form-row messageField" id="displayModePanel">
+        <label for="node-input-displayMode"><i class="fa fa-tag"></i> Display as</label>
+        <input type="text" id="node-input-displayMode">
+    </div>
+    <div class="form-row messageField" id="linkDisplayNamePanel">
+        <label for="node-input-linkDisplayName"><i class="fa fa-tag"></i> Link name</label>
+        <input type="text" id="node-input-linkDisplayName" placeholder="Link display name">
+        <input type="hidden" id="node-input-linkDisplayNameType">
+    </div>
     <div class="form-row messageField" id="webviewFullScreenPanel">
         <label for="node-input-enableFullScreenView"><i class="fa fa-tag"></i> Enable Full Screen</label>
         <select id="node-input-enableFullScreenView">
@@ -396,7 +442,7 @@
         The semilimes app will create a map widget of the specified location.
     </p>
     <p>
-        <b>WebView:</b> creates a webview message that in the app produces an iframe displaying an external webpage. You can configure the <code>Url</code>, whether to be displayed in <code>Full Screen</code>, or the size proportions with <code>View Size</code>. 
+        <b>WebView:</b> creates a webview message that in the app produces an iframe displaying an external webpage. You can configure the <code>Url</code>, whether to display it as a straight <code>Link</code>, or as a <code>Thumbnail</code> (static preview of the page, if supported), or as a <code>Live Web</code> preview. If the latter is selected, you can decide its proportions with <code>View Size</code>, and whether the user can click on it and be redirected to a full screen browser page through the <code>Full Screen</code> property. 
     </p>
     <p>
         <b>Channel:</b> creates a channel reference message by specifying a <code>Channel Id</code> (guid). The app will create a channel widget for the other users to see/open.
