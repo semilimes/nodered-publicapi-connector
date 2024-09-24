@@ -38,9 +38,31 @@
             allDay: { value: false },
             allDayType: { value: "bool" },
 
+            //Line Chart
+            xLabelText: { value: "X Axis"},
+            xLabelTextType: { value: "str" },
+
+            xShowValues: { value: true },
+            xShowValuesType: { value: "bool" },
+
+            yLabelText: { value: "Y Axis" },
+            yLabelTextType: { value: "str" },
+
+            yShowValues: { value: true },
+            yShowValuesType: { value: "bool" },
+
+            gridDisplay: { value: true },
+            gridDisplayType: { value: "bool" },
+
+            backgroundColor: { value: "#FFFFFF" },
+            backgroundColorType: { value: "str" },
+
+            lines: { value: '[{"options":{"line":{"color": "#00AAFF","width":2.0},"point":{"display":true}},"data":[{"x": 1.0,"y": 3.8}]}]' },
+            linesType: { value: "json" },
+
             //Location
             locationName: { value: "myLocation" },
-            locationNameType: { value: "str"},
+            locationNameType: { value: "str" },
 
             latitude: { value: ""},
             latitudeType: { value : "str"},
@@ -89,6 +111,7 @@
                     {value: "file", label: "File"},
                     {value: "contact", label: "Contact"},
                     {value: "appointment", label: "Appointment"},
+                    {value: "linechart", label: "Line Chart"},
                     {value: "location", label: "Location"},
                     {value: "webview", label: "WebView"},
                     {value: "channel", label: "Channel"},
@@ -155,6 +178,49 @@
                 type: "bool",
                 types: ["bool", "msg", "flow", "global"],
                 typeField: "#node-input-allDayType"
+            });
+
+            //Line Chart
+            $("#node-input-xLabelText").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-xLabelTextType"
+            });
+
+            $("#node-input-xShowValues").typedInput({
+                type: "bool",
+                types: ["bool"],
+                typeField: "#node-input-xShowValuesType"
+            });
+
+            $("#node-input-yLabelText").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-yLabelTextType"
+            });
+
+            $("#node-input-yShowValues").typedInput({
+                type: "bool",
+                types: ["bool"],
+                typeField: "#node-input-yShowValuesType"
+            });
+
+            $("#node-input-gridDisplay").typedInput({
+                type: "bool",
+                types: ["bool", "msg", "flow", "global"],
+                typeField: "#node-input-gridDisplayType"
+            });
+
+            $("#node-input-backgroundColor").typedInput({
+                type: "str",
+                types: ["str", "msg", "flow", "global"],
+                typeField: "#node-input-backgroundColorType"
+            });
+
+            $("#node-input-lines").typedInput({
+                type: "json",
+                types: ["json", "msg", "flow", "global"],
+                typeField: "#node-input-linesType"
             });
 
             //Location
@@ -243,6 +309,16 @@
                 $('#locationLatitudePanel').show();
                 $('#locationLongitudePanel').show();
                 break;
+            case 'linechart':
+                $('#titlePanel').show();
+                $('#xLabelTextPanel').show();
+                $('#xShowValuesPanel').show();
+                $('#yLabelTextPanel').show();
+                $('#yShowValuesPanel').show();
+                $('#gridDisplayPanel').show();
+                $('#backgroundColorPanel').show();
+                $('#linesPanel').show();
+                break;
             case 'location':
                 $('#locationNamePanel').show();
                 $('#locationLatitudePanel').show();
@@ -254,23 +330,14 @@
                 switch (chosenDisplayMode) {
                     case 'link':
                         $('#linkDisplayNamePanel').show();
-                        //$('#webviewFullScreenPanel').hide();
-                        //$('#webviewViewSizePanel').hide();
                         break;
                     case 'thumbnail':
-                        //$('#linkDisplayNamePanel').hide();
-                        //$('#webviewFullScreenPanel').hide();
-                        //$('#webviewViewSizePanel').hide();
                         break;
                     case 'liveweb':
-                        //$('#linkDisplayNamePanel').hide();
                         $('#webviewFullScreenPanel').show();
                         $('#webviewViewSizePanel').show();
                         break;
                     default:
-                        //$('#linkDisplayNamePanel').hide();
-                        //$('#webviewFullScreenPanel').hide();
-                        //$('#webviewViewSizePanel').hide();
                         break;
                 }
                 break;
@@ -347,6 +414,41 @@
         <label for="node-input-allDay"><i class="fa fa-tag"></i> All day</label>
         <input type="text" id="node-input-allDay" placeholder="All day">
         <input type="hidden" id="node-input-allDayType">
+    </div>
+    <div class="form-row messageField" id="xLabelTextPanel">
+        <label for="node-input-xLabelText"><i class="fa fa-tag"></i> X Axis Label</label>
+        <input type="text" id="node-input-xLabelText" placeholder="Label here">
+        <input type="hidden" id="node-input-xLabelTextType">
+    </div>
+    <div class="form-row messageField" id="xShowValuesPanel">
+        <label for="node-input-xShowValues"><i class="fa fa-tag"></i> Show X Values</label>
+        <input type="text" id="node-input-xShowValues" placeholder="">
+        <input type="hidden" id="node-input-xShowValuesType">
+    </div>
+    <div class="form-row messageField" id="yLabelTextPanel">
+        <label for="node-input-yLabelText"><i class="fa fa-tag"></i> Y Axis Label</label>
+        <input type="text" id="node-input-yLabelText" placeholder="Label here">
+        <input type="hidden" id="node-input-yLabelTextType">
+    </div>
+    <div class="form-row messageField" id="yShowValuesPanel">
+        <label for="node-input-yShowValues"><i class="fa fa-tag"></i> Show Y Values</label>
+        <input type="text" id="node-input-yShowValues" placeholder="">
+        <input type="hidden" id="node-input-yShowValuesType">
+    </div>
+    <div class="form-row messageField" id="gridDisplayPanel">
+        <label for="node-input-gridDisplay"><i class="fa fa-tag"></i> Show Grid</label>
+        <input type="text" id="node-input-gridDisplay" placeholder="Show Grid">
+        <input type="hidden" id="node-input-gridDisplayType">
+    </div>
+    <div class="form-row messageField" id="backgroundColorPanel">
+        <label for="node-input-backgroundColor"><i class="fa fa-tag"></i> Background Color</label>
+        <input type="text" id="node-input-backgroundColor" placeholder="RGB Color #RRGGBB...">
+        <input type="hidden" id="node-input-backgroundColorType">
+    </div>
+    <div class="form-row messageField" id="linesPanel">
+        <label for="node-input-lines"><i class="fa fa-tag"></i> Lines</label>
+        <input type="text" id="node-input-lines" placeholder="Lines json object">
+        <input type="hidden" id="node-input-linesType">
     </div>
     <div class="form-row messageField" id="locationNamePanel">
         <label for="node-input-locationName"><i class="fa fa-tag"></i> Location Name</label>
@@ -436,6 +538,37 @@
     <p>
         <b>Appointment:</b> creates an appointment message downloadable to the user's personal calendar, using a <code>Title</code>, a <code>Description</code>, <code>Start</code> and <code>End</code> times in epoch milliseconds (UTC timezone), an <code>All Day</code> option to expand the appointment to the whole selected day specified in Start end End, and finally a <code>Latitude</code> (float) and a <code>Longitude</code> (float) if you want to specify a specific location of the appointment.
         The semilimes app will create an appointment widget using the specified parameters.
+    </p>
+    <p>
+        <b>Line Chart:</b> creates a simple line chart message, supporting multiple lines with customizable color. 
+        <code>Show X/Y Values</code> are general options for the two axis, so to show or hide values on the axis itself. It may be useful when your value range is too wide, so the values on the axis do not overlap.
+        Define <code>Lines</code> as a json array, using this format:
+        <pre>
+"lines": [
+{
+    "options": {
+        "line": {
+            "color": "#00AAFF",
+            "width": 2.0
+        },
+        "point": {
+            "display": true
+        }
+    },
+    "data" : [
+        {
+            "x": 1.0,
+            "y": 3.8
+        }
+    ]
+}
+]   
+        </pre>
+        The line object has an <code>options</code> and a <code>data</code> properties.
+        The <code>options/line</code> property has a string-typed <code>color</code> in RGB format (#RRGGBB), and a float <code>width</code> for defining the line thickness.
+        The <code>options/point</code> property has a boolean <code>display</code> property to show/hide the graph dots for each data point.
+        The <code>data</code> property is an array of Points, where each point object is defined with an <code>x</code> and <code>y</code> properties, both as float types.
+        The semilimes app will create a line chart widget using the specified parameters.
     </p>
     <p>
         <b>Location:</b> creates a location reference message using a <code>Location Name</code> (string), a <code>Latitude</code> (float), and a <code>Longitude</code> (float).

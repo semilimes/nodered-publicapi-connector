@@ -50,7 +50,30 @@ module.exports = function(RED) {
         this.allDay = config.allDay;
         this.allDayType = config.allDayType;
 
-        //location langitude and longitude reused from location object
+        //location latitude and longitude reused from location object
+
+        //Line Chart
+
+        this.xLabelText = config.xLabelText;
+        this.xLabelTextType = config.xLabelTextType;
+
+        this.xShowValues = config.xShowValues;
+        this.xShowValuesType = config.xShowValuesType;
+
+        this.yLabelText = config.yLabelText;
+        this.yLabelTextType = config.yLabelTextType;
+
+        this.yShowValues = config.yShowValues;
+        this.yShowValuesType = config.yShowValuesType;
+
+        this.gridDisplay = config.gridDisplay;
+        this.gridDisplayType = config.gridDisplayType;
+
+        this.backgroundColor = config.backgroundColor;
+        this.backgroundColorType = config.backgroundColorType;
+        
+        this.lines = config.lines;
+        this.linesType = config.linesType;
 
         //WebView
         this.url = config.url;
@@ -175,6 +198,59 @@ module.exports = function(RED) {
                                 }
                             }
                         }
+                    break;
+                case 'linechart':
+                    var titleValue = smeHelper.getNodeConfigValue(node, msg, node.titleType, node.title);
+                    var xLabelTextValue = smeHelper.getNodeConfigValue(node, msg, node.xLabelTextType, node.xLabelText);
+                    var yLabelTextValue = smeHelper.getNodeConfigValue(node, msg, node.yLabelTextType, node.yLabelText);
+                    var gridDisplayValue = smeHelper.getNodeConfigValue(node, msg, node.gridDisplayType, node.gridDisplay);
+                    var backgroundColorValue = smeHelper.getNodeConfigValue(node, msg, node.backgroundColorType, node.backgroundColor);
+                    var linesValue = smeHelper.getNodeConfigValue(node, msg, node.linesType, node.lines);
+                    
+                    //Setting default options object
+                    var options = {
+                        x: {
+                            label: {
+                                text: "X Axis"
+                            },
+                            showTitles: node.xShowValues || false
+                        },
+                        y: {
+                            label: {
+                                text: "Y Axis"
+                            },
+                            showTitles: node.yShowValues || false
+                        },
+                        grid: {
+                            display: true
+                        },
+                        background: {
+                            color: "#FFFFFF"
+                        }
+                    };
+
+                    if (xLabelTextValue) {
+                        options.x.label.text = xLabelTextValue;
+                    }
+                    if (yLabelTextValue) {
+                        options.y.label.text = yLabelTextValue;
+                    }
+                    if (typeof gridDisplayValue === 'boolean') {
+                        options.grid.display = gridDisplayValue;
+                    }
+                    if (backgroundColorValue) {
+                        options.background.color = backgroundColorValue;
+                    }
+                    
+                    smeMsg = {
+                        dataComponent: {
+                            dataComponentType: "linechart",
+                            title: titleValue || "Line Chart",
+                            options: options,
+                            lines: linesValue
+                        }
+                    }
+
                     break;
                 case 'location':
                     var locationNameValue = smeHelper.getNodeConfigValue(node, msg, node.locationNameType, node.locationName);
